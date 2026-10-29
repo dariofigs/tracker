@@ -36,3 +36,23 @@ describe('AppLayout', () => {
     )
   })
 })
+
+describe('Rapid check-in', () => {
+  it('is not shown on other tabs', () => {
+    renderAt('/insights')
+    expect(screen.queryByRole('button', { name: /check-in/i })).not.toBeInTheDocument()
+  })
+
+  it('opens the sheet from Today', async () => {
+    renderAt('/')
+    await userEvent.click(screen.getByRole('button', { name: /check-in/i }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+})
+
+describe('Rapid check-in placement (today)', () => {
+  it('appears on Today only', () => {
+    renderAt('/')
+    expect(screen.getByRole('button', { name: /check-in/i })).toBeInTheDocument()
+  })
+})

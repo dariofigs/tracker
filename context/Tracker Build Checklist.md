@@ -109,8 +109,8 @@ Because only you will use it, safety comes from three layers:
 
 - [x] 4.1 Layout: linen canvas, safe-area insets, centered max width on desktop for testing
 - [x] 4.2 Routes and nav wiring; login gate in front of everything
-- [ ] 4.3 Persistent Rapid Check-in button that opens the AM or PM sheet based on time of day
-- [ ] 4.4 Header with date and greeting in Young Serif
+- [x] 4.3 Persistent Rapid Check-in button that opens the AM or PM sheet based on time of day
+- [x] 4.4 Header with date and greeting in Fraunces
 - [ ] 4.5 AM/PM connected timeline card: morning node with ✓, time, pain and capacity; evening node with DUE tag that opens the PM sheet
 - [ ] 4.6 Battery card reading the latest capacity
 - [ ] 4.7 States: nothing logged, AM only, both done, load error, saving
