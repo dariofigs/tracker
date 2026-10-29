@@ -49,8 +49,9 @@ export interface Entry extends Partial<MorningFields>, Partial<EveningFields> {
   updatedAt: string; // ISO timestamp
 }
 
-/** Payload for upserting an entry. Only the id-less fields the client sends. */
-export type EntryInput = Omit<Entry, 'id' | 'createdAt' | 'updatedAt'>;
+/** Payload for saving an entry. Only the day and period are required. Omitted fields are left unchanged. */
+export type EntryInput = Pick<Entry, 'entryDate' | 'period'> &
+  Partial<Omit<Entry, 'id' | 'entryDate' | 'period' | 'createdAt' | 'updatedAt'>>;
 
 export type CustomOptionKind = 'symptom' | 'activity' | 'exercise_type';
 
@@ -70,7 +71,6 @@ export interface EntryRow {
   waking_pain: number | null;
   sleep_hours: number | null;
   sleep_quality: number | null;
-  stiffness_minutes: number | null;
   starting_capacity: number | null;
   end_pain: number | null;
   exercise: Exercise | null;
