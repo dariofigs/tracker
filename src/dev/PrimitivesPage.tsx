@@ -3,6 +3,13 @@
 import { useState, type ReactNode } from 'react'
 import {
   BatteryBar,
+  SegmentedControl,
+  Stepper,
+  BottomNav,
+  InsightsIcon,
+  SettingsIcon,
+  TodayIcon,
+  BottomSheet,
   Button,
   Card,
   PainGauge,
@@ -44,6 +51,90 @@ function GaugeDemo({
   return <PainGauge label={label} value={v} onChange={setV} rangeLabels={rangeLabels} />
 }
 
+function SheetDemo() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button variant="secondary" onClick={() => setOpen(true)}>
+        Open sheet
+      </Button>
+      <BottomSheet open={open} onClose={() => setOpen(false)} title="Evening check-in">
+        <div className="space-y-[1.6rem]">
+          <GaugeDemo label="Pain" initial={3} />
+          <p className="text-body text-text-muted">
+            Swipe the handle down, tap outside or press Escape to close.
+          </p>
+          <p className="text-body text-text-muted">
+            Extra content to check that the body scrolls on short screens.
+          </p>
+          <Button fullWidth onClick={() => setOpen(false)}>
+            Save Entry
+          </Button>
+        </div>
+      </BottomSheet>
+    </>
+  )
+}
+
+const navItems = [
+  { id: 'today', label: 'Today', icon: TodayIcon },
+  { id: 'insights', label: 'Insights', icon: InsightsIcon },
+  { id: 'settings', label: 'Settings', icon: SettingsIcon },
+]
+
+function NavDemo() {
+  const [tab, setTab] = useState('today')
+  return <BottomNav items={navItems} value={tab} onChange={setTab} />
+}
+
+const qualityOptions = [1, 2, 3, 4, 5].map((n) => ({ value: n, label: String(n) }))
+const effortOptions = [
+  { value: 1, label: 'Light' },
+  { value: 2, label: 'Easy' },
+  { value: 3, label: 'Mod' },
+  { value: 4, label: 'Hard' },
+  { value: 5, label: 'Max' },
+]
+
+function CompactDemo() {
+  const [hours, setHours] = useState(7)
+  const [quality, setQuality] = useState<number | null>(3)
+  const [effort, setEffort] = useState<number | null>(null)
+  return (
+    <div className="space-y-[2rem]">
+      <div className="space-y-[0.8rem]">
+        <p className="text-micro text-text-muted uppercase">Sleep hours</p>
+        <Stepper
+          label="Sleep hours"
+          value={hours}
+          onChange={setHours}
+          step={0.5}
+          max={14}
+          unit="h"
+        />
+      </div>
+      <div className="space-y-[0.8rem]">
+        <p className="text-micro text-text-muted uppercase">Sleep quality</p>
+        <SegmentedControl
+          label="Sleep quality"
+          options={qualityOptions}
+          value={quality}
+          onChange={setQuality}
+        />
+      </div>
+      <div className="space-y-[0.8rem]">
+        <p className="text-micro text-text-muted uppercase">Effort (nothing selected)</p>
+        <SegmentedControl
+          label="Effort"
+          options={effortOptions}
+          value={effort}
+          onChange={setEffort}
+        />
+      </div>
+    </div>
+  )
+}
+
 function PrimitivesPage() {
   return (
     <main className="text-text-primary mx-auto min-h-dvh max-w-[120rem] space-y-[2.4rem] p-[1.6rem] pt-[7.2rem] md:p-[3.2rem] md:pt-[8rem]">
@@ -78,6 +169,24 @@ function PrimitivesPage() {
             <Button fullWidth variant="secondary">
               Cancel
             </Button>
+          </Card>
+        </Demo>
+
+        <Demo title="Stepper and Segmented">
+          <Card>
+            <CompactDemo />
+          </Card>
+        </Demo>
+
+        <Demo title="Bottom Nav">
+          <Card className="bg-surface-subtle">
+            <NavDemo />
+          </Card>
+        </Demo>
+
+        <Demo title="Bottom Sheet">
+          <Card>
+            <SheetDemo />
           </Card>
         </Demo>
 

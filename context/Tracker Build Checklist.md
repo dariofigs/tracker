@@ -99,9 +99,9 @@ Because only you will use it, safety comes from three layers:
 - [x] 3.3 Primary and secondary pill buttons, including the full-width 50px Save Entry button
 - [x] 3.4 Pain Gauge 1A: 11 beads, 28px sage handle, tap and drag, keyboard and ARIA slider support, range labels. Reused for stress 0–10
 - [x] 3.5 Battery bar (8px pill track, sage to clay fill)
-- [ ] 3.6 Bottom sheet: swipe or tap to dismiss, focus handling, safe-area padding
-- [ ] 3.7 Bottom nav: floating pill with 3 tabs (Today, Insights, Settings)
-- [ ] 3.8 Small stepper/segmented controls for sleep hours, sleep quality and effort
+- [x] 3.6 Bottom sheet: swipe or tap to dismiss, focus handling, safe-area padding
+- [x] 3.7 Bottom nav: floating pill with 3 tabs (Today, Insights, Settings)
+- [x] 3.8 Small stepper/segmented controls for sleep hours, sleep quality and effort
 
 **Done when:** a throwaway gallery page shows every primitive in all states, and the gauge feels right on your real phone with tired hands.
 

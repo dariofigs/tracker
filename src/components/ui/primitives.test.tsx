@@ -1,7 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BatteryBar, Button, Card, PillChip, SectionHeader, StatusChip } from '.'
+import {
+  BatteryBar,
+  BottomNav,
+  Button,
+  Card,
+  PillChip,
+  SectionHeader,
+  StatusChip,
+} from '.'
 
 describe('Card', () => {
   it('renders children and merges className', () => {
@@ -134,5 +142,28 @@ describe('BatteryBar', () => {
   it('clamps out-of-range values', () => {
     render(<BatteryBar value={140} label="Capacity" />)
     expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '100')
+  })
+})
+
+describe('BottomNav', () => {
+  const items = [
+    { id: 'today', label: 'Today', icon: null },
+    { id: 'insights', label: 'Insights', icon: null },
+    { id: 'settings', label: 'Settings', icon: null },
+  ]
+
+  it('marks the current tab and reports taps', async () => {
+    const onChange = vi.fn()
+    render(<BottomNav items={items} value="today" onChange={onChange} />)
+    expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Today' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+    expect(screen.getByRole('button', { name: 'Insights' })).not.toHaveAttribute(
+      'aria-current',
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Insights' }))
+    expect(onChange).toHaveBeenCalledWith('insights')
   })
 })

@@ -74,6 +74,23 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Bottom sheet entrance; skipped for reduced motion */
+@keyframes sheet-enter {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.sheet-enter {
+  animation: sheet-enter 240ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet-enter {
+    animation: none;
+  }
+}
+
 h1,
 h2,
 h3,
