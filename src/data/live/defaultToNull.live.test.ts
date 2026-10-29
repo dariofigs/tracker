@@ -1,10 +1,14 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { supabase } from '../../lib/supabase'
 import { entryToRow } from '../mappers'
+import { generateSeed } from '../../dev/seedData'
 
-// Experiment for option C: a bulk upsert with defaultToNull: false. Uses its own date so it
-// doesn't overlap the other live tests.
+// Option C: a bulk upsert with defaultToNull: false. Each test uses its own dates so the
+// tests don't overlap the other live tests.
 const DAY = '1999-02-01'
+const BATCH_START = '1999-03-01'
+const BATCH_END = '1999-04-29'
+const BATCH_DAYS = 60
 const ON_CONFLICT = 'user_id,entry_date,period'
 
 describe('live: bulk upsert with defaultToNull: false', () => {
@@ -18,7 +22,36 @@ describe('live: bulk upsert with defaultToNull: false', () => {
 
   afterAll(async () => {
     await supabase.from('entries').delete().eq('entry_date', DAY)
+    await supabase.from('entries').delete().gte('entry_date', BATCH_START).lte('entry_date', BATCH_END)
     await supabase.auth.signOut()
+  })
+
+  it('saves a 60-day batch with mixed columns, and saving it again changes nothing', async () => {
+    // Morning rows have no evening columns and evening rows have no morning columns, so the
+    // batch has the mixed keys that broke the first bulk attempt.
+    const rows = generateSeed(BATCH_END, BATCH_DAYS).map(entryToRow)
+
+    const first = await supabase.from('entries').upsert(rows, { onConflict: ON_CONFLICT, defaultToNull: false })
+    expect(first.error).toBeNull()
+
+    const read = () =>
+      supabase
+        .from('entries')
+        .select('entry_date, period, waking_pain, end_pain, activities, symptoms')
+        .gte('entry_date', BATCH_START)
+        .lte('entry_date', BATCH_END)
+        .order('entry_date')
+        .order('period')
+    const once = await read()
+    expect(once.error).toBeNull()
+    expect(once.data).toHaveLength(BATCH_DAYS * 2)
+    expect(once.data?.every((r) => r.period === 'AM' ? r.end_pain === null : r.waking_pain === null)).toBe(true)
+
+    const second = await supabase.from('entries').upsert(rows, { onConflict: ON_CONFLICT, defaultToNull: false })
+    expect(second.error).toBeNull()
+
+    const twice = await read()
+    expect(twice.data).toEqual(once.data)
   })
 
   it('keeps existing columns and fills missing ones in a mixed-column bulk upsert', async () => {
