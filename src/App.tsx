@@ -1,4 +1,4 @@
-import SwatchPage from './dev/SwatchPage'
+import DevPages from './dev/DevPages'
 import LoginScreen from './features/auth/LoginScreen'
 import { useSession } from './hooks/useSession'
 import { supabase } from './lib/supabase'
@@ -14,11 +14,11 @@ function App() {
       <button
         type="button"
         onClick={() => supabase.auth.signOut()}
-        className="min-touch fixed top-[1.6rem] right-[1.6rem] rounded-tile bg-surface-card px-[1.6rem] text-body-sm"
+        className="min-touch rounded-tile bg-surface-card text-body-sm fixed top-[1.6rem] right-[1.6rem] px-[1.6rem]"
       >
         Sign out
       </button>
-      <SwatchPage />
+      <DevPages />
     </>
   )
 }

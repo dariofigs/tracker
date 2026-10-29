@@ -94,7 +94,7 @@ Because only you will use it, safety comes from three layers:
 
 ## Phase 3: UI primitives
 
-- [ ] 3.1 Card, Section Header, Status Chip (Balanced, Low Battery, DUE, Flare)
+- [x] 3.1 Card, Section Header, Status Chip (Balanced, Low Battery, DUE, Flare)
 - [ ] 3.2 Pill Chip toggle: `+` inactive, `✓` active, Sage and Clay variants, 48px+ target
 - [ ] 3.3 Primary and secondary pill buttons, including the full-width 50px Save Entry button
 - [ ] 3.4 Pain Gauge 1A: 11 beads, 28px sage handle, tap and drag, keyboard and ARIA slider support, range labels. Reused for stress 0–10

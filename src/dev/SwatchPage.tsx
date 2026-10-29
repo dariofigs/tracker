@@ -34,7 +34,7 @@ const radii = [
 
 function SwatchPage() {
   return (
-    <main className="mx-auto min-h-dvh max-w-[43rem] space-y-[2.4rem] bg-canvas-bg p-[1.6rem] text-text-primary">
+    <main className="text-text-primary mx-auto min-h-dvh max-w-[120rem] space-y-[2.4rem] p-[1.6rem] pt-[7.2rem] md:p-[3.2rem] md:pt-[8rem]">
       <header>
         <h1 className="text-screen">Botanical Sanctuary</h1>
         <p className="text-body text-text-muted">Swatch page, checklist 0.5</p>
@@ -42,12 +42,17 @@ function SwatchPage() {
 
       <section className="space-y-[1.2rem]">
         <h2 className="text-section">Color tokens</h2>
-        <ul className="grid grid-cols-2 gap-[1.2rem]">
+        <ul className="grid grid-cols-2 gap-[1.2rem] sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {colors.map((c) => (
-            <li key={c.name} className="rounded-card border border-border-subtle bg-surface-card p-[1.2rem]">
-              <div className={`h-[4.8rem] rounded-tile border border-border-subtle ${c.className}`} />
-              <p className="mt-[0.8rem] text-body-sm font-semibold">{c.name}</p>
-              <p className="text-micro uppercase text-text-muted">{c.hex}</p>
+            <li
+              key={c.name}
+              className="rounded-card border-border-subtle bg-surface-card border p-[1.2rem]"
+            >
+              <div
+                className={`rounded-tile border-border-subtle h-[4.8rem] border ${c.className}`}
+              />
+              <p className="text-body-sm mt-[0.8rem] font-semibold">{c.name}</p>
+              <p className="text-micro text-text-muted uppercase">{c.hex}</p>
             </li>
           ))}
         </ul>
@@ -55,11 +60,11 @@ function SwatchPage() {
 
       <section className="space-y-[1.2rem]">
         <h2 className="text-section">Type scale</h2>
-        <div className="space-y-[1.2rem] rounded-card border border-border-subtle bg-surface-card p-[1.6rem]">
+        <div className="rounded-card border-border-subtle bg-surface-card space-y-[1.2rem] border p-[2.4rem]">
           {typeScale.map((t) => (
             <div key={t.name}>
               <p className={t.className}>The quick brown fox</p>
-              <p className="text-micro uppercase text-text-muted">{t.name}</p>
+              <p className="text-micro text-text-muted uppercase">{t.name}</p>
             </div>
           ))}
         </div>
@@ -67,10 +72,16 @@ function SwatchPage() {
 
       <section className="space-y-[1.2rem]">
         <h2 className="text-section">Radii</h2>
-        <div className="grid grid-cols-3 gap-[1.2rem]">
+        <div className="grid grid-cols-1 gap-[1.2rem] sm:grid-cols-3">
           {radii.map((r) => (
-            <div key={r.name} className={`h-[8rem] border border-border-subtle bg-sage-tint ${r.className}`}>
-              <p className="p-[0.8rem] text-micro uppercase text-text-muted">{r.name}</p>
+            <div
+              key={r.name}
+              className="rounded-card border-border-subtle bg-surface-card border p-[1.2rem]"
+            >
+              <div
+                className={`border-border-subtle bg-sage-tint h-[8rem] border ${r.className}`}
+              />
+              <p className="text-micro text-text-muted mt-[0.8rem] uppercase">{r.name}</p>
             </div>
           ))}
         </div>
@@ -79,10 +90,16 @@ function SwatchPage() {
       <section className="space-y-[1.2rem]">
         <h2 className="text-section">48px min-touch</h2>
         <div className="flex gap-[1.2rem]">
-          <button type="button" className="min-touch rounded-tile border border-brand-sage bg-sage-tint px-[1.2rem] text-body font-semibold text-brand-sage">
+          <button
+            type="button"
+            className="min-touch rounded-tile border-brand-sage bg-sage-tint text-body text-brand-sage border px-[1.2rem] font-semibold"
+          >
             ✓ Active chip
           </button>
-          <button type="button" className="min-touch rounded-tile bg-surface-subtle px-[1.2rem] text-body text-text-muted">
+          <button
+            type="button"
+            className="min-touch rounded-tile bg-surface-subtle text-body text-text-muted px-[1.2rem]"
+          >
             + Inactive chip
           </button>
         </div>

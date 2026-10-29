@@ -68,6 +68,8 @@ body,
 }
 
 body {
+  background-color: var(--color-canvas-bg);
+  color: var(--color-text-primary);
   font-family: var(--font-sans);
 }
 
