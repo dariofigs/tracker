@@ -1,7 +1,14 @@
 // Primitives page (checklist Phase 3). Every UI primitive gets a section here in all its states,
 // the same way SwatchPage keeps the design tokens.
 import { useState, type ReactNode } from 'react'
-import { Card, PillChip, SectionHeader, StatusChip } from '../components/ui'
+import {
+  Button,
+  Card,
+  PainGauge,
+  PillChip,
+  SectionHeader,
+  StatusChip,
+} from '../components/ui'
 
 function Demo({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -23,6 +30,19 @@ function ChipDemo({ variant }: { variant: 'sage' | 'clay' }) {
   )
 }
 
+function GaugeDemo({
+  label,
+  initial,
+  rangeLabels,
+}: {
+  label: string
+  initial: number
+  rangeLabels?: string[]
+}) {
+  const [v, setV] = useState(initial)
+  return <PainGauge label={label} value={v} onChange={setV} rangeLabels={rangeLabels} />
+}
+
 function PrimitivesPage() {
   return (
     <main className="text-text-primary mx-auto min-h-dvh max-w-[120rem] space-y-[2.4rem] p-[1.6rem] pt-[7.2rem] md:p-[3.2rem] md:pt-[8rem]">
@@ -40,6 +60,36 @@ function PrimitivesPage() {
             <StatusChip status="low-battery" />
             <StatusChip status="due" />
             <StatusChip status="flare" />
+          </Card>
+        </Demo>
+
+        <Demo title="Buttons">
+          <Card className="space-y-[1.6rem]">
+            <div className="flex flex-wrap gap-[1.2rem]">
+              <Button>Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button disabled>Disabled</Button>
+              <Button variant="secondary" disabled>
+                Disabled
+              </Button>
+            </div>
+            <Button fullWidth>Save Entry</Button>
+            <Button fullWidth variant="secondary">
+              Cancel
+            </Button>
+          </Card>
+        </Demo>
+
+        <Demo title="Pain Gauge">
+          <Card className="space-y-[2.4rem]">
+            <GaugeDemo label="Pain" initial={0} />
+            <GaugeDemo label="Pain" initial={4} />
+            <GaugeDemo label="Pain" initial={10} />
+            <GaugeDemo
+              label="Stress"
+              initial={6}
+              rangeLabels={['0 Calm', '10 Overwhelmed']}
+            />
           </Card>
         </Demo>
 

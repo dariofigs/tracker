@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Card, PillChip, SectionHeader, StatusChip } from '.'
+import { Button, Card, PillChip, SectionHeader, StatusChip } from '.'
 
 describe('Card', () => {
   it('renders children and merges className', () => {
@@ -79,5 +79,40 @@ describe('PillChip', () => {
   it('has a 48px minimum target', () => {
     render(<PillChip label="Walk" selected={false} onChange={() => {}} />)
     expect(screen.getByRole('button')).toHaveClass('min-touch')
+  })
+})
+
+describe('Button', () => {
+  it('is a non-submitting button by default and fires onClick', async () => {
+    const onClick = vi.fn()
+    render(<Button onClick={onClick}>Save</Button>)
+    const button = screen.getByRole('button', { name: 'Save' })
+    expect(button).toHaveAttribute('type', 'button')
+    await userEvent.click(button)
+    expect(onClick).toHaveBeenCalledOnce()
+  })
+
+  it('does not fire when disabled', async () => {
+    const onClick = vi.fn()
+    render(
+      <Button disabled onClick={onClick}>
+        Save
+      </Button>,
+    )
+    await userEvent.click(screen.getByRole('button'))
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('applies secondary and full-width styles', () => {
+    render(
+      <Button variant="secondary" fullWidth>
+        Cancel
+      </Button>,
+    )
+    expect(screen.getByRole('button')).toHaveClass(
+      'border-brand-sage',
+      'w-full',
+      'h-[5rem]',
+    )
   })
 })
