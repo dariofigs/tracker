@@ -1,4 +1,14 @@
-import type { CustomOption, CustomOptionRow, Entry, EntryInput, EntryRow, Exercise } from './types'
+import type {
+  CustomOption,
+  CustomOptionRow,
+  Entry,
+  EntryInput,
+  EntryRow,
+  Exercise,
+  TimedLog,
+  TimedLogInput,
+  TimedLogRow,
+} from './types'
 
 /** Postgres numeric columns can come back as strings, so coerce them. */
 function num(value: number | string | null): number | null {
@@ -50,6 +60,33 @@ export function entryToRow(input: EntryInput): Record<string, unknown> {
   for (const [key, column] of ENTRY_COLUMNS) {
     if (input[key] !== undefined) row[column] = input[key]
   }
+  return row
+}
+
+export function timedLogFromRow(row: TimedLogRow): TimedLog {
+  return {
+    id: row.id,
+    occurredAt: row.occurred_at,
+    kind: row.kind,
+    pain: num(row.pain),
+    label: row.label,
+    minutes: num(row.minutes),
+    effort: num(row.effort) as TimedLog['effort'],
+    note: row.note,
+    createdAt: row.created_at,
+  }
+}
+
+/** Only the fields the caller supplied. Unsupplied optional columns are left out, not sent as null. */
+export function timedLogToRow(input: Partial<TimedLogInput>): Record<string, unknown> {
+  const row: Record<string, unknown> = {}
+  if (input.occurredAt !== undefined) row.occurred_at = input.occurredAt
+  if (input.kind !== undefined) row.kind = input.kind
+  if (input.pain !== undefined) row.pain = input.pain
+  if (input.label !== undefined) row.label = input.label
+  if (input.minutes !== undefined) row.minutes = input.minutes
+  if (input.effort !== undefined) row.effort = input.effort
+  if (input.note !== undefined) row.note = input.note
   return row
 }
 

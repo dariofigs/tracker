@@ -1,41 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import type { SupabaseClient } from '@supabase/supabase-js'
 import { createRepository } from './repository'
 import { entryFromRow, entryToRow } from './mappers'
 import type { EntryInput, EntryRow } from './types'
-
-interface Call {
-  method: string
-  args: unknown[]
-}
-
-/** Records every query-builder call and resolves to the given result, like the real chainable client. */
-function fakeClient(result: { data: unknown; error: { message: string } | null }) {
-  const calls: Call[] = []
-  const builder: Record<string, unknown> = {}
-  for (const method of [
-    'from',
-    'select',
-    'upsert',
-    'insert',
-    'update',
-    'delete',
-    'eq',
-    'gte',
-    'lte',
-    'order',
-    'single',
-  ]) {
-    builder[method] = (...args: unknown[]) => {
-      calls.push({ method, args })
-      return builder
-    }
-  }
-  builder.then = (resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) =>
-    Promise.resolve(result).then(resolve, reject)
-  const client = { from: builder.from } as unknown as SupabaseClient
-  return { client, calls }
-}
+import { fakeClient } from '../test/fakeSupabase'
 
 const amRow: EntryRow = {
   id: 'e1',
@@ -93,6 +60,21 @@ describe('createRepository', () => {
       }],
     })
     expect(saved.id).toBe('e1')
+  })
+
+  it('upserts a list one row at a time, even when the rows have different columns', async () => {
+    const { client, calls } = fakeClient({ data: amRow, error: null })
+    const repo = createRepository(client)
+
+    await repo.upsertEntries([
+      { entryDate: '2026-10-28', period: 'AM', wakingPain: 4 },
+      { entryDate: '2026-10-28', period: 'PM', endPain: 3 },
+    ])
+
+    const upserts = calls.filter((c) => c.method === 'upsert')
+    expect(upserts).toHaveLength(2)
+    expect(upserts[0].args[0]).not.toHaveProperty('end_pain')
+    expect(upserts[1].args[0]).not.toHaveProperty('waking_pain')
   })
 
   it('filters by date for getEntriesForDate', async () => {

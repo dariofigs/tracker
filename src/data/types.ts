@@ -55,6 +55,36 @@ export type EntryInput = Pick<Entry, 'entryDate' | 'period'> &
 
 export type CustomOptionKind = 'symptom' | 'activity' | 'exercise_type';
 
+/** A timed event logged between or alongside the daily check-ins. */
+export type TimedKind = 'pain' | 'symptom' | 'activity' | 'exercise';
+
+export interface TimedLog {
+  id: string;
+  occurredAt: string; // ISO timestamp of when it happened
+  kind: TimedKind;
+  pain: number | null; // pain kind only, 0–10
+  label: string | null; // symptom, activity, or exercise type
+  minutes: number | null; // exercise only
+  effort: Effort | null; // exercise only
+  note: string | null;
+  createdAt: string;
+}
+
+export type TimedLogInput = Pick<TimedLog, 'occurredAt' | 'kind'> &
+  Partial<Pick<TimedLog, 'pain' | 'label' | 'minutes' | 'effort' | 'note'>>;
+
+export interface TimedLogRow {
+  id: string;
+  occurred_at: string;
+  kind: TimedKind;
+  pain: number | null;
+  label: string | null;
+  minutes: number | null;
+  effort: number | null;
+  note: string | null;
+  created_at: string;
+}
+
 export interface CustomOption {
   id: string;
   kind: CustomOptionKind;

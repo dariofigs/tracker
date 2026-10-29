@@ -1,7 +1,14 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
-import { customOptionFromRow, entryFromRow, entryToRow } from './mappers'
-import type { CustomOption, CustomOptionKind, Entry, EntryInput } from './types'
+import { customOptionFromRow, entryFromRow, entryToRow, timedLogFromRow, timedLogToRow } from './mappers'
+import type {
+  CustomOption,
+  CustomOptionKind,
+  Entry,
+  EntryInput,
+  TimedLog,
+  TimedLogInput,
+} from './types'
 
 /** A Supabase error. `code` is the Postgres or PostgREST code, empty when there was no response. */
 export class DataError extends Error {
@@ -36,6 +43,16 @@ export function createRepository(client: SupabaseClient) {
       return entryFromRow(unwrap(result))
     },
 
+    /**
+     * Saves several entries one row per request, in order. Use this instead of a single bulk upsert:
+     * a bulk upsert fills any column missing from some rows with null, which breaks not-null columns.
+     */
+    async upsertEntries(inputs: EntryInput[]): Promise<Entry[]> {
+      const saved: Entry[] = []
+      for (const input of inputs) saved.push(await this.upsertEntry(input))
+      return saved
+    },
+
     /** Both AM and PM entries for one local day (YYYY-MM-DD), AM first. */
     async getEntriesForDate(date: string): Promise<Entry[]> {
       const result = await client
@@ -60,6 +77,38 @@ export function createRepository(client: SupabaseClient) {
 
     async deleteEntry(id: string): Promise<void> {
       const result = await client.from('entries').delete().eq('id', id)
+      unwrap(result)
+    },
+
+    /** Timed logs are added, not merged: every call creates a new event. */
+    async addTimedLog(input: TimedLogInput): Promise<TimedLog> {
+      const result = await client.from('timed_logs').insert(timedLogToRow(input)).select().single()
+      return timedLogFromRow(unwrap(result))
+    },
+
+    /** Timed logs with occurredAt in [from, to), oldest first. Use dayBounds() for one local day. */
+    async listTimedLogs(from: Date, to: Date): Promise<TimedLog[]> {
+      const result = await client
+        .from('timed_logs')
+        .select()
+        .gte('occurred_at', from.toISOString())
+        .lt('occurred_at', to.toISOString())
+        .order('occurred_at', { ascending: true })
+      return unwrap(result).map(timedLogFromRow)
+    },
+
+    async updateTimedLog(id: string, changes: Partial<TimedLogInput>): Promise<TimedLog> {
+      const result = await client
+        .from('timed_logs')
+        .update(timedLogToRow(changes))
+        .eq('id', id)
+        .select()
+        .single()
+      return timedLogFromRow(unwrap(result))
+    },
+
+    async deleteTimedLog(id: string): Promise<void> {
+      const result = await client.from('timed_logs').delete().eq('id', id)
       unwrap(result)
     },
 

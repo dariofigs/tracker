@@ -60,3 +60,35 @@ create policy "custom_options: owner only" on public.custom_options
   to authenticated
   using (user_id = auth.uid())
   with check (user_id = auth.uid());
+
+-- Timed logs: extra readings and events with a time, logged alongside the daily check-ins.
+-- One row per event. Each kind uses only the columns it needs, enforced by the shape check.
+create table if not exists public.timed_logs (
+  id           uuid primary key default gen_random_uuid(),
+  user_id      uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  occurred_at  timestamptz not null,
+  kind         text not null check (kind in ('pain', 'symptom', 'activity', 'exercise')),
+  pain         smallint check (pain between 0 and 10),
+  label        text check (label is null or length(trim(label)) > 0),
+  minutes      smallint check (minutes >= 0),
+  effort       smallint check (effort between 1 and 5),
+  note         text,
+  created_at   timestamptz not null default now(),
+
+  constraint timed_logs_shape check (
+    (kind = 'pain' and pain is not null)
+    or (kind in ('symptom', 'activity') and label is not null)
+    or (kind = 'exercise' and label is not null and minutes is not null)
+  )
+);
+
+create index if not exists timed_logs_user_time on public.timed_logs (user_id, occurred_at);
+
+alter table public.timed_logs enable row level security;
+
+drop policy if exists "timed_logs: owner only" on public.timed_logs;
+create policy "timed_logs: owner only" on public.timed_logs
+  for all
+  to authenticated
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid());

@@ -73,9 +73,45 @@ describe('live: signed in', () => {
     expect(saved.wakingPain).toBe(4)
   })
 
+  it('saves rows with different columns one at a time without clearing either', async () => {
+    const [am, pm] = await repo.upsertEntries([
+      { entryDate: TEST_DATE, period: 'AM', wakingPain: 2 },
+      { entryDate: TEST_DATE, period: 'PM', endPain: 6 },
+    ])
+    // The AM row is the same one saved earlier, so only the PM row is new.
+    expect(am.id).toBe(entryIds[0])
+    entryIds.push(pm.id)
+
+    const [savedAm, savedPm] = await repo.getEntriesForDate(TEST_DATE)
+    expect(savedAm).toMatchObject({ period: 'AM', wakingPain: 2, activities: [] })
+    expect(savedPm).toMatchObject({ period: 'PM', endPain: 6, symptoms: [] })
+  })
+
   it('finds the entry in a date range', async () => {
     const entries = await repo.getEntriesInRange('1999-01-01', '1999-01-02')
     expect(entries.map((e) => e.id)).toEqual(entryIds)
+  })
+
+  it('adds, lists, updates and deletes a timed log', async () => {
+    const day = new Date(1999, 2, 1, 10, 0)
+    const added = await repo.addTimedLog({
+      occurredAt: day.toISOString(),
+      kind: 'pain',
+      pain: 6,
+    })
+
+    try {
+      const listed = await repo.listTimedLogs(new Date(1999, 2, 1), new Date(1999, 2, 2))
+      expect(listed.map((l) => l.id)).toContain(added.id)
+
+      const updated = await repo.updateTimedLog(added.id, { pain: 7 })
+      expect(updated).toMatchObject({ kind: 'pain', pain: 7, occurredAt: added.occurredAt })
+    } finally {
+      await repo.deleteTimedLog(added.id)
+    }
+
+    const after = await repo.listTimedLogs(new Date(1999, 2, 1), new Date(1999, 2, 2))
+    expect(after.map((l) => l.id)).not.toContain(added.id)
   })
 
   it('adds a custom option, then hides it without deleting it', async () => {
