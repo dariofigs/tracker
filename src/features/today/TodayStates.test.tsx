@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import LoadErrorCard from './LoadErrorCard'
 import SaveStatusLine from './SaveStatusLine'
@@ -32,6 +32,27 @@ describe('SaveStatusLine', () => {
   it('announces a message inside a live region', () => {
     render(<SaveStatusLine status={{ state: 'not_saved', pending: 1, failed: 0 }} />)
     expect(screen.getByRole('status')).toHaveTextContent('Not saved yet')
+  })
+})
+
+describe('SaveStatusLine confirmation', () => {
+  it('says Saved briefly after a save finishes, then goes quiet', () => {
+    vi.useFakeTimers()
+    const { rerender } = render(
+      <SaveStatusLine status={{ state: 'saving', pending: 1, failed: 0 }} />,
+    )
+    rerender(<SaveStatusLine status={{ state: 'saved', pending: 0, failed: 0 }} />)
+    expect(screen.getByRole('status')).toHaveTextContent('Saved')
+    act(() => {
+      vi.advanceTimersByTime(3000)
+    })
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
+    vi.useRealTimers()
+  })
+
+  it('stays quiet when the screen opens already saved', () => {
+    render(<SaveStatusLine status={{ state: 'saved', pending: 0, failed: 0 }} />)
+    expect(screen.getByRole('status')).toBeEmptyDOMElement()
   })
 })
 

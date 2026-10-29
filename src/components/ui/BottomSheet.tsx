@@ -14,6 +14,8 @@ type BottomSheetProps = {
   onClose: () => void
   title: string
   children: ReactNode
+  /** Pinned under the scrolling body, e.g. dismiss and save buttons. */
+  footer?: ReactNode
 }
 
 /** Drag distance (px) past which releasing the handle dismisses the sheet. */
@@ -22,7 +24,7 @@ const DISMISS_DISTANCE = 96
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
-function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
+function BottomSheet({ open, onClose, title, children, footer }: BottomSheetProps) {
   const titleId = useId()
   const sheetRef = useRef<HTMLDivElement>(null)
   const drag = useRef<{ startY: number } | null>(null)
@@ -119,9 +121,18 @@ function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
             {title}
           </h2>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[1.6rem] pb-[max(1.6rem,env(safe-area-inset-bottom))]">
+        <div
+          className={`min-h-0 flex-1 overflow-y-auto overscroll-contain px-[1.6rem] ${
+            footer ? 'pb-[1.6rem]' : 'pb-[max(1.6rem,env(safe-area-inset-bottom))]'
+          }`}
+        >
           {children}
         </div>
+        {footer && (
+          <div className="border-border-subtle flex shrink-0 gap-[1.2rem] border-t px-[1.6rem] pt-[1.2rem] pb-[max(1.2rem,env(safe-area-inset-bottom))]">
+            {footer}
+          </div>
+        )}
       </div>
     </div>,
     document.body,

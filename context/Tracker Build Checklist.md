@@ -121,15 +121,15 @@ Because only you will use it, safety comes from three layers:
 
 ## Phase 5: Check-in flows
 
-- [ ] 5.1 Shared sheet shell with sticky bar (dismiss + Save Entry)
-- [ ] 5.2 Morning check-in: waking pain, sleep hours, sleep quality, starting capacity
-- [ ] 5.3 Evening check-in: end-of-day pain, exercise (type, minutes, effort), activity chips, symptom chips, stress, remaining capacity
-- [ ] 5.4 Pre-fill defaults from your last entry so a minimal check-in is a few taps
-- [ ] 5.5 Optional note field, collapsed by default
-- [ ] 5.6 Save with quiet confirmation, then return to Today; show the failed-save state clearly
-- [ ] 5.7 Edit mode: reopen and update an earlier entry, including past days
-- [ ] 5.8 Component tests for the gauge, chips and both save flows
-- [ ] 5.9 Count taps: morning at most 4, evening at most 6 for the fastest path; cut anything that does not earn its place
+- [x] 5.1 Shared sheet shell with sticky bar (dismiss + Save Entry)
+- [x] 5.2 Morning check-in: waking pain, sleep hours, sleep quality, starting capacity
+- [x] 5.3 Evening check-in: end-of-day pain, exercise (type, minutes, effort), activity chips, symptom chips, stress, remaining capacity
+- [x] 5.4 Pre-fill defaults from your last entry so a minimal check-in is a few taps
+- [x] 5.5 Optional note field, collapsed by default
+- [x] 5.6 Save with quiet confirmation, then return to Today; show the failed-save state clearly
+- [x] 5.7 Edit mode: reopen and update an earlier entry, including past days
+- [x] 5.8 Component tests for the gauge, chips and both save flows
+- [x] 5.9 Count taps: morning at most 4, evening at most 6 for the fastest path; cut anything that does not earn its place
 
 **Done when:** you can complete a real day of logging on your phone. **This is the first point you can start using it for real, and the point where data begins to build up.**
 

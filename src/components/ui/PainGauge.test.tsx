@@ -73,4 +73,14 @@ describe('PainGauge', () => {
     rerender(<PainGauge label="Stress" value={0} onChange={() => {}} rangeLabels={[]} />)
     expect(screen.queryByText('Flare (8-10)')).not.toBeInTheDocument()
   })
+
+  it('counts the first key press as an answer when unset, even at 0', async () => {
+    const onChange = vi.fn()
+    render(<PainGauge label="Waking pain" value={0} unset onChange={onChange} />)
+    expect(slider()).not.toHaveAttribute('aria-valuenow')
+    expect(slider()).toHaveAttribute('aria-valuetext', 'Not set')
+    slider().focus()
+    await userEvent.keyboard('{Home}')
+    expect(onChange).toHaveBeenCalledWith(0)
+  })
 })

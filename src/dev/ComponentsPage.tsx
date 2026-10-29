@@ -1,7 +1,15 @@
 // Feature components (checklist Phase 4 onward). Every component built from a feature folder gets a
 // section here in all its states; the shared primitives live on PrimitivesPage.
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { Entry } from '../data/types'
+import CapacityPicker from '../features/checkin/CapacityPicker'
+import EveningForm from '../features/checkin/EveningForm'
+import MorningForm from '../features/checkin/MorningForm'
+import CustomChipAdder from '../features/checkin/CustomChipAdder'
+import NoteField from '../features/checkin/NoteField'
+import { DEFAULT_OPTIONS } from '../features/checkin/options'
+import { defaultsFrom, emptyForm, formFromEntry, type CheckinForm } from '../features/checkin/formModel'
+import RecentDaysCard from '../features/today/RecentDaysCard'
 import CadenceCard from '../features/today/CadenceCard'
 import BatteryCard from '../features/today/BatteryCard'
 import InsightBanner from '../features/today/InsightBanner'
@@ -37,6 +45,48 @@ const base = {
 }
 const morning: Entry = { ...base, period: 'AM', wakingPain: 3, startingCapacity: 70 }
 const evening: Entry = { ...base, period: 'PM', endPain: 5, remainingCapacity: 25 }
+
+function MorningDemo({ initial }: { initial: CheckinForm }) {
+  const [form, setForm] = useState(initial)
+  return <MorningForm form={form} onChange={(c) => setForm((f) => ({ ...f, ...c }))} />
+}
+
+function EveningDemo({ initial }: { initial: CheckinForm }) {
+  const [form, setForm] = useState(initial)
+  const [options, setOptions] = useState(DEFAULT_OPTIONS)
+  return (
+    <EveningForm
+      form={form}
+      options={options}
+      onAddOption={(kind, label) =>
+        setOptions((o) => ({ ...o, [kind]: [...o[kind], label] }))
+      }
+      onChange={(c) => setForm((f) => ({ ...f, ...c }))}
+    />
+  )
+}
+
+function CapacityDemo({ initial }: { initial: number | null }) {
+  const [value, setValue] = useState(initial)
+  return <CapacityPicker label="Capacity" value={value} onChange={setValue} />
+}
+
+function NoteDemo({ initial }: { initial: string }) {
+  const [value, setValue] = useState(initial)
+  return <NoteField value={value} onChange={setValue} />
+}
+
+const filledEvening: Entry = {
+  ...base,
+  period: 'PM',
+  endPain: 6,
+  stress: 4,
+  remainingCapacity: 25,
+  painAreas: ['Lower back', 'Hips'],
+  activities: ['Walk', 'Pool therapy'],
+  symptoms: ['Fatigue', 'Brain fog'],
+  note: 'Pushed it at the pool.',
+}
 
 function ComponentsPage() {
   const noop = () => {}
@@ -124,6 +174,75 @@ function ComponentsPage() {
           </Variant>
           <Variant label="Signed out">
             <SaveStatusLine status={{ state: 'paused', pending: 1, failed: 0 }} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Morning form">
+          <Variant label="New, no history (pain and quality unset)">
+            <MorningDemo initial={defaultsFrom(null, 'AM')} />
+          </Variant>
+          <Variant label="New, sleep carried from last morning">
+            <MorningDemo
+              initial={defaultsFrom({ ...morning, sleepHours: 6.5, sleepQuality: 2 }, 'AM')}
+            />
+          </Variant>
+          <Variant label="Editing a saved entry">
+            <MorningDemo
+              initial={formFromEntry({ ...morning, sleepHours: 8, sleepQuality: 4 })}
+            />
+          </Variant>
+        </Demo>
+
+        <Demo title="Evening form">
+          <Variant label="New (all unset)">
+            <EveningDemo initial={emptyForm()} />
+          </Variant>
+          <Variant label="Editing a saved entry with a custom chip">
+            <EveningDemo initial={formFromEntry(filledEvening)} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Capacity picker">
+          <Variant label="Unset">
+            <CapacityDemo initial={null} />
+          </Variant>
+          <Variant label="Preset">
+            <CapacityDemo initial={50} />
+          </Variant>
+          <Variant label="Saved value that isn't a preset">
+            <CapacityDemo initial={60} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Add-new chip">
+          <Variant label="Tap + Add new to type a name (Enter or Add)">
+            <div className="flex flex-wrap gap-[0.8rem]">
+              <CustomChipAdder noun="activity" onAdd={noop} />
+            </div>
+          </Variant>
+        </Demo>
+
+        <Demo title="Note field">
+          <Variant label="Collapsed">
+            <NoteDemo initial="" />
+          </Variant>
+          <Variant label="Open with text">
+            <NoteDemo initial="Slept badly, woke twice." />
+          </Variant>
+        </Demo>
+
+        <Demo title="Recent days card">
+          <Variant label="Some days logged, some missed">
+            <RecentDaysCard
+              today="2026-10-29"
+              days={4}
+              onOpen={noop}
+              entries={[
+                { ...morning, entryDate: '2026-10-28' },
+                { ...evening, entryDate: '2026-10-28' },
+                { ...morning, entryDate: '2026-10-27' },
+              ]}
+            />
           </Variant>
         </Demo>
 

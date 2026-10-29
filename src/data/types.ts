@@ -35,6 +35,8 @@ export interface EveningFields {
   exercise: Exercise | null;
   activities: string[];
   symptoms: string[];
+  /** Body areas that hurt during the day. Only filled in when end-of-day pain is above 0. */
+  painAreas: string[];
   stress: Score0to10 | null;
   remainingCapacity: Percent | null;
 }
@@ -53,7 +55,7 @@ export interface Entry extends Partial<MorningFields>, Partial<EveningFields> {
 export type EntryInput = Pick<Entry, 'entryDate' | 'period'> &
   Partial<Omit<Entry, 'id' | 'entryDate' | 'period' | 'createdAt' | 'updatedAt'>>;
 
-export type CustomOptionKind = 'symptom' | 'activity' | 'exercise_type';
+export type CustomOptionKind = 'symptom' | 'activity' | 'exercise_type' | 'pain_area';
 
 /** A timed event logged between or alongside the daily check-ins. */
 export type TimedKind = 'pain' | 'symptom' | 'activity' | 'exercise';
@@ -106,6 +108,7 @@ export interface EntryRow {
   exercise: Exercise | null;
   activities: string[];
   symptoms: string[];
+  pain_areas?: string[] | null;
   stress: number | null;
   remaining_capacity: number | null;
   note: string | null;

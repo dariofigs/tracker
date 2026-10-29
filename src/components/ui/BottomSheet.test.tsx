@@ -87,4 +87,14 @@ describe('BottomSheet', () => {
     await userEvent.keyboard('{Escape}')
     expect(document.body.style.overflow).not.toBe('hidden')
   })
+
+  it('keeps the footer outside the scrolling body', () => {
+    render(
+      <BottomSheet open title="T" onClose={() => {}} footer={<button>Save</button>}>
+        <p>Body</p>
+      </BottomSheet>,
+    )
+    const save = screen.getByRole('button', { name: 'Save' })
+    expect(save.parentElement).not.toBe(screen.getByText('Body').parentElement)
+  })
 })

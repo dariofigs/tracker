@@ -19,6 +19,7 @@ create table if not exists public.entries (
   exercise            jsonb,
   activities          text[] not null default '{}',
   symptoms            text[] not null default '{}',
+  pain_areas          text[] not null default '{}',
   stress              smallint check (stress between 0 and 10),
   remaining_capacity  smallint check (remaining_capacity between 0 and 100),
 
@@ -33,7 +34,7 @@ create table if not exists public.entries (
 create table if not exists public.custom_options (
   id          uuid primary key default gen_random_uuid(),
   user_id     uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  kind        text not null check (kind in ('symptom', 'activity', 'exercise_type')),
+  kind        text not null check (kind in ('symptom', 'activity', 'exercise_type', 'pain_area')),
   label       text not null check (length(trim(label)) > 0),
   hidden      boolean not null default false,
   created_at  timestamptz not null default now()
@@ -92,3 +93,9 @@ create policy "timed_logs: owner only" on public.timed_logs
   to authenticated
   using (user_id = auth.uid())
   with check (user_id = auth.uid());
+
+-- Body areas that hurt (Phase 5 follow-up). Safe to run on a database created before this change.
+alter table public.entries add column if not exists pain_areas text[] not null default '{}';
+alter table public.custom_options drop constraint if exists custom_options_kind_check;
+alter table public.custom_options add constraint custom_options_kind_check
+  check (kind in ('symptom', 'activity', 'exercise_type', 'pain_area'));

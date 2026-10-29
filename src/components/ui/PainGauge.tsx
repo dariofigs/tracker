@@ -14,6 +14,8 @@ type PainGaugeProps = {
   rangeLabels?: string[]
   /** Reads out the value for screen readers, e.g. (n) => `${n} out of 10`. */
   valueText?: (value: number) => string
+  /** Nothing chosen yet: the handle shows a dash and the first tap or key press counts, even at 0. */
+  unset?: boolean
 }
 
 function clamp(n: number) {
@@ -27,6 +29,7 @@ function PainGauge({
   label,
   rangeLabels = PAIN_RANGE_LABELS,
   valueText,
+  unset = false,
 }: PainGaugeProps) {
   const trackRef = useRef<HTMLDivElement>(null)
   const handleRef = useRef<HTMLDivElement>(null)
@@ -39,7 +42,7 @@ function PainGauge({
   }
 
   function update(next: number) {
-    if (next !== value) onChange(next)
+    if (unset || next !== value) onChange(next)
   }
 
   function onPointerDown(e: PointerEvent<HTMLDivElement>) {
@@ -74,7 +77,7 @@ function PainGauge({
     update(clamp(steps[e.key]))
   }
 
-  const percent = (value / MAX) * 100
+  const percent = unset ? 0 : (value / MAX) * 100
 
   return (
     <div>
@@ -99,7 +102,7 @@ function PainGauge({
               key={stop}
               aria-hidden="true"
               className={`absolute top-1/2 size-[0.6rem] -translate-x-1/2 -translate-y-1/2 rounded-full ${
-                stop <= value ? 'bg-brand-sage' : 'bg-bead-stone'
+                !unset && stop <= value ? 'bg-brand-sage' : 'bg-bead-stone'
               }`}
               style={{ left: `${(stop / MAX) * 100}%` }}
             />
@@ -111,13 +114,13 @@ function PainGauge({
             aria-label={label}
             aria-valuemin={0}
             aria-valuemax={MAX}
-            aria-valuenow={value}
-            aria-valuetext={valueText?.(value)}
+            aria-valuenow={unset ? undefined : value}
+            aria-valuetext={unset ? 'Not set' : valueText?.(value)}
             onKeyDown={onKeyDown}
-            className="border-surface-card bg-brand-sage text-body-sm text-surface-card focus-visible:outline-brand-sage absolute top-1/2 flex size-[2.8rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 font-bold shadow-md focus-visible:outline-2 focus-visible:outline-offset-2"
+            className={`border-surface-card ${unset ? 'bg-bead-stone' : 'bg-brand-sage'} text-body-sm text-surface-card focus-visible:outline-brand-sage absolute top-1/2 flex size-[2.8rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 font-bold shadow-md focus-visible:outline-2 focus-visible:outline-offset-2`}
             style={{ left: `${percent}%` }}
           >
-            {value}
+            {unset ? '–' : value}
           </div>
         </div>
       </div>

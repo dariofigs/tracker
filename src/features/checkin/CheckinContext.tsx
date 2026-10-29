@@ -6,38 +6,44 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { BottomSheet } from '../../components/ui'
 import type { Period } from '../../data/types'
-import { periodFor } from '../../lib/dates'
+import { periodFor, todayString } from '../../lib/dates'
+import CheckinSheet from './CheckinSheet'
 
 type CheckinContextValue = {
-  /** Opens the check-in sheet; with no period it picks AM or PM from the time of day. */
-  openCheckin: (period?: Period) => void
+  /**
+   * Opens the check-in sheet. With no period it picks AM or PM from the time of day; with no date
+   * it is today. Opening a day and period that already has an entry edits it.
+   */
+  openCheckin: (period?: Period, date?: string) => void
 }
 
 const CheckinContext = createContext<CheckinContextValue | null>(null)
 
-const titles: Record<Period, string> = { AM: 'Morning check-in', PM: 'Evening check-in' }
+type Target = { period: Period; date: string }
 
-/** Owns the check-in sheet so any screen can open it. The form itself arrives in Phase 5. */
+/** Owns the check-in sheet so any screen can open it. */
 export function CheckinProvider({ children }: { children: ReactNode }) {
-  const [period, setPeriod] = useState<Period | null>(null)
+  const [target, setTarget] = useState<Target | null>(null)
 
-  const openCheckin = useCallback((p?: Period) => setPeriod(p ?? periodFor()), [])
+  const openCheckin = useCallback(
+    (period?: Period, date?: string) =>
+      setTarget({ period: period ?? periodFor(), date: date ?? todayString() }),
+    [],
+  )
   const value = useMemo(() => ({ openCheckin }), [openCheckin])
 
   return (
     <CheckinContext.Provider value={value}>
       {children}
-      <BottomSheet
-        open={period !== null}
-        onClose={() => setPeriod(null)}
-        title={titles[period ?? 'AM']}
-      >
-        <p className="text-body text-text-muted pb-[1.6rem]">
-          The check-in form is coming soon.
-        </p>
-      </BottomSheet>
+      {target && (
+        <CheckinSheet
+          key={`${target.date}|${target.period}`}
+          period={target.period}
+          date={target.date}
+          onClose={() => setTarget(null)}
+        />
+      )}
     </CheckinContext.Provider>
   )
 }
