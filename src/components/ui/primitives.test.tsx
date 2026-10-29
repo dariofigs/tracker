@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Button, Card, PillChip, SectionHeader, StatusChip } from '.'
+import { BatteryBar, Button, Card, PillChip, SectionHeader, StatusChip } from '.'
 
 describe('Card', () => {
   it('renders children and merges className', () => {
@@ -114,5 +114,25 @@ describe('Button', () => {
       'w-full',
       'h-[5rem]',
     )
+  })
+})
+
+describe('BatteryBar', () => {
+  it('exposes the value as a meter and sizes the fill', () => {
+    render(<BatteryBar value={65} label="Capacity" />)
+    const meter = screen.getByRole('meter', { name: 'Capacity' })
+    expect(meter).toHaveAttribute('aria-valuenow', '65')
+    expect(meter.firstElementChild).toHaveStyle({ width: '65%' })
+    expect(meter.firstElementChild).toHaveClass('bg-brand-sage')
+  })
+
+  it('turns clay at or below the low threshold', () => {
+    render(<BatteryBar value={30} label="Capacity" />)
+    expect(screen.getByRole('meter').firstElementChild).toHaveClass('bg-accent-clay')
+  })
+
+  it('clamps out-of-range values', () => {
+    render(<BatteryBar value={140} label="Capacity" />)
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '100')
   })
 })

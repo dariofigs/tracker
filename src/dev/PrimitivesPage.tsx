@@ -2,6 +2,7 @@
 // the same way SwatchPage keeps the design tokens.
 import { useState, type ReactNode } from 'react'
 import {
+  BatteryBar,
   Button,
   Card,
   PainGauge,
@@ -77,6 +78,17 @@ function PrimitivesPage() {
             <Button fullWidth variant="secondary">
               Cancel
             </Button>
+          </Card>
+        </Demo>
+
+        <Demo title="Battery Bar">
+          <Card className="space-y-[1.6rem]">
+            {[100, 65, 30, 10, 0].map((v) => (
+              <div key={v} className="space-y-[0.8rem]">
+                <p className="text-micro text-text-muted uppercase">{v}%</p>
+                <BatteryBar value={v} label={`Capacity ${v}%`} />
+              </div>
+            ))}
           </Card>
         </Demo>
 

@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/fraunces/full.css';
 @import '@fontsource-variable/dm-sans';
 
 @theme {
@@ -79,5 +79,7 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display);
-  font-variation-settings: 'WONK' 0;
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 1;
 }
