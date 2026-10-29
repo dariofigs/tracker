@@ -87,8 +87,8 @@ Because only you will use it, safety comes from three layers:
 - [x] 2.4 Failed-save queue: keep unsent entries on the phone and retry; expose a "saved / saving / not saved yet" status
 - [x] 2.5 Date helpers: local-day boundaries, AM/PM mode by time of day (before 12:00 = morning, adjustable in Settings)
 - [x] 2.6 Dev-only seed script that creates about 60 days of data with a planted 18–24h lag, plus stress and sleep effects, written to a separate test project or flagged rows
-- [ ] 2.7 Unit tests for date helpers and the repository logic
-- [ ] 2.8 Timed logs: an optional, timestamped pain, symptom, activity or exercise log alongside the daily AM/PM check-ins, so lags can be measured in hours. Table, types, repository, seed and tests. Saved through the failed-save queue with a phone-made id, so a retry can't duplicate a log
+- [x] 2.7 Unit tests for date helpers and the repository logic
+- [x] 2.8 Timed logs: an optional, timestamped pain, symptom, activity or exercise log alongside the daily AM/PM check-ins, so lags can be measured in hours. Table, types, repository, seed and tests. Saved through the failed-save queue with a phone-made id, so a retry can't duplicate a log
 
 **Done when:** entries round-trip from the app code to the database and back, and the failed-save queue is proven by a test that simulates a dropped connection.
 

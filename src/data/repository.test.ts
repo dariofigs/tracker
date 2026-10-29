@@ -117,4 +117,41 @@ describe('createRepository', () => {
     })
     expect(option.label).toBe('Brain fog')
   })
+
+  it('lists options of one kind, oldest first', async () => {
+    const { client, calls } = fakeClient({ data: [], error: null })
+    await createRepository(client).listCustomOptions('activity')
+
+    expect(calls).toContainEqual({ method: 'eq', args: ['kind', 'activity'] })
+    expect(calls).toContainEqual({ method: 'order', args: ['created_at', { ascending: true }] })
+  })
+
+  it('hides an option without touching its label', async () => {
+    const { client, calls } = fakeClient({
+      data: { id: 'o1', kind: 'symptom', label: 'Fatigue', hidden: true, created_at: '2026-10-28T07:00:00Z' },
+      error: null,
+    })
+    await createRepository(client).updateCustomOption('o1', { hidden: true })
+
+    expect(calls).toContainEqual({ method: 'update', args: [{ hidden: true }] })
+    expect(calls).toContainEqual({ method: 'eq', args: ['id', 'o1'] })
+  })
+
+  it('renames an option and trims the new label', async () => {
+    const { client, calls } = fakeClient({
+      data: { id: 'o1', kind: 'symptom', label: 'Tired', hidden: false, created_at: '2026-10-28T07:00:00Z' },
+      error: null,
+    })
+    await createRepository(client).updateCustomOption('o1', { label: '  Tired ' })
+
+    expect(calls).toContainEqual({ method: 'update', args: [{ label: 'Tired' }] })
+  })
+
+  it('deletes an entry by its id', async () => {
+    const { client, calls } = fakeClient({ data: null, error: null })
+    await createRepository(client).deleteEntry('e1')
+
+    expect(calls).toContainEqual({ method: 'delete', args: [] })
+    expect(calls).toContainEqual({ method: 'eq', args: ['id', 'e1'] })
+  })
 })
