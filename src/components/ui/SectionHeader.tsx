@@ -12,7 +12,7 @@ function SectionHeader({ title, trailing, level = 2 }: SectionHeaderProps) {
   const Heading = level === 2 ? 'h2' : 'h3'
   return (
     <div className="flex min-h-[2.8rem] items-center justify-between gap-[1.2rem]">
-      <Heading className="text-title text-text-primary">{title}</Heading>
+      <Heading className="text-section text-text-primary">{title}</Heading>
       {trailing}
     </div>
   )

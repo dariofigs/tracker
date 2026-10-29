@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Card, SectionHeader, StatusChip } from '.'
+import userEvent from '@testing-library/user-event'
+import { Card, PillChip, SectionHeader, StatusChip } from '.'
 
 describe('Card', () => {
   it('renders children and merges className', () => {
@@ -47,5 +48,36 @@ describe('StatusChip', () => {
   it('accepts a label override', () => {
     render(<StatusChip status="flare" label="Flare day" />)
     expect(screen.getByText('Flare day')).toBeInTheDocument()
+  })
+})
+
+describe('PillChip', () => {
+  it('shows + when inactive and ✓ when active', () => {
+    const { rerender } = render(
+      <PillChip label="Fatigue" selected={false} onChange={() => {}} />,
+    )
+    const chip = screen.getByRole('button', { name: /Fatigue/ })
+    expect(chip).toHaveAttribute('aria-pressed', 'false')
+    expect(chip).toHaveTextContent('+')
+    rerender(<PillChip label="Fatigue" selected onChange={() => {}} />)
+    expect(chip).toHaveAttribute('aria-pressed', 'true')
+    expect(chip).toHaveTextContent('✓')
+  })
+
+  it('reports the toggled value on tap', async () => {
+    const onChange = vi.fn()
+    render(<PillChip label="Walk" selected={false} onChange={onChange} />)
+    await userEvent.click(screen.getByRole('button'))
+    expect(onChange).toHaveBeenCalledWith(true)
+  })
+
+  it('uses the clay variant when active', () => {
+    render(<PillChip label="Walk" selected variant="clay" onChange={() => {}} />)
+    expect(screen.getByRole('button')).toHaveClass('text-accent-clay')
+  })
+
+  it('has a 48px minimum target', () => {
+    render(<PillChip label="Walk" selected={false} onChange={() => {}} />)
+    expect(screen.getByRole('button')).toHaveClass('min-touch')
   })
 })

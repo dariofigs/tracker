@@ -1,7 +1,7 @@
 // Primitives page (checklist Phase 3). Every UI primitive gets a section here in all its states,
 // the same way SwatchPage keeps the design tokens.
-import type { ReactNode } from 'react'
-import { Card, SectionHeader, StatusChip } from '../components/ui'
+import { useState, type ReactNode } from 'react'
+import { Card, PillChip, SectionHeader, StatusChip } from '../components/ui'
 
 function Demo({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -9,6 +9,17 @@ function Demo({ title, children }: { title: string; children: ReactNode }) {
       <h2 className="text-section">{title}</h2>
       {children}
     </section>
+  )
+}
+
+function ChipDemo({ variant }: { variant: 'sage' | 'clay' }) {
+  const [on, setOn] = useState(false)
+  return (
+    <div className="flex flex-wrap gap-[1.2rem]">
+      <PillChip label="Inactive" selected={false} onChange={() => {}} variant={variant} />
+      <PillChip label="Active" selected onChange={() => {}} variant={variant} />
+      <PillChip label="Tap me" selected={on} onChange={setOn} variant={variant} />
+    </div>
   )
 }
 
@@ -29,6 +40,13 @@ function PrimitivesPage() {
             <StatusChip status="low-battery" />
             <StatusChip status="due" />
             <StatusChip status="flare" />
+          </Card>
+        </Demo>
+
+        <Demo title="Pill Chip">
+          <Card className="space-y-[1.6rem]">
+            <ChipDemo variant="sage" />
+            <ChipDemo variant="clay" />
           </Card>
         </Demo>
 
