@@ -112,7 +112,7 @@ Because only you will use it, safety comes from three layers:
 - [x] 4.3 Persistent Rapid Check-in button that opens the AM or PM sheet based on time of day
 - [x] 4.4 Header with date and greeting in Fraunces
 - [x] 4.5 AM/PM connected timeline card: morning node with ✓, time, pain and capacity; evening node with DUE tag that opens the PM sheet
-- [ ] 4.6 Battery card reading the latest capacity
+- [x] 4.6 Battery card reading the latest capacity
 - [ ] 4.7 States: nothing logged, AM only, both done, load error, saving
 - [ ] 4.8 Insight banner slot (wired to real data in Phase 6)
 
