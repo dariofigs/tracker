@@ -1,0 +1,17 @@
+{
+  "name": "Tracker",
+  "short_name": "Tracker",
+  "description": "Daily pain, symptom and activity check-ins, with patterns found in your own data.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF9F5",
+  "theme_color": "#2D5A46",
+  "icons": [
+    {
+      "src": "/favicon-g-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

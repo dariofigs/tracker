@@ -28,8 +28,8 @@ This is a single-user, phone-only app that logs pain, symptoms, exercise, activi
 
 | When         | Fields                                                                                                                                               |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Morning (AM) | Waking pain 0–10, sleep hours, sleep quality, stiffness minutes, starting capacity %, optional note                                                  |
-| Evening (PM) | End-of-day pain 0–10, exercise (type + minutes + effort), activity chips, symptom chips, stress 0–10, fog level, remaining capacity %, optional note |
+| Morning (AM) | Waking pain 0–10, sleep hours, sleep quality, starting capacity %, optional note                                                  |
+| Evening (PM) | End-of-day pain 0–10, exercise (type + minutes + effort), activity chips, symptom chips, stress 0–10, remaining capacity %, optional note |
 
 **How to use this checklist**
 
@@ -59,29 +59,29 @@ Because only you will use it, safety comes from three layers:
 
 ## Phase 0: Foundation
 
-- [ ] 0.1 Scaffold Vite + React + TypeScript; add Tailwind v4, ESLint, Prettier, Vitest
+- [x] 0.1 Scaffold Vite + React + TypeScript; add Tailwind v4, ESLint, Prettier, Vitest
 - [x] 0.2 Self-host Fraunces and DM Sans (500, 600, 700, 800)
-- [ ] 0.3 Register all 13 color tokens in `@theme`, plus type scale, 16–24px radii and a 48px min-touch utility
-- [ ] 0.4 Folder layout: `components/ui`, `features/{today,checkin,insights,settings}`, `lib`, `hooks`, `data`
-- [ ] 0.5 Temporary swatch page to compare against the Design System sheet
-- [ ] 0.6 Web manifest and app icon (typographic, no generated images) for home-screen install
+- [x] 0.3 Register all 13 color tokens in `@theme`, plus type scale, 16–24px radii and a 48px min-touch utility
+- [x] 0.4 Folder layout: `components/ui`, `features/{today,checkin,insights,settings}`, `lib`, `hooks`, `data`
+- [x] 0.5 Temporary swatch page to compare against the Design System sheet
+- [x] 0.6 Web manifest and app icon (typographic, no generated images) for home-screen install
 
 **Done when:** a blank mobile-width page builds, uses the right fonts and colors, and `npm test` runs.
 
 ## Phase 1: Backend setup (Supabase)
 
-- [ ] 1.1 You create the Supabase project; I provide the steps. Keys go in `.env`, never committed
-- [ ] 1.2 Tables: `entries` (one row per day per period) and `custom_options` (your own symptoms, activities, exercise types)
-- [ ] 1.3 Unique constraint on date + period, so saving again edits instead of duplicating
-- [ ] 1.4 Row Level Security: only your user id can read or write; signups disabled
-- [ ] 1.5 Create your single login; decide between email magic link and password
-- [ ] 1.6 Save the schema as a SQL file in the repo so the database can be rebuilt
+- [x] 1.1 You create the Supabase project; I provide the steps. Keys go in `.env`, never committed
+- [x] 1.2 Tables: `entries` (one row per day per period) and `custom_options` (your own symptoms, activities, exercise types)
+- [x] 1.3 Unique constraint on date + period, so saving again edits instead of duplicating
+- [x] 1.4 Row Level Security: only your user id can read or write; signups disabled
+- [x] 1.5 Create your single login; decide between email magic link and password
+- [x] 1.6 Save the schema as a SQL file in the repo so the database can be rebuilt
 
 **Done when:** a test script can insert and read an entry while signed in, and is refused when signed out.
 
 ## Phase 2: Data layer (no screens yet)
 
-- [ ] 2.1 Types: pain 0–10 integer, capacity %, sleep hours and quality, stiffness minutes, stress 0–10, fog (clear / mild / heavy), exercise (type, minutes, effort), tags, note
+- [x] 2.1 Types: pain 0–10 integer, capacity %, sleep hours and quality, stress 0–10, exercise (type from a custom list, minutes, effort), tags, note
 - [ ] 2.2 Supabase client plus sign-in flow with a minimal login screen
 - [ ] 2.3 Repository functions: upsert entry, get today, get date range, delete, custom options CRUD
 - [ ] 2.4 Failed-save queue: keep unsent entries on the phone and retry; expose a "saved / saving / not saved yet" status
@@ -100,7 +100,7 @@ Because only you will use it, safety comes from three layers:
 - [ ] 3.5 Battery bar (8px pill track, sage to clay fill)
 - [ ] 3.6 Bottom sheet: swipe or tap to dismiss, focus handling, safe-area padding
 - [ ] 3.7 Bottom nav: floating pill with 3 tabs (Today, Insights, Settings)
-- [ ] 3.8 Small stepper/segmented controls for sleep hours, sleep quality, fog level and effort
+- [ ] 3.8 Small stepper/segmented controls for sleep hours, sleep quality and effort
 
 **Done when:** a throwaway gallery page shows every primitive in all states, and the gauge feels right on your real phone with tired hands.
 
@@ -120,8 +120,8 @@ Because only you will use it, safety comes from three layers:
 ## Phase 5: Check-in flows
 
 - [ ] 5.1 Shared sheet shell with sticky bar (dismiss + Save Entry)
-- [ ] 5.2 Morning check-in: waking pain, sleep hours, sleep quality, stiffness minutes, starting capacity
-- [ ] 5.3 Evening check-in: end-of-day pain, exercise (type, minutes, effort), activity chips, symptom chips, stress, fog, remaining capacity
+- [ ] 5.2 Morning check-in: waking pain, sleep hours, sleep quality, starting capacity
+- [ ] 5.3 Evening check-in: end-of-day pain, exercise (type, minutes, effort), activity chips, symptom chips, stress, remaining capacity
 - [ ] 5.4 Pre-fill defaults from your last entry so a minimal check-in is a few taps
 - [ ] 5.5 Optional note field, collapsed by default
 - [ ] 5.6 Save with quiet confirmation, then return to Today; show the failed-save state clearly
@@ -137,8 +137,8 @@ Insights has two views behind a segmented switch: **Trends** and **Calendar**. T
 
 **6A. Correlation engine (pure functions, unit tested)**
 
-- [ ] 6.1 Pair each day's evening data (exercise minutes, activities, stress) with the next morning's pain and stiffness
-- [ ] 6.2 Pair each night's sleep (hours, quality) with the same morning's pain and stiffness, and with that day's fog
+- [ ] 6.1 Pair each day's evening data (exercise minutes, activities, stress) with the next morning's pain
+- [ ] 6.2 Pair each night's sleep (hours, quality) with the same morning's pain
 - [ ] 6.3 Compare days with a factor against days without it, and report the percent difference with the number of days behind it
 - [ ] 6.4 Test lags of 0, 1 and 2 days and report the strongest, so the 18–24h pattern is found by the data rather than assumed
 - [ ] 6.5 Minimum sample rule (for example 10+ paired days) before any insight appears; otherwise say plainly that more days are needed
