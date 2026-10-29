@@ -3,9 +3,23 @@ import { supabase } from '../lib/supabase'
 import { customOptionFromRow, entryFromRow, entryToRow } from './mappers'
 import type { CustomOption, CustomOptionKind, Entry, EntryInput } from './types'
 
-/** Throws on a Supabase error so callers (and the failed-save queue in 2.4) can catch it. */
-function unwrap<T>(result: { data: T | null; error: { message: string } | null }): T {
-  if (result.error) throw new Error(result.error.message)
+/** A Supabase error. `code` is the Postgres or PostgREST code, empty when there was no response. */
+export class DataError extends Error {
+  readonly code: string | undefined
+
+  constructor(message: string, code: string | undefined) {
+    super(message)
+    this.name = 'DataError'
+    this.code = code
+  }
+}
+
+/** Throws on a Supabase error so callers (and the save queue) can classify it by code. */
+function unwrap<T>(result: {
+  data: T | null
+  error: { message: string; code?: string } | null
+}): T {
+  if (result.error) throw new DataError(result.error.message, result.error.code)
   return result.data as T
 }
 

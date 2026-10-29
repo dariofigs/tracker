@@ -84,7 +84,7 @@ Because only you will use it, safety comes from three layers:
 - [x] 2.1 Types: pain 0–10 integer, capacity %, sleep hours and quality, stress 0–10, exercise (type from a custom list, minutes, effort), tags, note
 - [x] 2.2 Supabase client plus sign-in flow with a minimal login screen
 - [x] 2.3 Repository functions: upsert entry, get today, get date range, delete, custom options add, rename and hide
-- [ ] 2.4 Failed-save queue: keep unsent entries on the phone and retry; expose a "saved / saving / not saved yet" status
+- [x] 2.4 Failed-save queue: keep unsent entries on the phone and retry; expose a "saved / saving / not saved yet" status
 - [ ] 2.5 Date helpers: local-day boundaries, AM/PM mode by time of day (before 12:00 = morning, adjustable in Settings)
 - [ ] 2.6 Dev-only seed script that creates about 60 days of data with a planted 18–24h lag, plus stress and sleep effects, written to a separate test project or flagged rows
 - [ ] 2.7 Unit tests for date helpers and the repository logic
