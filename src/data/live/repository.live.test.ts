@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { supabase } from '../../lib/supabase'
+import { newId } from '../../lib/ids'
 import { createRepository } from '../repository'
 
 // Runs against the Supabase test project from .env.test. Never point this at the real project.
@@ -90,6 +91,23 @@ describe('live: signed in', () => {
   it('finds the entry in a date range', async () => {
     const entries = await repo.getEntriesInRange('1999-01-01', '1999-01-02')
     expect(entries.map((e) => e.id)).toEqual(entryIds)
+  })
+
+  it('saves the same timed log id twice as one row', async () => {
+    const id = newId()
+    const log = { occurredAt: new Date(1999, 2, 2, 9).toISOString(), kind: 'pain' as const, pain: 3 }
+
+    try {
+      await repo.upsertTimedLog(id, log)
+      await repo.upsertTimedLog(id, { ...log, pain: 4 })
+
+      const rows = await repo.listTimedLogs(new Date(1999, 2, 2), new Date(1999, 2, 3))
+      const matches = rows.filter((r) => r.id === id)
+      expect(matches).toHaveLength(1)
+      expect(matches[0].pain).toBe(4)
+    } finally {
+      await repo.deleteTimedLog(id)
+    }
   })
 
   it('adds, lists, updates and deletes a timed log', async () => {

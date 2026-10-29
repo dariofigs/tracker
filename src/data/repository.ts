@@ -86,6 +86,19 @@ export function createRepository(client: SupabaseClient) {
       return timedLogFromRow(unwrap(result))
     },
 
+    /**
+     * Saves a timed log under an id made on the phone. Saving the same id again edits that row,
+     * so a retry after a lost response can't create a second copy.
+     */
+    async upsertTimedLog(id: string, input: TimedLogInput): Promise<TimedLog> {
+      const result = await client
+        .from('timed_logs')
+        .upsert({ id, ...timedLogToRow(input) }, { onConflict: 'id' })
+        .select()
+        .single()
+      return timedLogFromRow(unwrap(result))
+    },
+
     /** Timed logs with occurredAt in [from, to), oldest first. Use dayBounds() for one local day. */
     async listTimedLogs(from: Date, to: Date): Promise<TimedLog[]> {
       const result = await client

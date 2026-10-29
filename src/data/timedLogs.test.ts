@@ -80,6 +80,23 @@ describe('timed log repository', () => {
 
     expect(calls).toContainEqual({ method: 'update', args: [{ minutes: 50 }] })
   })
+
+  it('upserts a timed log on its id', async () => {
+    const { client, calls } = fakeClient({ data: row, error: null })
+    await createRepository(client).upsertTimedLog('t1', {
+      occurredAt: '2026-10-28T14:30:00.000Z',
+      kind: 'pain',
+      pain: 6,
+    })
+
+    expect(calls).toContainEqual({
+      method: 'upsert',
+      args: [
+        { id: 't1', occurred_at: '2026-10-28T14:30:00.000Z', kind: 'pain', pain: 6 },
+        { onConflict: 'id' },
+      ],
+    })
+  })
 })
 
 describe('generateTimedSeed', () => {

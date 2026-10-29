@@ -20,10 +20,15 @@ const coded = (code: string | undefined) => Object.assign(new Error(`code ${code
 const AM = { entryDate: '2026-10-28', period: 'AM' as const }
 const PM = { entryDate: '2026-10-28', period: 'PM' as const }
 
-function makeQueue(
-  overrides: Partial<Parameters<typeof createSaveQueue>[0]> & { save: SaveQueueOptions['save'] },
-) {
+type QueueOverrides = Partial<Omit<SaveQueueOptions, 'saveEntry' | 'saveTimedLog'>> & {
+  save?: SaveQueueOptions['saveEntry']
+  saveTimedLog?: SaveQueueOptions['saveTimedLog']
+}
+
+function makeQueue({ save, saveTimedLog, ...overrides }: QueueOverrides = {}) {
   return createSaveQueue({
+    saveEntry: save ?? vi.fn().mockResolvedValue({}),
+    saveTimedLog: saveTimedLog ?? vi.fn().mockResolvedValue({}),
     hasSession: async () => true,
     storage: memoryStorage(),
     storageKey: KEY,
@@ -196,5 +201,66 @@ describe('save queue', () => {
     await queue.save({ ...AM, wakingPain: 4 })
 
     expect(queue.getStatus()).toMatchObject({ state: 'needs_attention', failed: 1 })
+  })
+})
+
+describe('timed logs in the save queue', () => {
+  const PAIN = { occurredAt: '2026-10-28T10:00:00.000Z', kind: 'pain' as const, pain: 6 }
+
+  it('sends a timed log with the id it was given', async () => {
+    const saveTimedLog = vi.fn().mockResolvedValue({})
+    const queue = makeQueue({ saveTimedLog })
+
+    const id = await queue.logTimed(PAIN, 'log-1')
+
+    expect(id).toBe('log-1')
+    expect(saveTimedLog).toHaveBeenCalledWith('log-1', PAIN)
+    expect(queue.getStatus()).toEqual({ state: 'saved', pending: 0, failed: 0 })
+  })
+
+  it('reuses the same id on a retry, so a lost response cannot duplicate the log', async () => {
+    const saveTimedLog = vi.fn().mockRejectedValueOnce(coded(undefined)).mockResolvedValue({})
+    const queue = makeQueue({ saveTimedLog, retryDelaysMs: [0] })
+
+    await queue.logTimed(PAIN, 'log-2')
+    await vi.waitFor(() => expect(queue.getStatus().state).toBe('saved'))
+
+    expect(saveTimedLog).toHaveBeenCalledTimes(2)
+    expect(saveTimedLog.mock.calls[0][0]).toBe('log-2')
+    expect(saveTimedLog.mock.calls[1][0]).toBe('log-2')
+  })
+
+  it('keeps every timed log separate instead of merging them', async () => {
+    const queue = makeQueue({ saveTimedLog: vi.fn().mockRejectedValue(coded(undefined)) })
+
+    await queue.logTimed(PAIN, 'a')
+    await queue.logTimed({ ...PAIN, pain: 2 }, 'b')
+
+    expect(queue.getStatus().pending).toBe(2)
+  })
+
+  it('restores a timed log queued offline in a new session and sends it', async () => {
+    const storage = memoryStorage()
+    const offline = makeQueue({ saveTimedLog: vi.fn().mockRejectedValue(coded(undefined)), storage })
+    await offline.logTimed(PAIN, 'c')
+
+    const saveTimedLog = vi.fn().mockResolvedValue({})
+    const restored = makeQueue({ saveTimedLog, storage })
+    expect(restored.getStatus().pending).toBe(1)
+
+    await restored.flush()
+
+    expect(saveTimedLog).toHaveBeenCalledWith('c', PAIN)
+    expect(restored.getStatus()).toEqual({ state: 'saved', pending: 0, failed: 0 })
+  })
+
+  it('flags a refused timed log and discards it by id', async () => {
+    const queue = makeQueue({ saveTimedLog: vi.fn().mockRejectedValue(coded('23514')) })
+
+    await queue.logTimed(PAIN, 'd')
+    expect(queue.getStatus()).toEqual({ state: 'needs_attention', pending: 0, failed: 1 })
+
+    queue.discardTimedLog('d')
+    expect(queue.getStatus()).toEqual({ state: 'idle', pending: 0, failed: 0 })
   })
 })

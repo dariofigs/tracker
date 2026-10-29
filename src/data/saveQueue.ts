@@ -1,15 +1,16 @@
 import { supabase } from '../lib/supabase'
+import { newId } from '../lib/ids'
 import { repository } from './repository'
-import type { EntryInput } from './types'
+import type { EntryInput, TimedLogInput } from './types'
 
 /** saved: all sent · saving: sending · not_saved: retrying · paused: signed out · needs_attention: some refused */
 export type SaveState = 'idle' | 'saving' | 'saved' | 'not_saved' | 'paused' | 'needs_attention'
 
 export interface SaveStatus {
   state: SaveState
-  /** Entries waiting to be sent. */
+  /** Items waiting to be sent. */
   pending: number
-  /** Entries the database refused. They stay on the phone until retried or discarded. */
+  /** Items the database refused. They stay on the phone until retried or discarded. */
   failed: number
 }
 
@@ -22,22 +23,25 @@ export type FailureKind = 'transient' | 'permission' | 'permanent'
 
 type QueueStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>
 
-interface QueuedEntry {
-  input: EntryInput
-  failed: boolean
-}
+/** Entries merge per day and period. Timed logs keep their own id and are never merged. */
+type QueuedItem = { failed: boolean } & (
+  | { kind: 'entry'; input: EntryInput }
+  | { kind: 'timed'; id: string; input: TimedLogInput }
+)
 
 export interface SaveQueueOptions {
-  save: (input: EntryInput) => Promise<unknown>
+  saveEntry: (input: EntryInput) => Promise<unknown>
+  /** Upserts on the id, so a retry after a lost response can't create a second row. */
+  saveTimedLog: (id: string, input: TimedLogInput) => Promise<unknown>
   /** Tells a permission refusal apart: no session means signed out. */
   hasSession: () => Promise<boolean>
-  /** Where unsent entries are kept between visits. Null keeps them in memory only. */
+  /** Where unsent items are kept between visits. Null keeps them in memory only. */
   storage: QueueStorage | null
   storageKey?: string
   retryDelaysMs?: number[]
 }
 
-const DEFAULT_STORAGE_KEY = 'tracker.saveQueue.v2'
+const DEFAULT_STORAGE_KEY = 'tracker.saveQueue.v3'
 const DEFAULT_RETRY_DELAYS_MS = [2_000, 4_000, 8_000, 16_000, 32_000, 60_000]
 
 /** Postgres class 22 (bad data) and 23 (constraint violated) mean the data is wrong. */
@@ -49,15 +53,20 @@ export function classifyError(error: unknown): FailureKind {
   return 'transient'
 }
 
-const keyOf = (input: Pick<EntryInput, 'entryDate' | 'period'>) => `${input.entryDate}|${input.period}`
+const entryKey = (input: Pick<EntryInput, 'entryDate' | 'period'>) =>
+  `entry|${input.entryDate}|${input.period}`
+const timedKey = (id: string) => `timed|${id}`
 
-function withoutUndefined(input: EntryInput): Partial<EntryInput> {
-  return Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined))
+function withoutUndefined<T extends object>(input: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(input).filter(([, value]) => value !== undefined),
+  ) as Partial<T>
 }
 
 /**
- * Keeps saves until the database accepts them. One queued item per day and period: later saves
- * merge into it, so no field is lost if several saves happen before the first one goes through.
+ * Keeps saves until the database accepts them. Entries for the same day and period merge, so no
+ * field is lost if several saves happen before the first goes through. Timed logs are kept one
+ * per id, so each one is sent exactly once, even if it is retried.
  */
 export function createSaveQueue(options: SaveQueueOptions) {
   const storageKey = options.storageKey ?? DEFAULT_STORAGE_KEY
@@ -70,10 +79,10 @@ export function createSaveQueue(options: SaveQueueOptions) {
   let retryTimer: ReturnType<typeof setTimeout> | undefined
   let failures = 0
 
-  function restore(): Map<string, QueuedEntry> {
+  function restore(): Map<string, QueuedItem> {
     try {
       const raw = options.storage?.getItem(storageKey)
-      return new Map(raw ? (JSON.parse(raw) as [string, QueuedEntry][]) : [])
+      return new Map(raw ? (JSON.parse(raw) as [string, QueuedItem][]) : [])
     } catch {
       return new Map()
     }
@@ -84,12 +93,12 @@ export function createSaveQueue(options: SaveQueueOptions) {
       if (items.size === 0) options.storage?.removeItem(storageKey)
       else options.storage?.setItem(storageKey, JSON.stringify([...items]))
     } catch {
-      // Storage is full or blocked. The entries stay in memory until the page closes.
+      // Storage is full or blocked. The items stay in memory until the page closes.
     }
   }
 
   function counts() {
-    const failed = [...items.values()].filter((entry) => entry.failed).length
+    const failed = [...items.values()].filter((item) => item.failed).length
     return { pending: items.size - failed, failed }
   }
 
@@ -98,9 +107,15 @@ export function createSaveQueue(options: SaveQueueOptions) {
     listeners.forEach((listener) => listener())
   }
 
-  function nextRetryable(): [string, QueuedEntry] | undefined {
+  function nextRetryable(): [string, QueuedItem] | undefined {
     for (const pair of items) if (!pair[1].failed) return pair
     return undefined
+  }
+
+  function send(item: QueuedItem) {
+    return item.kind === 'entry'
+      ? options.saveEntry(item.input)
+      : options.saveTimedLog(item.id, item.input)
   }
 
   async function run() {
@@ -108,9 +123,9 @@ export function createSaveQueue(options: SaveQueueOptions) {
     setStatus({ state: 'saving' })
 
     for (let next = nextRetryable(); next; next = nextRetryable()) {
-      const [key, entry] = next
+      const [key, item] = next
       try {
-        await options.save(entry.input)
+        await send(item)
       } catch (error) {
         const kind = classifyError(error)
 
@@ -127,14 +142,14 @@ export function createSaveQueue(options: SaveQueueOptions) {
         }
 
         // Refused by the data or the rules. Keep it on the phone and stop retrying it.
-        items.set(key, { ...entry, failed: true })
+        items.set(key, { ...item, failed: true })
         persist()
         setStatus({})
         continue
       }
 
-      // If the entry changed while it was being sent, keep it so the newer fields go out next.
-      if (items.get(key) === entry) items.delete(key)
+      // If an entry changed while it was being sent, keep it so the newer fields go out next.
+      if (items.get(key) === item) items.delete(key)
       persist()
       setStatus({})
     }
@@ -158,12 +173,14 @@ export function createSaveQueue(options: SaveQueueOptions) {
   }
 
   return {
-    /** Queues a save for one day and period, then tries to send it right away. */
+    /** Queues a save for one day and period, merging into any entry already waiting for it. */
     save(input: EntryInput): Promise<void> {
-      const key = keyOf(input)
-      const existing = items.get(key)?.input
+      const key = entryKey(input)
+      const existing = items.get(key)
+      const previous = existing?.kind === 'entry' ? existing.input : undefined
       items.set(key, {
-        input: { ...existing, ...withoutUndefined(input) } as EntryInput,
+        kind: 'entry',
+        input: { ...previous, ...withoutUndefined(input) } as EntryInput,
         failed: false,
       })
       persist()
@@ -171,13 +188,22 @@ export function createSaveQueue(options: SaveQueueOptions) {
       return flush()
     },
 
+    /** Queues a timed log under its id, then sends it. Returns the id so the screen can refer to it. */
+    async logTimed(input: TimedLogInput, id: string = newId()): Promise<string> {
+      items.set(timedKey(id), { kind: 'timed', id, input, failed: false })
+      persist()
+      setStatus({})
+      await flush()
+      return id
+    },
+
     /** Sends whatever is waiting. Also used to resume after sign-in. */
     flush,
 
-    /** Puts refused entries back in the queue and sends them again. */
+    /** Puts refused items back in the queue and sends them again. */
     retryFailed(): Promise<void> {
-      for (const [key, entry] of items) {
-        if (entry.failed) items.set(key, { ...entry, failed: false })
+      for (const [key, item] of items) {
+        if (item.failed) items.set(key, { ...item, failed: false })
       }
       persist()
       return flush()
@@ -185,7 +211,14 @@ export function createSaveQueue(options: SaveQueueOptions) {
 
     /** Drops one queued entry. The caller must confirm with the user first. */
     discard(entryDate: string, period: EntryInput['period']) {
-      items.delete(keyOf({ entryDate, period }))
+      items.delete(entryKey({ entryDate, period }))
+      persist()
+      setStatus({ state: items.size === 0 ? 'idle' : status.state })
+    },
+
+    /** Drops one queued timed log. The caller must confirm with the user first. */
+    discardTimedLog(id: string) {
+      items.delete(timedKey(id))
       persist()
       setStatus({ state: items.size === 0 ? 'idle' : status.state })
     },
@@ -212,7 +245,8 @@ function browserStorage(): QueueStorage | null {
 }
 
 export const saveQueue = createSaveQueue({
-  save: (input) => repository.upsertEntry(input),
+  saveEntry: (input) => repository.upsertEntry(input),
+  saveTimedLog: (id, input) => repository.upsertTimedLog(id, input),
   hasSession: async () => Boolean((await supabase.auth.getSession()).data.session),
   storage: browserStorage(),
 })
