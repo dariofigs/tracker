@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/dm-sans';
+
+@theme {
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-sans: 'DM Sans Variable', system-ui, sans-serif;
+}
+
+/* Botanical Sanctuary color tokens, type scale and utilities arrive in step 0.3. */
+
+html,
+body,
+#root {
+  min-height: 100dvh;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
