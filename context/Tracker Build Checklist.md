@@ -113,7 +113,7 @@ Because only you will use it, safety comes from three layers:
 - [x] 4.4 Header with date and greeting in Fraunces
 - [x] 4.5 AM/PM connected timeline card: morning node with ✓, time, pain and capacity; evening node with DUE tag that opens the PM sheet
 - [x] 4.6 Battery card reading the latest capacity
-- [ ] 4.7 States: nothing logged, AM only, both done, load error, saving
+- [x] 4.7 States: nothing logged, AM only, both done, load error, saving
 - [ ] 4.8 Insight banner slot (wired to real data in Phase 6)
 
 **Done when:** Today reads live data from the database and each state renders correctly using seed data.
