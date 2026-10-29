@@ -1,10 +1,12 @@
-// Dev-only switcher between the token swatches and the primitives page.
+// Dev-only switcher between the token swatches, primitives and feature components pages.
 import { useState } from 'react'
+import ComponentsPage from './ComponentsPage'
 import PrimitivesPage from './PrimitivesPage'
 import SwatchPage from './SwatchPage'
 
 const pages = [
   { id: 'primitives', label: 'Primitives', Page: PrimitivesPage },
+  { id: 'components', label: 'Components', Page: ComponentsPage },
   { id: 'tokens', label: 'Tokens', Page: SwatchPage },
 ] as const
 

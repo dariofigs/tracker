@@ -34,6 +34,7 @@ This is a single-user, phone-only app that logs pain, symptoms, exercise, activi
 **How to use this checklist**
 
 - Each phase ends with a **Done when** line. A phase is not finished until it is met.
+- Every new component gets a section, in all its states, on the `/dev` page: shared primitives on Primitives, feature components on Components.
 - Tick items as we go. Anything that comes up mid-build goes in the Parking lot at the end, not into the current phase.
 - Source docs still apply: the Design System sheet for tokens and components, and the project brief for tone. `project_context.md` (the dark athletic app) is not part of this project.
 
@@ -114,7 +115,7 @@ Because only you will use it, safety comes from three layers:
 - [x] 4.5 AM/PM connected timeline card: morning node with ✓, time, pain and capacity; evening node with DUE tag that opens the PM sheet
 - [x] 4.6 Battery card reading the latest capacity
 - [x] 4.7 States: nothing logged, AM only, both done, load error, saving
-- [ ] 4.8 Insight banner slot (wired to real data in Phase 6)
+- [x] 4.8 Insight banner slot (wired to real data in Phase 6)
 
 **Done when:** Today reads live data from the database and each state renders correctly using seed data.
 
