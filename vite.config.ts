@@ -10,6 +10,6 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     css: false,
     // Live tests hit the real test project, so they run only through `npm run test:live`.
-    exclude: [...configDefaults.exclude, '**/*.live.test.ts'],
+    exclude: [...configDefaults.exclude, '**/*.live.test.ts', 'e2e/**'],
   },
 })
