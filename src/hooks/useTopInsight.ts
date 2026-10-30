@@ -1,6 +1,20 @@
+import { useMemo } from 'react'
 import type { BannerInsight } from '../features/today/InsightBanner'
+import { findInsights } from '../features/insights/engine/insights'
+import { addDays, todayString } from '../lib/dates'
+import { useEntriesInRange } from './useEntriesInRange'
 
-/** The strongest current insight for the Today banner. Always null until the correlation engine exists (6.11). */
+/** How far back the engine looks. More days make small effects findable. */
+export const ENGINE_DAYS = 365
+
+/** The strongest current insight for the Today banner, or null while loading, on error, or when nothing stands out. */
 export function useTopInsight(): BannerInsight | null {
-  return null
+  const today = todayString()
+  const { entries } = useEntriesInRange(addDays(today, -ENGINE_DAYS), today)
+
+  return useMemo(() => {
+    const result = findInsights(entries)
+    if (result.status !== 'ready' || result.insights.length === 0) return null
+    return { text: result.insights[0].text }
+  }, [entries])
 }

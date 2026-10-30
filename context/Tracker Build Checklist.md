@@ -139,26 +139,26 @@ Insights has two views behind a segmented switch: **Trends** and **Calendar**. T
 
 **6A. Correlation engine (pure functions, unit tested)**
 
-- [ ] 6.1 Pair each day's evening data (exercise minutes, activities, stress) with the next morning's pain
-- [ ] 6.2 Pair each night's sleep (hours, quality) with the same morning's pain
-- [ ] 6.3 Compare days with a factor against days without it, and report the percent difference with the number of days behind it
-- [ ] 6.4 Test lags of 0, 1 and 2 days and report the strongest, so the 18–24h pattern is found by the data rather than assumed
-- [ ] 6.5 Minimum sample rule (for example 10+ paired days) before any insight appears; otherwise say plainly that more days are needed
-- [ ] 6.6 Tests using the seed data: the planted lag and sleep effect must be found, and pure noise must produce no insight
+- [x] 6.1 Pair each day's evening data (exercise minutes, activities, stress) with the next morning's pain
+- [x] 6.2 Pair each night's sleep (hours, quality) with the same morning's pain
+- [x] 6.3 Compare days with a factor against days without it, and report the percent difference with the number of days behind it
+- [x] 6.4 Test lags of 0, 1 and 2 days and report the strongest, so the 18–24h pattern is found by the data rather than assumed
+- [x] 6.5 Minimum sample rule (for example 10+ paired days) before any insight appears; otherwise say plainly that more days are needed
+- [x] 6.6 Tests using the seed data: the planted lag and sleep effect must be found, and pure noise must produce no insight
 
 **6B. Trends view**
 
-- [ ] 6.7 Lag curve card: paired daily bars (exertion in sage, next-day pain in clay/plum) with a 7 / 30 / 90-day filter
-- [ ] 6.8 Sleep vs. pain chart and stress vs. pain chart
-- [ ] 6.9 Insight cards in plain language, worded as patterns seen in your data, not medical conclusions
-- [ ] 6.10 Weekly flare vs. good-day distribution
-- [ ] 6.11 Wire the Today banner to the top current insight
+- [x] 6.7 Lag curve card: paired daily bars (exertion in sage, next-day pain in clay/plum) with a 7 / 30 / 90-day filter
+- [x] 6.8 Sleep vs. pain chart and stress vs. pain chart
+- [x] 6.9 Insight cards in plain language, worded as patterns seen in your data, not medical conclusions
+- [x] 6.10 Weekly flare vs. good-day distribution
+- [x] 6.11 Wire the Today banner to the top current insight
 
 **6C. Calendar view**
 
-- [ ] 6.12 Monthly calendar with AM/PM split dots colored by pain band (sage 1–3, clay 4–6, plum 7–10)
-- [ ] 6.13 Tap a day to see its entries, with edit and delete (delete asks to confirm)
-- [ ] 6.14 Chronological history list, month navigation and an empty-month state
+- [x] 6.12 Monthly calendar with AM/PM split dots colored by pain band (sage 1–3, clay 4–6, plum 7–10)
+- [x] 6.13 Tap a day to see its entries, with edit and delete (delete asks to confirm)
+- [x] 6.14 Chronological history list, month navigation and an empty-month state
 
 **Done when:** with seed data the engine finds the planted patterns and shows nothing for noise, and with your first real weeks of data Insights says clearly what it can and cannot tell yet.
 
@@ -211,3 +211,4 @@ Ideas that come up mid-build go here instead of expanding the current phase.
 - [ ] Medication and supplement logging
 - [ ] Scheduled automatic backup to a private repo
 - [ ] Dark / low-light mode
+- [ ] Timed-log engine and logging UI (hour-level lags from timed_logs; needs a quick-log button first)

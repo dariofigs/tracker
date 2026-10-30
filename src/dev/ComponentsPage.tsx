@@ -1,14 +1,35 @@
 // Feature components (checklist Phase 4 onward). Every component built from a feature folder gets a
 // section here in all its states; the shared primitives live on PrimitivesPage.
 import { useState, type ReactNode } from 'react'
-import type { Entry } from '../data/types'
+import { Button } from '../components/ui'
+import type { Entry, EntryInput } from '../data/types'
+import { generateSeed } from './seedData'
+import { findInsights } from '../features/insights/engine/insights'
+import DayDetailSheet from '../features/insights/DayDetailSheet'
+import FlareDistributionCard from '../features/insights/FlareDistributionCard'
+import HistoryList from '../features/insights/HistoryList'
+import InsightCard from '../features/insights/InsightCard'
+import LagCurveCard from '../features/insights/LagCurveCard'
+import MonthGrid from '../features/insights/MonthGrid'
+import ScatterCard from '../features/insights/ScatterCard'
+import {
+  lagSeries,
+  sleepPainPoints,
+  stressPainPoints,
+  weeklyDistribution,
+} from '../features/insights/trends'
 import CapacityPicker from '../features/checkin/CapacityPicker'
 import EveningForm from '../features/checkin/EveningForm'
 import MorningForm from '../features/checkin/MorningForm'
 import CustomChipAdder from '../features/checkin/CustomChipAdder'
 import NoteField from '../features/checkin/NoteField'
 import { DEFAULT_OPTIONS } from '../features/checkin/options'
-import { defaultsFrom, emptyForm, formFromEntry, type CheckinForm } from '../features/checkin/formModel'
+import {
+  defaultsFrom,
+  emptyForm,
+  formFromEntry,
+  type CheckinForm,
+} from '../features/checkin/formModel'
 import RecentDaysCard from '../features/today/RecentDaysCard'
 import CadenceCard from '../features/today/CadenceCard'
 import BatteryCard from '../features/today/BatteryCard'
@@ -86,6 +107,37 @@ const filledEvening: Entry = {
   activities: ['Walk', 'Pool therapy'],
   symptoms: ['Fatigue', 'Brain fog'],
   note: 'Pushed it at the pool.',
+}
+
+const DEMO_END = '2026-10-28'
+const DEMO_FROM = '2026-09-29'
+const demoInputs: EntryInput[] = generateSeed(DEMO_END, 60)
+const demoEntries: Entry[] = demoInputs.map((e, i) => ({
+  ...base,
+  ...e,
+  id: `demo-${i}`,
+  note: null,
+}))
+const octoberEntries = demoEntries.filter((e) => e.entryDate.startsWith('2026-10'))
+
+function DayDetailDemo() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button variant="secondary" onClick={() => setOpen(true)}>
+        Open day sheet
+      </Button>
+      {open && (
+        <DayDetailSheet
+          day="2026-10-28"
+          entries={demoEntries.filter((e) => e.entryDate === '2026-10-28')}
+          onClose={() => setOpen(false)}
+          onEdit={() => setOpen(false)}
+          onDeleted={() => setOpen(false)}
+        />
+      )}
+    </>
+  )
 }
 
 function ComponentsPage() {
@@ -183,7 +235,10 @@ function ComponentsPage() {
           </Variant>
           <Variant label="New, sleep carried from last morning">
             <MorningDemo
-              initial={defaultsFrom({ ...morning, sleepHours: 6.5, sleepQuality: 2 }, 'AM')}
+              initial={defaultsFrom(
+                { ...morning, sleepHours: 6.5, sleepQuality: 2 },
+                'AM',
+              )}
             />
           </Variant>
           <Variant label="Editing a saved entry">
@@ -243,6 +298,99 @@ function ComponentsPage() {
                 { ...morning, entryDate: '2026-10-27' },
               ]}
             />
+          </Variant>
+        </Demo>
+
+        <Demo title="Insight card">
+          <Variant label="Not enough days yet">
+            <InsightCard result={{ status: 'needs-more-days', have: 6, need: 10 }} />
+          </Variant>
+          <Variant label="Enough days, nothing stands out">
+            <InsightCard result={{ status: 'ready', have: 40, insights: [] }} />
+          </Variant>
+          <Variant label="Patterns found (90 days of seed data)">
+            <InsightCard result={findInsights(generateSeed(DEMO_END, 90))} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Exertion and next-morning pain">
+          <Variant label="30 days">
+            <LagCurveCard series={lagSeries(demoInputs, DEMO_FROM, DEMO_END)} />
+          </Variant>
+          <Variant label="Nothing logged">
+            <LagCurveCard series={lagSeries([], '2026-10-22', DEMO_END)} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Scatter chart (sleep, stress)">
+          <Variant label="Sleep and morning pain">
+            <ScatterCard
+              title="Sleep and morning pain"
+              xLabel="hours slept"
+              yLabel="waking pain"
+              xDomain={[3, 10]}
+              points={sleepPainPoints(demoInputs, DEMO_FROM, DEMO_END)}
+            />
+          </Variant>
+          <Variant label="Stress and next-morning pain">
+            <ScatterCard
+              title="Stress and next-morning pain"
+              xLabel="evening stress"
+              yLabel="next morning's pain"
+              xDomain={[0, 10]}
+              points={stressPainPoints(demoInputs, DEMO_FROM, DEMO_END)}
+            />
+          </Variant>
+          <Variant label="Empty">
+            <ScatterCard
+              title="Sleep and morning pain"
+              xLabel="hours slept"
+              yLabel="waking pain"
+              xDomain={[3, 10]}
+              points={[]}
+            />
+          </Variant>
+        </Demo>
+
+        <Demo title="Flare distribution card">
+          <Variant label="Five weeks">
+            <FlareDistributionCard
+              weeks={weeklyDistribution(demoInputs, DEMO_FROM, DEMO_END)}
+            />
+          </Variant>
+          <Variant label="Nothing logged">
+            <FlareDistributionCard weeks={[]} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Month grid">
+          <Variant label="October, fully logged (today is the 29th)">
+            <MonthGrid
+              monthStart="2026-10-01"
+              entries={octoberEntries}
+              today="2026-10-29"
+              onSelect={noop}
+            />
+          </Variant>
+          <Variant label="Empty month">
+            <MonthGrid
+              monthStart="2026-09-01"
+              entries={[]}
+              today="2026-10-29"
+              onSelect={noop}
+            />
+          </Variant>
+        </Demo>
+
+        <Demo title="History list">
+          <Variant label="Newest first">
+            <HistoryList entries={octoberEntries.slice(-16)} onSelect={noop} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Day detail sheet">
+          <Variant label="Entries with edit and delete (delete asks to confirm)">
+            <DayDetailDemo />
           </Variant>
         </Demo>
 
