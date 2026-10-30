@@ -54,7 +54,7 @@ function CustomChipAdder({ noun, onAdd }: CustomChipAdderProps) {
       <button
         type="button"
         onClick={submit}
-        className="min-touch text-body bg-brand-sage text-surface-card rounded-full px-[1.6rem] font-bold"
+        className="min-touch text-body bg-brand-sage text-surface-card rounded-full px-[1.6rem] font-semibold"
       >
         Add
       </button>

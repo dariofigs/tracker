@@ -27,7 +27,7 @@ function SaveStatusLine({ status }: { status: SaveStatus }) {
     <div role="status" aria-live="polite">
       {message && (
         <p
-          className={`text-body-sm rounded-tile px-[1.2rem] py-[0.8rem] font-semibold ${
+          className={`text-caption rounded-tile px-[1.2rem] py-[0.8rem] font-semibold ${
             warn ? 'bg-clay-tint text-clay-text' : 'bg-surface-subtle text-text-muted'
           }`}
         >

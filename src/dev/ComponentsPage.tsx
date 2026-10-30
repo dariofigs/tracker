@@ -65,7 +65,7 @@ function Demo({ title, children }: { title: string; children: ReactNode }) {
 function Variant({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="space-y-[0.8rem]">
-      <p className="text-micro text-text-muted uppercase">{label}</p>
+      <p className="text-micro text-text-muted">{label}</p>
       {children}
     </div>
   )

@@ -102,7 +102,7 @@ function ImportPreview({ plan, stage, onClose, onImport, onRetry }: ImportPrevie
                   These days are saved differently now. Replacing them uses the backup’s
                   version.
                 </p>
-                <ul className="text-body-sm text-text-muted max-h-[16rem] overflow-y-auto">
+                <ul className="text-caption text-text-muted max-h-[16rem] overflow-y-auto">
                   {changed.map(({ incoming }) => (
                     <li key={`${incoming.entryDate}|${incoming.period}`}>
                       {incoming.entryDate} {incoming.period}
@@ -124,7 +124,7 @@ function ImportPreview({ plan, stage, onClose, onImport, onRetry }: ImportPrevie
           </p>
         )}
         {stage.step === 'error' && (
-          <p role="alert" className="text-body-sm text-flare-plum">
+          <p role="alert" className="text-caption text-flare-plum">
             {stage.message}
           </p>
         )}

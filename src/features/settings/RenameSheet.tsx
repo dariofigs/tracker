@@ -76,7 +76,7 @@ function RenameSheet({
           className="min-touch bg-surface-subtle text-body text-text-primary focus-visible:outline-brand-sage rounded-full px-[1.6rem] focus-visible:outline-2"
         />
         {problem && (
-          <p role="alert" className="text-body-sm text-flare-plum">
+          <p role="alert" className="text-caption text-flare-plum">
             {problem}
           </p>
         )}
@@ -98,7 +98,7 @@ function RenameSheet({
           </p>
         )}
         {stage.step === 'error' && (
-          <p role="alert" className="text-body-sm text-flare-plum">
+          <p role="alert" className="text-caption text-flare-plum">
             {stage.message}
           </p>
         )}

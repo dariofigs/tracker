@@ -11,7 +11,7 @@ function OfflineBanner({ offline }: { offline?: boolean }) {
   return (
     <div
       role="status"
-      className="bg-clay-tint text-text-primary text-body-sm px-[1.6rem] py-[0.8rem] text-center font-semibold"
+      className="bg-clay-tint text-text-primary text-caption px-[1.6rem] py-[0.8rem] text-center font-semibold"
     >
       You’re offline. Entries will save when you’re back online.
     </div>

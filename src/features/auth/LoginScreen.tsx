@@ -11,28 +11,32 @@ export default function LoginScreen() {
     event.preventDefault()
     setError(null)
     setSubmitting(true)
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
     setSubmitting(false)
     if (signInError) setError('That email and password did not match. Try again.')
   }
 
   if (!isSupabaseConfigured) {
     return (
-      <main className="mx-auto min-h-dvh max-w-[43rem] bg-canvas-bg p-[1.6rem] text-text-primary">
+      <main className="bg-canvas-bg text-text-primary mx-auto min-h-dvh max-w-[43rem] p-[1.6rem]">
         <h1 className="text-screen font-display">Setup needed</h1>
         <p className="text-body text-text-muted">
-          Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env, then restart the dev server.
+          Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env, then restart the dev
+          server.
         </p>
       </main>
     )
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-[43rem] flex-col justify-center bg-canvas-bg p-[1.6rem] text-text-primary">
+    <main className="bg-canvas-bg text-text-primary mx-auto flex min-h-dvh max-w-[43rem] flex-col justify-center p-[1.6rem]">
       <h1 className="text-screen font-display">Sign in</h1>
       <form onSubmit={handleSubmit} className="mt-[2.4rem] space-y-[1.6rem]">
         <label className="block space-y-[0.8rem]">
-          <span className="text-body-sm text-text-muted">Email</span>
+          <span className="text-caption text-text-muted">Email</span>
           <input
             type="email"
             name="email"
@@ -40,11 +44,11 @@ export default function LoginScreen() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="min-touch w-full rounded-tile border border-border-subtle bg-surface-card px-[1.6rem] text-body"
+            className="min-touch rounded-tile border-border-subtle bg-surface-card text-body w-full border px-[1.6rem]"
           />
         </label>
         <label className="block space-y-[0.8rem]">
-          <span className="text-body-sm text-text-muted">Password</span>
+          <span className="text-caption text-text-muted">Password</span>
           <input
             type="password"
             name="password"
@@ -52,18 +56,18 @@ export default function LoginScreen() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="min-touch w-full rounded-tile border border-border-subtle bg-surface-card px-[1.6rem] text-body"
+            className="min-touch rounded-tile border-border-subtle bg-surface-card text-body w-full border px-[1.6rem]"
           />
         </label>
         {error && (
-          <p role="alert" className="text-body-sm text-flare-plum">
+          <p role="alert" className="text-caption text-flare-plum">
             {error}
           </p>
         )}
         <button
           type="submit"
           disabled={submitting}
-          className="min-touch w-full rounded-tile bg-brand-sage px-[1.6rem] text-title font-semibold text-white disabled:opacity-60"
+          className="min-touch rounded-tile bg-brand-sage text-title w-full px-[1.6rem] font-semibold text-white disabled:opacity-60"
         >
           {submitting ? 'Signing in…' : 'Sign in'}
         </button>

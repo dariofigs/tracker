@@ -75,7 +75,7 @@ function CalendarView() {
               today={today}
               onSelect={setSelected}
             />
-            <p className="text-body-sm text-text-muted mt-[1.2rem]">
+            <p className="text-caption text-text-muted mt-[1.2rem]">
               Left dot morning, right dot evening. Sage 0–3, clay 4–6, plum 7–10; an empty
               ring means not logged.
             </p>

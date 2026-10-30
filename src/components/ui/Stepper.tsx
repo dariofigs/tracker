@@ -26,7 +26,7 @@ function Stepper({
 }: StepperProps) {
   const set = (next: number) => onChange(Math.min(max, Math.max(min, snap(next, step))))
   const buttonClass =
-    'min-touch flex items-center justify-center rounded-full bg-surface-subtle text-title font-bold text-brand-sage focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sage enabled:active:bg-sage-tint disabled:text-text-muted disabled:opacity-60'
+    'min-touch flex items-center justify-center rounded-full bg-surface-subtle text-title font-semibold text-brand-sage focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sage enabled:active:bg-sage-tint disabled:text-text-muted disabled:opacity-60'
 
   return (
     <div role="group" aria-label={label} className="flex items-center gap-[1.2rem]">
@@ -41,11 +41,11 @@ function Stepper({
       </button>
       <output
         aria-live="polite"
-        className="text-title text-text-primary min-w-[6.4rem] text-center font-bold"
+        className="text-title text-text-primary min-w-[6.4rem] text-center font-semibold"
       >
         {value}
         {unit && (
-          <span className="text-body-sm text-text-muted ml-[0.4rem] font-medium">
+          <span className="text-caption text-text-muted ml-[0.4rem] font-medium">
             {unit}
           </span>
         )}

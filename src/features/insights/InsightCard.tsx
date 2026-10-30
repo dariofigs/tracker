@@ -48,7 +48,7 @@ function InsightCard({ result }: { result: InsightsResult }) {
               </li>
             ))}
           </ul>
-          <p className="text-body-sm text-text-muted">
+          <p className="text-caption text-text-muted">
             These are patterns in your own logs, not causes or medical advice.
           </p>
         </>

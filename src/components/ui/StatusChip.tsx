@@ -18,7 +18,7 @@ function StatusChip({ status, label }: StatusChipProps) {
   const { label: defaultLabel, className } = styles[status]
   return (
     <span
-      className={`text-micro inline-flex items-center rounded-full px-[1rem] py-[0.4rem] font-bold whitespace-nowrap uppercase ${className}`}
+      className={`text-micro inline-flex items-center rounded-full px-[1rem] py-[0.4rem] font-semibold whitespace-nowrap ${className}`}
     >
       {label ?? defaultLabel}
     </span>

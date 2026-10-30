@@ -26,7 +26,7 @@ function DevPages() {
             type="button"
             aria-pressed={active === id}
             onClick={() => setActive(id)}
-            className={`min-touch rounded-tile text-body-sm px-[1.6rem] ${
+            className={`min-touch rounded-tile text-caption px-[1.6rem] ${
               active === id
                 ? 'bg-brand-sage text-surface-card font-semibold'
                 : 'bg-surface-card text-text-primary'

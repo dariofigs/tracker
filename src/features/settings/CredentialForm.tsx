@@ -48,7 +48,7 @@ function CredentialForm({ kind, status, onSubmit }: CredentialFormProps) {
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-[1.2rem]">
       <label className="block space-y-[0.8rem]">
-        <span className="text-body-sm text-text-muted">
+        <span className="text-caption text-text-muted">
           {isPassword ? 'New password' : 'New email'}
         </span>
         <input
@@ -62,7 +62,7 @@ function CredentialForm({ kind, status, onSubmit }: CredentialFormProps) {
       </label>
       {isPassword && (
         <label className="block space-y-[0.8rem]">
-          <span className="text-body-sm text-text-muted">Repeat new password</span>
+          <span className="text-caption text-text-muted">Repeat new password</span>
           <input
             type="password"
             name="confirm-password"
@@ -74,12 +74,12 @@ function CredentialForm({ kind, status, onSubmit }: CredentialFormProps) {
         </label>
       )}
       {(problem || status.state === 'error') && (
-        <p role="alert" className="text-body-sm text-flare-plum">
+        <p role="alert" className="text-caption text-flare-plum">
           {problem ?? (status.state === 'error' ? status.message : '')}
         </p>
       )}
       {status.state === 'done' && (
-        <p role="status" className="text-body-sm text-brand-sage">
+        <p role="status" className="text-caption text-brand-sage">
           {status.message}
         </p>
       )}

@@ -50,12 +50,12 @@ function BackupCard() {
         </Button>
       </div>
       {error && (
-        <p role="alert" className="text-body-sm text-flare-plum">
+        <p role="alert" className="text-caption text-flare-plum">
           {error}
         </p>
       )}
       {note && (
-        <p role="status" className="text-body-sm text-brand-sage">
+        <p role="status" className="text-caption text-brand-sage">
           {note}
         </p>
       )}

@@ -29,14 +29,17 @@ Building on the approved **Botanical Sanctuary** palette, here are functional ro
 
 ## 2. Typography Rules
 
-- **Display & Headings:** `Fraunces` (Regular)
-  - Screen Titles: `28px` / Line-height `1.15` / Letter-spacing `-0.01em`
-  - Section Headers: `18px–20px` / Line-height `1.2`
-- **Numerals & Metrics:** `DM Sans` (Weight 800)
-  - Key Metrics (e.g. Battery %, Pain Score): `36px–44px`
-- **Labels, Buttons & Data:** `DM Sans` (Weight 500–700)
-  - Micro-caps / Category tags: `10px–11px`, Uppercase, tracking `0.08em`
-  - Body text: `13px–14px`, line-height `1.5`
+- **Display & Headings:** `Fraunces` (Weight 600), on `h1`–`h3`
+  - Screen Titles: `36px` / Line-height `1.2` / Letter-spacing `-0.01em`
+  - Section Headers: `24px` / Line-height `1.2`
+- **Numerals & Metrics:** `DM Sans` (Weight 600, tabular figures)
+  - Key Metrics (e.g. Battery %): `36px`, never larger than Screen Titles
+- **Body, Labels & Buttons:** `DM Sans` (Weight 450 body, 500 small emphasis, 600 strong)
+  - Item titles: `18px` / Weight 600
+  - Body text and form fields: `16px` / Line-height `1.4` (16px is also the iOS no-zoom floor for fields)
+  - Caption (secondary text, times, helper copy): `14px` / Line-height `1.4`
+  - Micro (chart axes, calendar letters, status chips): `12px`, sentence case
+- Weights in use: 450, 500, 600 only. Corners use squircle where supported.
 
 ---
 

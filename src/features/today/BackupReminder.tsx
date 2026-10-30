@@ -19,17 +19,17 @@ function BackupReminder({ days, neverBackedUp, onSnooze }: BackupReminderProps) 
           ? 'You haven’t saved a backup yet. A copy of your history keeps it safe if your phone is lost.'
           : `It’s been ${days} days since your last backup.`}
       </p>
-      <div className="flex flex-wrap items-center gap-[1.6rem]">
+      <div className="-my-[1.4rem] flex flex-wrap items-center gap-[1.6rem]">
         <Link
           to="/settings"
-          className="text-body-sm text-brand-sage focus-visible:outline-brand-sage min-touch inline-flex items-center font-semibold underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="text-caption text-brand-sage focus-visible:outline-brand-sage min-touch inline-flex items-center font-semibold underline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Back up now
         </Link>
         <button
           type="button"
           onClick={onSnooze}
-          className="text-body-sm text-text-muted focus-visible:outline-brand-sage min-touch font-semibold focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="text-caption text-text-muted focus-visible:outline-brand-sage min-touch font-semibold focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Remind me later
         </button>

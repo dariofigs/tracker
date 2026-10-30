@@ -49,7 +49,7 @@ function MonthGrid({ monthStart, entries, today, onSelect }: MonthGridProps) {
           <span
             key={name}
             role="columnheader"
-            className="text-micro text-text-muted text-center uppercase"
+            className="text-micro text-text-muted text-center"
           >
             {name}
           </span>
@@ -75,7 +75,7 @@ function MonthGrid({ monthStart, entries, today, onSelect }: MonthGridProps) {
                 aria-label={`${full}: ${describePeriod('morning', am)}, ${describePeriod('evening', pm)}`}
                 aria-current={day === today ? 'date' : undefined}
                 className={`min-touch text-body focus-visible:outline-brand-sage rounded-tile flex flex-col items-center justify-center gap-[0.4rem] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40 ${
-                  day === today ? 'bg-sage-tint font-bold' : ''
+                  day === today ? 'bg-sage-tint font-semibold' : ''
                 }`}
               >
                 <span>{Number(day.slice(8))}</span>

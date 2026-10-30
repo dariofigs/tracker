@@ -46,7 +46,7 @@ function RecentDaysCard({ today, days, entries, onOpen }: RecentDaysCardProps) {
                     type="button"
                     onClick={() => onOpen(period, date)}
                     aria-label={`${period} ${label.toLowerCase()} check-in for ${date}, ${done ? 'logged, edit' : 'not logged, add'}`}
-                    className={`min-touch text-body-sm focus-visible:outline-brand-sage rounded-full px-[1.2rem] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                    className={`min-touch text-caption focus-visible:outline-brand-sage rounded-full px-[1.2rem] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 ${
                       done
                         ? 'bg-sage-tint text-brand-sage'
                         : 'bg-surface-subtle text-text-muted'

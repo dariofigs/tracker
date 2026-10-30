@@ -92,7 +92,7 @@ function ImportFlow() {
         {reading ? 'Reading file…' : 'Restore from backup file'}
       </Button>
       {problem && (
-        <p role="alert" className="text-body-sm text-flare-plum">
+        <p role="alert" className="text-caption text-flare-plum">
           {problem}
         </p>
       )}

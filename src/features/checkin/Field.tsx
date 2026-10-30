@@ -15,7 +15,7 @@ function Field({
     <div className="space-y-[0.8rem]">
       <div>
         <p className="text-body text-text-primary font-semibold">{label}</p>
-        {hint && <p className="text-body-sm text-text-muted">{hint}</p>}
+        {hint && <p className="text-caption text-text-muted">{hint}</p>}
       </div>
       {children}
     </div>

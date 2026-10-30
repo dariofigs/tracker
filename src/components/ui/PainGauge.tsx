@@ -117,7 +117,7 @@ function PainGauge({
             aria-valuenow={unset ? undefined : value}
             aria-valuetext={unset ? 'Not set' : valueText?.(value)}
             onKeyDown={onKeyDown}
-            className={`border-surface-card ${unset ? 'bg-bead-stone' : 'bg-brand-sage'} text-body-sm text-surface-card focus-visible:outline-brand-sage absolute top-1/2 flex size-[2.8rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 font-bold shadow-md focus-visible:outline-2 focus-visible:outline-offset-2`}
+            className={`border-surface-card ${unset ? 'bg-bead-stone' : 'bg-brand-sage'} text-caption text-surface-card focus-visible:outline-brand-sage absolute top-1/2 flex size-[2.8rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 font-bold shadow-md focus-visible:outline-2 focus-visible:outline-offset-2`}
             style={{ left: `${percent}%` }}
           >
             {unset ? '–' : value}
@@ -127,7 +127,7 @@ function PainGauge({
       {rangeLabels.length > 0 && (
         <div
           aria-hidden="true"
-          className="text-micro text-text-muted flex justify-between px-[0.4rem] uppercase"
+          className="text-micro text-text-muted flex justify-between px-[0.4rem]"
         >
           {rangeLabels.map((text) => (
             <span key={text}>{text}</span>

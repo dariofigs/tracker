@@ -48,7 +48,7 @@ function ScatterCard({ title, xLabel, yLabel, xDomain, points }: ScatterCardProp
                 x={LEFT - 6}
                 y={y(tick) + 4}
                 textAnchor="end"
-                className="fill-text-muted text-[10px]"
+                className="fill-text-muted text-micro"
               >
                 {tick}
               </text>
@@ -60,7 +60,7 @@ function ScatterCard({ title, xLabel, yLabel, xDomain, points }: ScatterCardProp
               x={x(tick)}
               y={H - 12}
               textAnchor="middle"
-              className="fill-text-muted text-[10px]"
+              className="fill-text-muted text-micro"
             >
               {tick}
             </text>
@@ -76,7 +76,7 @@ function ScatterCard({ title, xLabel, yLabel, xDomain, points }: ScatterCardProp
           ))}
         </svg>
       )}
-      <p className="text-body-sm text-text-muted">
+      <p className="text-caption text-text-muted">
         {xLabel} across, {yLabel} up.
       </p>
     </Card>

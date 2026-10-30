@@ -24,21 +24,23 @@
   --color-bead-stone: #d1c9be;
 
   /* Type scale (Design System sheet, section 2) */
-  --text-micro: 1.1rem;
+  --text-micro: 1.2rem;
   --text-micro--line-height: 1.2;
-  --text-micro--letter-spacing: 0.08em;
-  --text-body-sm: 1.3rem;
-  --text-body-sm--line-height: 1.5;
-  --text-body: 1.4rem;
-  --text-body--line-height: 1.5;
-  --text-title: 1.6rem;
+  --text-micro--letter-spacing: 0.01em;
+  --text-caption: 1.4rem;
+  --text-caption--line-height: 1.4;
+  /* Body is also the form field size: under 16px, iOS Safari zooms the page on focus */
+  --text-body: 1.6rem;
+  --text-body--line-height: 1.4;
+  --text-title: 1.8rem;
   --text-title--line-height: 1.3;
-  --text-section: 2rem;
+  --text-section: 2.4rem;
   --text-section--line-height: 1.2;
-  --text-screen: 2.8rem;
-  --text-screen--line-height: 1.15;
+  --text-screen: 3.6rem;
+  --text-screen--line-height: 1.2;
   --text-screen--letter-spacing: -0.01em;
-  --text-metric: 4rem;
+  /* Never larger than screen; figures stay in DM Sans */
+  --text-metric: 3.6rem;
   --text-metric--line-height: 1;
 
   /* Corner radii for cards, tiles and sheets */
@@ -69,10 +71,32 @@ body,
   min-height: 100dvh;
 }
 
+/* Safety net: iOS Safari zooms the page when a focused field's font is under 16px */
+input,
+textarea,
+select {
+  font-size: var(--text-body);
+}
+
+/* Weights: 450 body, 500 small emphasis, 600 headings and strong text */
 body {
   background-color: var(--color-canvas-bg);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
+  font-weight: 450;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Squircle corners where supported; falls back to plain rounding */
+.rounded-tile,
+.rounded-card,
+.rounded-sheet {
+  corner-shape: squircle;
 }
 
 /* Bottom sheet entrance; skipped for reduced motion */
@@ -97,6 +121,8 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display);
+  font-weight: 600;
+  text-wrap: balance;
   font-variation-settings:
     'SOFT' 100,
     'WONK' 0;

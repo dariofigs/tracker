@@ -103,7 +103,7 @@ function CompactDemo() {
   return (
     <div className="space-y-[2rem]">
       <div className="space-y-[0.8rem]">
-        <p className="text-micro text-text-muted uppercase">Sleep hours</p>
+        <p className="text-micro text-text-muted">Sleep hours</p>
         <Stepper
           label="Sleep hours"
           value={hours}
@@ -114,7 +114,7 @@ function CompactDemo() {
         />
       </div>
       <div className="space-y-[0.8rem]">
-        <p className="text-micro text-text-muted uppercase">Sleep quality</p>
+        <p className="text-micro text-text-muted">Sleep quality</p>
         <SegmentedControl
           label="Sleep quality"
           options={qualityOptions}
@@ -123,7 +123,7 @@ function CompactDemo() {
         />
       </div>
       <div className="space-y-[0.8rem]">
-        <p className="text-micro text-text-muted uppercase">Effort (nothing selected)</p>
+        <p className="text-micro text-text-muted">Effort (nothing selected)</p>
         <SegmentedControl
           label="Effort"
           options={effortOptions}
@@ -194,7 +194,7 @@ function PrimitivesPage() {
           <Card className="space-y-[1.6rem]">
             {[100, 65, 30, 10, 0].map((v) => (
               <div key={v} className="space-y-[0.8rem]">
-                <p className="text-micro text-text-muted uppercase">{v}%</p>
+                <p className="text-micro text-text-muted">{v}%</p>
                 <BatteryBar value={v} label={`Capacity ${v}%`} />
               </div>
             ))}

@@ -14,7 +14,7 @@ type OptionsListProps = {
 }
 
 const smallButton =
-  'min-touch text-body-sm text-brand-sage focus-visible:outline-brand-sage rounded-full px-[1.2rem] font-semibold focus-visible:outline-2 disabled:text-text-muted'
+  'min-touch text-caption text-brand-sage focus-visible:outline-brand-sage rounded-full px-[1.2rem] font-semibold focus-visible:outline-2 disabled:text-text-muted'
 
 /** One kind's choices with rename and hide, plus a field to add another. */
 function OptionsList({
@@ -52,7 +52,7 @@ function OptionsList({
               >
                 {row.label}
               </p>
-              {row.hidden && <p className="text-body-sm text-text-muted">Hidden</p>}
+              {row.hidden && <p className="text-caption text-text-muted">Hidden</p>}
             </div>
             <div className="flex shrink-0">
               <button
@@ -93,7 +93,7 @@ function OptionsList({
           </Button>
         </div>
         {error && (
-          <p role="alert" className="text-body-sm text-flare-plum">
+          <p role="alert" className="text-caption text-flare-plum">
             {error}
           </p>
         )}

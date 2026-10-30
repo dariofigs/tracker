@@ -38,7 +38,7 @@ function Node({ done, title, detail, time, tag, onClick }: NodeProps) {
     <>
       <span
         aria-hidden="true"
-        className={`absolute top-[0.2rem] left-0 flex size-[2.8rem] -translate-x-1/2 items-center justify-center rounded-full border-2 text-[1.4rem] font-bold ${
+        className={`absolute top-[0.2rem] left-0 flex size-[2.8rem] -translate-x-1/2 items-center justify-center rounded-full border-2 text-[1.4rem] font-semibold ${
           done
             ? 'border-brand-sage bg-brand-sage text-surface-card'
             : 'border-bead-stone bg-surface-card'
@@ -48,7 +48,7 @@ function Node({ done, title, detail, time, tag, onClick }: NodeProps) {
       </span>
       <span className="flex flex-wrap items-center gap-[0.8rem]">
         <span className="text-title font-semibold">{title}</span>
-        {time && <span className="text-body-sm text-text-muted">{time}</span>}
+        {time && <span className="text-caption text-text-muted">{time}</span>}
         {tag}
       </span>
       <span className="text-body text-text-muted block">{detail}</span>

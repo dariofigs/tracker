@@ -18,7 +18,7 @@ function BatteryCard({ reading }: BatteryCardProps) {
         trailing={reading && <StatusChip status={low ? 'low-battery' : 'balanced'} />}
       />
       <p
-        className={`text-metric mt-[1.2rem] font-extrabold ${reading ? '' : 'text-bead-stone'}`}
+        className={`text-metric mt-[1.2rem] font-semibold tabular-nums${reading ? '' : 'text-bead-stone'}`}
         aria-hidden={reading ? undefined : true}
       >
         {reading ? `${reading.value}%` : '–%'}

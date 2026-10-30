@@ -23,7 +23,7 @@ function Button({
   return (
     <button
       type={type}
-      className={`min-touch text-body focus-visible:outline-brand-sage inline-flex items-center justify-center rounded-full px-[2.4rem] font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed ${
+      className={`min-touch text-body focus-visible:outline-brand-sage inline-flex items-center justify-center rounded-full px-[2.4rem] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed ${
         fullWidth ? 'h-[5rem] w-full' : ''
       } ${variants[variant]} ${className}`}
       {...rest}

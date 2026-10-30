@@ -21,14 +21,14 @@ function TimeSetting({ value, onChange }: TimeSettingProps) {
           className="min-touch bg-surface-subtle text-body rounded-full px-[1.6rem]"
         />
       </label>
-      <p className="text-body-sm text-text-muted">
+      <p className="text-caption text-text-muted">
         Before this time the button opens the morning check-in.
       </p>
       {value !== DEFAULT_MORNING_CUTOFF && (
         <button
           type="button"
           onClick={() => onChange(DEFAULT_MORNING_CUTOFF)}
-          className="min-touch text-body-sm text-brand-sage self-start font-semibold underline"
+          className="min-touch text-caption text-brand-sage self-start font-semibold underline"
         >
           Reset to 12:00
         </button>

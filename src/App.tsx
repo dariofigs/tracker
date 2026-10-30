@@ -54,7 +54,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => supabase.auth.signOut()}
-                  className="min-touch rounded-tile bg-surface-card text-body-sm fixed top-[1.6rem] right-[1.6rem] px-[1.6rem]"
+                  className="min-touch rounded-tile bg-surface-card text-caption fixed top-[1.6rem] right-[1.6rem] px-[1.6rem]"
                 >
                   Sign out
                 </button>

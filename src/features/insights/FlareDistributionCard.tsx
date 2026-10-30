@@ -66,7 +66,7 @@ function FlareDistributionCard({ weeks }: { weeks: WeekCount[] }) {
                     x={x + bar / 2}
                     y={H - 6}
                     textAnchor="middle"
-                    className="fill-text-muted text-[10px]"
+                    className="fill-text-muted text-micro"
                   >
                     {parseDayString(w.weekStart).toLocaleDateString('en-US', {
                       month: 'short',
@@ -77,7 +77,7 @@ function FlareDistributionCard({ weeks }: { weeks: WeekCount[] }) {
               )
             })}
           </svg>
-          <p className="text-body-sm text-text-muted">
+          <p className="text-caption text-text-muted">
             Each bar is a week starting Monday. A flare day is a worst pain of 7 or more;
             a good day stays at 3 or under.
           </p>

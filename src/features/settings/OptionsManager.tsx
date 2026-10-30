@@ -127,7 +127,7 @@ function OptionsManager() {
         }
       />
       {actionError && (
-        <p role="alert" className="text-body-sm text-flare-plum">
+        <p role="alert" className="text-caption text-flare-plum">
           {actionError}
         </p>
       )}

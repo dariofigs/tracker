@@ -90,7 +90,7 @@ function DayDetailSheet({
                         Delete this {lowerLabel} entry? This can’t be undone.
                       </p>
                       {error && (
-                        <p role="alert" className="text-body-sm text-flare-plum">
+                        <p role="alert" className="text-caption text-flare-plum">
                           {error}
                         </p>
                       )}

@@ -31,7 +31,7 @@ function PillChip({
       onClick={() => onChange(!selected)}
       className={`min-touch text-body focus-visible:outline-brand-sage inline-flex items-center gap-[0.8rem] rounded-full border px-[1.6rem] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
         selected
-          ? `${activeStyles[variant]} font-bold`
+          ? `${activeStyles[variant]} font-semibold`
           : 'bg-surface-subtle text-text-muted border-transparent'
       } ${className}`}
       {...rest}

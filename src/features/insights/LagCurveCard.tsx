@@ -69,7 +69,7 @@ function LagCurveCard({ series }: LagCurveCardProps) {
               )
             })}
           </svg>
-          <p className="text-body-sm text-text-muted">
+          <p className="text-caption text-text-muted">
             <span className="text-brand-sage font-semibold">Sage</span>: exercise minutes
             × effort. <span className="text-clay-text font-semibold">Clay</span> and{' '}
             <span className="text-flare-plum font-semibold">plum</span>: waking pain the

@@ -51,7 +51,7 @@ function SegmentedControl<T extends string | number>({
             onKeyDown={(e) => onKeyDown(e, i)}
             className={`min-touch text-body focus-visible:outline-brand-sage flex-1 rounded-full px-[0.8rem] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
               active
-                ? 'bg-brand-sage text-surface-card font-bold shadow-sm'
+                ? 'bg-brand-sage text-surface-card font-semibold shadow-sm'
                 : 'text-text-muted font-medium'
             }`}
           >

@@ -18,13 +18,16 @@ const colors = [
 ]
 
 const typeScale = [
-  { name: 'screen · 28px', className: 'text-screen font-display' },
-  { name: 'section · 20px', className: 'text-section font-display' },
-  { name: 'title · 16px', className: 'text-title font-semibold' },
-  { name: 'body · 14px', className: 'text-body' },
-  { name: 'body-sm · 13px', className: 'text-body-sm' },
-  { name: 'micro · 11px', className: 'text-micro uppercase font-semibold' },
-  { name: 'metric · 40px', className: 'text-metric font-extrabold' },
+  { name: 'screen · 36px · Fraunces 600', className: 'text-screen font-display' },
+  { name: 'section · 24px · Fraunces 600', className: 'text-section font-display' },
+  { name: 'title · 18px · DM Sans 600', className: 'text-title font-semibold' },
+  { name: 'body · 16px · DM Sans 450 (also form fields)', className: 'text-body' },
+  { name: 'caption · 14px · DM Sans 450', className: 'text-caption' },
+  { name: 'micro · 12px · DM Sans 500', className: 'text-micro font-medium' },
+  {
+    name: 'metric · 36px · DM Sans 600',
+    className: 'text-metric font-semibold tabular-nums',
+  },
 ]
 
 const radii = [
@@ -52,8 +55,8 @@ function SwatchPage() {
               <div
                 className={`rounded-tile border-border-subtle h-[4.8rem] border ${c.className}`}
               />
-              <p className="text-body-sm mt-[0.8rem] font-semibold">{c.name}</p>
-              <p className="text-micro text-text-muted uppercase">{c.hex}</p>
+              <p className="text-caption mt-[0.8rem] font-semibold">{c.name}</p>
+              <p className="text-micro text-text-muted">{c.hex}</p>
             </li>
           ))}
         </ul>
@@ -65,7 +68,7 @@ function SwatchPage() {
           {typeScale.map((t) => (
             <div key={t.name}>
               <p className={t.className}>The quick brown fox</p>
-              <p className="text-micro text-text-muted uppercase">{t.name}</p>
+              <p className="text-micro text-text-muted">{t.name}</p>
             </div>
           ))}
         </div>
@@ -82,7 +85,7 @@ function SwatchPage() {
               <div
                 className={`border-border-subtle bg-sage-tint h-[8rem] border ${r.className}`}
               />
-              <p className="text-micro text-text-muted mt-[0.8rem] uppercase">{r.name}</p>
+              <p className="text-micro text-text-muted mt-[0.8rem]">{r.name}</p>
             </div>
           ))}
         </div>
