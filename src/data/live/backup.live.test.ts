@@ -11,8 +11,9 @@ import { createRepository } from '../repository'
 // Runs against the Supabase test project from .env.test. Never point this at the real project.
 const repo = createRepository(supabase)
 
-// Dates far from any real history. Only rows created here are deleted and restored.
-const DAYS = ['1999-02-01', '1999-02-02']
+// Dates no other live test uses, since the live files run in parallel against one account.
+// Only rows created here are deleted and restored.
+const DAYS = ['1998-06-01', '1998-06-02']
 
 async function snapshot() {
   const [entries, customOptions, timedLogs] = await Promise.all([
@@ -80,7 +81,13 @@ describe('live: export, delete, import', () => {
     ])
     await repo.addCustomOption('activity', optionLabel)
 
-    const before = await snapshot()
+    // Back up only this test's rows: other live files write to the same account at the same time.
+    const all = await snapshot()
+    const before = {
+      entries: all.entries.filter((e) => DAYS.includes(e.entryDate)),
+      customOptions: all.customOptions.filter((o) => o.label === optionLabel),
+      timedLogs: [],
+    }
     const file = backupToJson(buildBackup(before, { morningCutoff: '12:00' }))
 
     await supabase.from('entries').delete().in('entry_date', DAYS)
@@ -90,6 +97,7 @@ describe('live: export, delete, import', () => {
     const parsed = parseBackup(file)
     if (!parsed.ok) throw new Error(parsed.error)
     const plan = planImport(parsed.backup, await snapshot())
+    expect(plan.entries.added).toHaveLength(3)
     await applyImport(repo, plan, false)
 
     const after = await snapshot()

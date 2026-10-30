@@ -73,7 +73,7 @@ export function createSaveQueue(options: SaveQueueOptions) {
   const retryDelays = options.retryDelaysMs ?? DEFAULT_RETRY_DELAYS_MS
   const listeners = new Set<() => void>()
 
-  let items = restore()
+  const items = restore()
   let status: SaveStatus = { state: 'idle', ...counts() }
   let inFlight: Promise<void> | null = null
   let retryTimer: ReturnType<typeof setTimeout> | undefined

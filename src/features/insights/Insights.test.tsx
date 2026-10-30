@@ -12,12 +12,13 @@ import MonthGrid from './MonthGrid'
 
 // The spy returns nothing: vitest tracks a spy's returned promise and reports a rejection as unhandled.
 const deleteEntry = vi.fn<(id: string) => void>()
-let deleteResult: Promise<void> = Promise.resolve()
+// A factory, so a rejected promise only exists once the code under test calls it and handles it.
+let deleteResult: () => Promise<void> = () => Promise.resolve()
 vi.mock('../../data/repository', () => ({
   repository: {
     deleteEntry: (id: string) => {
       deleteEntry(id)
-      return deleteResult
+      return deleteResult()
     },
   },
 }))
@@ -52,7 +53,7 @@ const pm: Entry = {
 
 beforeEach(() => {
   deleteEntry.mockReset()
-  deleteResult = Promise.resolve()
+  deleteResult = () => Promise.resolve()
 })
 
 describe('InsightCard', () => {
@@ -123,7 +124,7 @@ describe('DayDetailSheet', () => {
   })
 
   it('shows an error and keeps the confirmation open when delete fails', async () => {
-    deleteResult = Promise.reject(new Error('offline'))
+    deleteResult = () => Promise.reject(new Error('offline'))
     const { onDeleted } = renderSheet()
     await userEvent.click(screen.getByRole('button', { name: 'Delete evening entry' }))
     await userEvent.click(

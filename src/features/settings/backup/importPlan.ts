@@ -238,7 +238,8 @@ function entryKey(e: Entry): string {
     e.sleepQuality ?? null,
     e.startingCapacity ?? null,
     e.endPain ?? null,
-    e.exercise ?? null,
+    // Fixed field order: the database returns jsonb keys sorted, so key order says nothing.
+    e.exercise ? [e.exercise.type, e.exercise.minutes, e.exercise.effort] : null,
     e.activities ?? [],
     e.symptoms ?? [],
     e.painAreas ?? [],

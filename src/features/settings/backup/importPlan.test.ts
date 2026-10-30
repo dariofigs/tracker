@@ -135,6 +135,20 @@ describe('planImport', () => {
     expect(planIsEmpty(planImport(parsed(fileFor()), renewed))).toBe(true)
   })
 
+  it('ignores the order of fields inside the exercise, which the database sorts', () => {
+    const reordered = {
+      ...saved,
+      entries: [
+        am,
+        {
+          ...pm,
+          exercise: { effort: 2, minutes: 20, type: 'Walk' } as Entry['exercise'],
+        },
+      ],
+    }
+    expect(planIsEmpty(planImport(parsed(fileFor()), reordered))).toBe(true)
+  })
+
   it('treats everything as new for an empty database', () => {
     const plan = planImport(parsed(fileFor()), {
       entries: [],

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { Entry } from '../../data/types'
@@ -18,6 +18,15 @@ vi.mock('../../data/saveQueue', () => ({ saveQueue: { save } }))
 import CheckinSheet from './CheckinSheet'
 
 const DATE = '2026-10-29'
+
+// The sheet title drops the date only for today, so pin "today" to the day these tests use.
+beforeAll(() => {
+  vi.useFakeTimers({ toFake: ['Date'] })
+  vi.setSystemTime(new Date(2026, 9, 29, 9))
+})
+afterAll(() => {
+  vi.useRealTimers()
+})
 
 const entry = (over: Partial<Entry>): Entry => ({
   id: 'e',
