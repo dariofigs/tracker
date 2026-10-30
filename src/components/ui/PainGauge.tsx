@@ -89,13 +89,12 @@ function PainGauge({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        <div
-          ref={trackRef}
-          className="bg-surface-subtle relative h-[1.2rem] w-full rounded-full"
-        >
+        <div ref={trackRef} className="relative h-[1.2rem] w-full">
+          {/* Backdrop overhangs the first and last dot so both sit inside it */}
+          <div className="bg-surface-subtle absolute inset-y-0 -right-[0.9rem] -left-[0.9rem] rounded-full" />
           <div
-            className="bg-sage-tint absolute inset-y-0 left-0 rounded-full"
-            style={{ width: `${percent}%` }}
+            className="bg-sage-tint absolute inset-y-0 -left-[0.9rem] rounded-full"
+            style={{ width: `calc(${percent}% + 0.9rem)` }}
           />
           {STOPS.map((stop) => (
             <span

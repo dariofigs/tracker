@@ -60,16 +60,17 @@ describe('StatusChip', () => {
 })
 
 describe('PillChip', () => {
-  it('shows + when inactive and ✓ when active', () => {
+  it('shows an add icon when inactive and a check icon when active', () => {
     const { rerender } = render(
       <PillChip label="Fatigue" selected={false} onChange={() => {}} />,
     )
     const chip = screen.getByRole('button', { name: /Fatigue/ })
     expect(chip).toHaveAttribute('aria-pressed', 'false')
-    expect(chip).toHaveTextContent('+')
+    const inactiveIcon = chip.querySelector('svg')?.innerHTML
+    expect(inactiveIcon).toBeTruthy()
     rerender(<PillChip label="Fatigue" selected onChange={() => {}} />)
     expect(chip).toHaveAttribute('aria-pressed', 'true')
-    expect(chip).toHaveTextContent('✓')
+    expect(chip.querySelector('svg')?.innerHTML).not.toBe(inactiveIcon)
   })
 
   it('reports the toggled value on tap', async () => {
@@ -77,11 +78,6 @@ describe('PillChip', () => {
     render(<PillChip label="Walk" selected={false} onChange={onChange} />)
     await userEvent.click(screen.getByRole('button'))
     expect(onChange).toHaveBeenCalledWith(true)
-  })
-
-  it('uses the clay variant when active', () => {
-    render(<PillChip label="Walk" selected variant="clay" onChange={() => {}} />)
-    expect(screen.getByRole('button')).toHaveClass('text-clay-text')
   })
 
   it('has a 48px minimum target', () => {
@@ -147,9 +143,9 @@ describe('BatteryBar', () => {
 
 describe('BottomNav', () => {
   const items = [
-    { id: 'today', label: 'Today', icon: null },
-    { id: 'insights', label: 'Insights', icon: null },
-    { id: 'settings', label: 'Settings', icon: null },
+    { id: 'today', label: 'Today', icon: 'today' as const },
+    { id: 'insights', label: 'Insights', icon: 'today' as const },
+    { id: 'settings', label: 'Settings', icon: 'today' as const },
   ]
 
   it('marks the current tab and reports taps', async () => {

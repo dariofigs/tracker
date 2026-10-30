@@ -41,7 +41,8 @@ test('log morning and evening, then see the day on Today, Calendar and Insights'
   ])
 
   // Today shows both check-ins as done.
-  await expect(page.getByText('✓')).toHaveCount(2)
+  await expect(page.getByText(/Pain 3\/10/)).toBeVisible()
+  await expect(page.getByText(/Pain 5\/10/)).toBeVisible()
 
   // Calendar shows the day with both pain readings.
   const nav = page.getByRole('navigation', { name: 'Main' })

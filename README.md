@@ -60,3 +60,7 @@ On the phone, open the URL and use **Add to Home Screen**.
 - **Back up:** Settings, Export. JSON is for restoring, CSV is for spreadsheets. The Today screen reminds you after 30 days.
 - **Restore:** sign in to the (new or emptied) project, then Settings, Restore from backup file. A preview shows what will be added or changed before anything is written.
 - To prove a backup works, restore it into the test project and compare.
+
+## Credits
+
+Icons: [Solar](https://www.figma.com/community/file/1166831539721848736) by 480 Design, CC BY 4.0, via `@solar-icons/react`.

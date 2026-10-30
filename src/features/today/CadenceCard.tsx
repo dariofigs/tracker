@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Card, SectionHeader, StatusChip } from '../../components/ui'
+import { Card, Icon, SectionHeader, StatusChip } from '../../components/ui'
 import type { Entry, Period } from '../../data/types'
 
 type CadenceCardProps = {
@@ -15,25 +15,25 @@ function formatTime(iso: string): string {
 }
 
 function summary(
+  updatedAt: string,
   pain: number | null | undefined,
   capacity: number | null | undefined,
 ): string {
-  const parts = []
+  const parts = [formatTime(updatedAt)]
   if (pain != null) parts.push(`Pain ${pain}/10`)
   if (capacity != null) parts.push(`Capacity ${capacity}%`)
-  return parts.join(' · ') || 'Logged'
+  return parts.join(' · ')
 }
 
 type NodeProps = {
   done: boolean
   title: string
   detail: ReactNode
-  time?: string
   tag?: ReactNode
   onClick?: () => void
 }
 
-function Node({ done, title, detail, time, tag, onClick }: NodeProps) {
+function Node({ done, title, detail, tag, onClick }: NodeProps) {
   const body = (
     <>
       <span
@@ -44,11 +44,10 @@ function Node({ done, title, detail, time, tag, onClick }: NodeProps) {
             : 'border-bead-stone bg-surface-card'
         }`}
       >
-        {done ? '✓' : ''}
+        {done && <Icon name="check" size={16} />}
       </span>
       <span className="flex flex-wrap items-center gap-[0.8rem]">
         <span className="text-title font-semibold">{title}</span>
-        {time && <span className="text-caption text-text-muted">{time}</span>}
         {tag}
       </span>
       <span className="text-body text-text-muted block">{detail}</span>
@@ -86,8 +85,11 @@ function CadenceCard({ morning, evening, currentPeriod, onOpen }: CadenceCardPro
             <Node
               done
               title="Morning"
-              time={formatTime(morning.updatedAt)}
-              detail={summary(morning.wakingPain, morning.startingCapacity)}
+              detail={summary(
+                morning.updatedAt,
+                morning.wakingPain,
+                morning.startingCapacity,
+              )}
               onClick={() => onOpen('AM')}
             />
           ) : (
@@ -104,8 +106,11 @@ function CadenceCard({ morning, evening, currentPeriod, onOpen }: CadenceCardPro
             <Node
               done
               title="Evening"
-              time={formatTime(evening.updatedAt)}
-              detail={summary(evening.endPain, evening.remainingCapacity)}
+              detail={summary(
+                evening.updatedAt,
+                evening.endPain,
+                evening.remainingCapacity,
+              )}
               onClick={() => onOpen('PM')}
             />
           ) : (

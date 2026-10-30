@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes } from 'react'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'quiet'
   /** Stretches to the container width at the 50px Save Entry height. */
   fullWidth?: boolean
 }
@@ -11,6 +11,9 @@ const variants = {
     'bg-brand-sage text-surface-card enabled:active:bg-brand-sage/90 disabled:bg-surface-subtle disabled:text-text-muted',
   secondary:
     'border border-brand-sage bg-surface-card text-brand-sage enabled:active:bg-sage-tint disabled:border-border-subtle disabled:text-text-muted',
+  /** Low-emphasis action with no outline, for things like Sign out. */
+  quiet:
+    'bg-transparent text-clay-text enabled:active:bg-clay-tint disabled:text-text-muted',
 }
 
 function Button({

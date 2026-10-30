@@ -29,7 +29,9 @@ describe('CadenceCard', () => {
     render(
       <CadenceCard morning={morning} evening={null} currentPeriod="PM" onOpen={onOpen} />,
     )
-    expect(screen.getByText('Pain 3/10 · Capacity 70%')).toBeInTheDocument()
+    expect(
+      screen.getByText(/^\d{1,2}:\d{2} [AP]M · Pain 3\/10 · Capacity 70%$/),
+    ).toBeInTheDocument()
     expect(screen.getByText('DUE')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: /evening/i }))
     expect(onOpen).toHaveBeenCalledWith('PM')
@@ -44,7 +46,9 @@ describe('CadenceCard', () => {
         onOpen={() => {}}
       />,
     )
-    expect(screen.getByText('Pain 5/10 · Capacity 30%')).toBeInTheDocument()
+    expect(
+      screen.getByText(/^\d{1,2}:\d{2} [AP]M · Pain 5\/10 · Capacity 30%$/),
+    ).toBeInTheDocument()
     expect(screen.queryByText('DUE')).not.toBeInTheDocument()
   })
 })

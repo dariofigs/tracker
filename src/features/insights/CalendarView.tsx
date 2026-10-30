@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card } from '../../components/ui'
+import { Button, Card, Icon } from '../../components/ui'
 import type { Period } from '../../data/types'
 import { useEntriesInRange } from '../../hooks/useEntriesInRange'
 import {
@@ -47,7 +47,7 @@ function CalendarView() {
           aria-label="Previous month"
           onClick={() => setMonthStart(addMonths(monthStart, -1))}
         >
-          ‹
+          <Icon name="prev" size={20} />
         </Button>
         <h2 className="text-section" aria-live="polite">
           {monthName}
@@ -58,7 +58,7 @@ function CalendarView() {
           disabled={monthStart >= thisMonth}
           onClick={() => setMonthStart(addMonths(monthStart, 1))}
         >
-          ›
+          <Icon name="next" size={20} />
         </Button>
       </div>
 

@@ -4,11 +4,11 @@ import { useState, type ReactNode } from 'react'
 import {
   BatteryBar,
   SegmentedControl,
+  ScrollTabs,
   Stepper,
   BottomNav,
-  InsightsIcon,
-  SettingsIcon,
-  TodayIcon,
+  ICON_NAMES,
+  Icon,
   BottomSheet,
   Button,
   Card,
@@ -27,13 +27,13 @@ function Demo({ title, children }: { title: string; children: ReactNode }) {
   )
 }
 
-function ChipDemo({ variant }: { variant: 'sage' | 'clay' }) {
+function ChipDemo() {
   const [on, setOn] = useState(false)
   return (
     <div className="flex flex-wrap gap-[1.2rem]">
-      <PillChip label="Inactive" selected={false} onChange={() => {}} variant={variant} />
-      <PillChip label="Active" selected onChange={() => {}} variant={variant} />
-      <PillChip label="Tap me" selected={on} onChange={setOn} variant={variant} />
+      <PillChip label="Inactive" selected={false} onChange={() => {}} />
+      <PillChip label="Active" selected onChange={() => {}} />
+      <PillChip label="Tap me" selected={on} onChange={setOn} />
     </div>
   )
 }
@@ -77,9 +77,9 @@ function SheetDemo() {
 }
 
 const navItems = [
-  { id: 'today', label: 'Today', icon: TodayIcon },
-  { id: 'insights', label: 'Insights', icon: InsightsIcon },
-  { id: 'settings', label: 'Settings', icon: SettingsIcon },
+  { id: 'today', label: 'Today', icon: 'today' as const },
+  { id: 'insights', label: 'Insights', icon: 'insights' as const },
+  { id: 'settings', label: 'Settings', icon: 'settings' as const },
 ]
 
 function NavDemo() {
@@ -96,7 +96,15 @@ const effortOptions = [
   { value: 5, label: 'Max' },
 ]
 
+const kindOptions = [
+  { value: 'symptom', label: 'Symptoms' },
+  { value: 'activity', label: 'Activities' },
+  { value: 'exercise_type', label: 'Exercise' },
+  { value: 'pain_area', label: 'Body' },
+]
+
 function CompactDemo() {
+  const [kind, setKind] = useState('symptom')
   const [hours, setHours] = useState(7)
   const [quality, setQuality] = useState<number | null>(3)
   const [effort, setEffort] = useState<number | null>(null)
@@ -129,6 +137,17 @@ function CompactDemo() {
           options={effortOptions}
           value={effort}
           onChange={setEffort}
+        />
+      </div>
+      <div className="space-y-[0.8rem]">
+        <p className="text-micro text-text-muted">
+          Scroll tabs (fades show more chips; Settings options)
+        </p>
+        <ScrollTabs
+          label="Kind of option"
+          options={kindOptions}
+          value={kind}
+          onChange={setKind}
         />
       </div>
     </div>
@@ -164,6 +183,7 @@ function PrimitivesPage() {
               <Button variant="secondary" disabled>
                 Disabled
               </Button>
+              <Button variant="quiet">Quiet (Sign out)</Button>
             </div>
             <Button fullWidth>Save Entry</Button>
             <Button fullWidth variant="secondary">
@@ -181,6 +201,26 @@ function PrimitivesPage() {
         <Demo title="Bottom Nav">
           <Card className="bg-surface-subtle">
             <NavDemo />
+          </Card>
+        </Demo>
+
+        <Demo title="Icons (Solar, CC BY 4.0 by 480 Design)">
+          <Card className="space-y-[1.6rem]">
+            {([false, true] as const).map((bold) => (
+              <div key={String(bold)}>
+                <p className="text-micro text-text-muted mb-[0.8rem]">
+                  {bold ? 'Bold Duotone (active)' : 'Line Duotone'}
+                </p>
+                <div className="text-brand-sage flex flex-wrap gap-[1.6rem]">
+                  {ICON_NAMES.map((name) => (
+                    <span key={name} className="flex flex-col items-center gap-[0.4rem]">
+                      <Icon name={name} bold={bold} size={28} />
+                      <span className="text-micro text-text-muted">{name}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </Card>
         </Demo>
 
@@ -216,8 +256,7 @@ function PrimitivesPage() {
 
         <Demo title="Pill Chip">
           <Card className="space-y-[1.6rem]">
-            <ChipDemo variant="sage" />
-            <ChipDemo variant="clay" />
+            <ChipDemo />
           </Card>
         </Demo>
 

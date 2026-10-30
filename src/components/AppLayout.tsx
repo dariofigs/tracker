@@ -3,15 +3,15 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { CheckinProvider, useCheckin } from '../features/checkin/CheckinContext'
 import LoadingCards from '../features/today/LoadingCards'
 import OfflineBanner from './OfflineBanner'
-import { AppShell, BottomNav, Button, InsightsIcon, SettingsIcon, TodayIcon } from './ui'
+import { AppShell, BottomNav, Button } from './ui'
 import type { NavItem } from './ui'
 import { periodFor } from '../lib/dates'
 import { useMorningCutoff } from '../lib/preferences'
 
 const items: NavItem[] = [
-  { id: '/', label: 'Today', icon: TodayIcon },
-  { id: '/insights', label: 'Insights', icon: InsightsIcon },
-  { id: '/settings', label: 'Settings', icon: SettingsIcon },
+  { id: '/', label: 'Today', icon: 'today' },
+  { id: '/insights', label: 'Insights', icon: 'insights' },
+  { id: '/settings', label: 'Settings', icon: 'settings' },
 ]
 
 function RapidCheckinButton() {
@@ -21,7 +21,7 @@ function RapidCheckinButton() {
       ? 'Morning check-in'
       : 'Evening check-in'
   return (
-    <div className="mx-auto mb-[1.2rem] w-full max-w-[48rem] px-[1.6rem]">
+    <div className="mb-[1.2rem]">
       <Button fullWidth onClick={() => openCheckin()}>
         {label}
       </Button>

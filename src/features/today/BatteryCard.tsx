@@ -18,12 +18,12 @@ function BatteryCard({ reading }: BatteryCardProps) {
         trailing={reading && <StatusChip status={low ? 'low-battery' : 'balanced'} />}
       />
       <p
-        className={`text-metric mt-[1.2rem] font-semibold tabular-nums${reading ? '' : 'text-bead-stone'}`}
+        className={`text-metric mt-[1.2rem] font-semibold tabular-nums ${reading ? '' : 'text-bead-stone'}`}
         aria-hidden={reading ? undefined : true}
       >
         {reading ? `${reading.value}%` : '–%'}
       </p>
-      <p className="text-body text-text-muted mt-[0.4rem] mb-[1.2rem]">
+      <p className="text-body text-text-muted mt-[0.4rem] mb-[0.8rem]">
         {!reading
           ? 'Nothing logged today. Your level will show here after a check-in.'
           : reading.source === 'evening'

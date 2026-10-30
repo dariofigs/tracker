@@ -29,7 +29,9 @@ function AppShell({ children, nav, navRaised = false }: AppShellProps) {
         </main>
         {nav && (
           <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 pb-[max(1.6rem,env(safe-area-inset-bottom))]">
-            <div className="pointer-events-auto">{nav}</div>
+            <div className="pointer-events-auto mx-auto w-full max-w-[48rem] px-[max(1.6rem,env(safe-area-inset-left))]">
+              {nav}
+            </div>
           </div>
         )}
       </div>

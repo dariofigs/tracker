@@ -42,10 +42,18 @@ function AccountCard() {
   return (
     <div className="flex flex-col gap-[2.4rem]">
       <CredentialForm kind="email" status={emailStatus} onSubmit={changeEmail} />
-      <CredentialForm kind="password" status={passwordStatus} onSubmit={changePassword} />
-      <Button variant="secondary" onClick={() => supabase.auth.signOut()}>
-        Sign out
-      </Button>
+      <div className="border-border-subtle border-t pt-[2.4rem]">
+        <CredentialForm
+          kind="password"
+          status={passwordStatus}
+          onSubmit={changePassword}
+        />
+      </div>
+      <div className="border-border-subtle border-t pt-[1.6rem]">
+        <Button variant="quiet" fullWidth onClick={() => supabase.auth.signOut()}>
+          Sign out
+        </Button>
+      </div>
     </div>
   )
 }

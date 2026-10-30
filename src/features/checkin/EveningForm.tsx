@@ -93,7 +93,6 @@ function EveningForm({ form, onChange, options, onAddOption }: EveningFormProps)
             <PillChip
               key={label}
               label={label}
-              variant="clay"
               selected={form.activities.includes(label)}
               onChange={(on) => onChange({ activities: toggle(form.activities, label, on) })}
             />

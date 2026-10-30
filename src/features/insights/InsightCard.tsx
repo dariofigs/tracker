@@ -22,7 +22,7 @@ function InsightCard({ result }: { result: InsightsResult }) {
             aria-valuemin={0}
             aria-valuemax={result.need}
             aria-valuenow={result.have}
-            className="bg-surface-subtle h-[0.8rem] overflow-hidden rounded-full"
+            className="bg-surface-subtle -mt-[0.4rem] h-[0.8rem] overflow-hidden rounded-full"
           >
             <div
               className="bg-brand-sage h-full rounded-full"

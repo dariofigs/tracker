@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { SegmentedControl } from '../../components/ui'
+import { ScrollTabs } from '../../components/ui'
 import { repository } from '../../data/repository'
 import type { CustomOption, CustomOptionKind } from '../../data/types'
 import LoadErrorCard from '../today/LoadErrorCard'
@@ -106,7 +106,7 @@ function OptionsManager() {
 
   return (
     <div className="flex flex-col gap-[1.6rem]">
-      <SegmentedControl
+      <ScrollTabs
         label="Kind of option"
         options={KINDS}
         value={kind}

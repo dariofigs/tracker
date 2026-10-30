@@ -26,7 +26,7 @@ function InsightBanner({ insight }: InsightBannerProps) {
         <p className="text-body">{insight.text}</p>
         <Link
           to="/insights"
-          className="min-touch -my-[1.4rem] text-caption text-brand-sage focus-visible:outline-brand-sage inline-flex items-center self-start font-semibold underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="min-touch text-caption text-brand-sage focus-visible:outline-brand-sage -my-[1.4rem] inline-flex items-center self-start font-semibold underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           View trend chart
         </Link>

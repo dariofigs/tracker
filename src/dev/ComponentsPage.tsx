@@ -260,6 +260,9 @@ function ComponentsPage() {
           <Variant label="Morning">
             <TodayHeader now={new Date(2026, 9, 29, 8)} />
           </Variant>
+          <Variant label="Afternoon">
+            <TodayHeader now={new Date(2026, 9, 29, 14)} />
+          </Variant>
           <Variant label="Evening">
             <TodayHeader now={new Date(2026, 9, 29, 19)} />
           </Variant>
