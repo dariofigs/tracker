@@ -427,16 +427,29 @@ function ComponentsPage() {
         </Demo>
 
         <Demo title="Recent days card">
-          <Variant label="Some days logged, some missed">
+          <Variant label="Mid-week (Fri Oct 30), 3-day streak, some days missed">
             <RecentDaysCard
-              today="2026-10-29"
-              days={4}
+              today="2026-10-30"
+              streak={3}
               onOpen={noop}
               entries={[
+                { ...morning, entryDate: '2026-10-29' },
+                { ...evening, entryDate: '2026-10-29' },
                 { ...morning, entryDate: '2026-10-28' },
-                { ...evening, entryDate: '2026-10-28' },
                 { ...morning, entryDate: '2026-10-27' },
+                { ...morning, entryDate: '2026-10-30' },
               ]}
+            />
+          </Variant>
+          <Variant label="Start of the week, no streak">
+            <RecentDaysCard today="2026-10-25" streak={0} onOpen={noop} entries={[]} />
+          </Variant>
+          <Variant label="Last day of the week, one-day streak">
+            <RecentDaysCard
+              today="2026-10-31"
+              streak={1}
+              onOpen={noop}
+              entries={[{ ...evening, entryDate: '2026-10-31' }]}
             />
           </Variant>
         </Demo>

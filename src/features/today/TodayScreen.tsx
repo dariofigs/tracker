@@ -1,4 +1,5 @@
 import { periodFor, todayString } from '../../lib/dates'
+import { currentStreak } from '../../lib/streak'
 import { useMorningCutoff } from '../../lib/preferences'
 import { useRecentEntries } from '../../hooks/useRecentEntries'
 import { useSaveStatus } from '../../hooks/useSaveStatus'
@@ -17,7 +18,8 @@ import { latestCapacity } from './latestCapacity'
 import SaveStatusLine from './SaveStatusLine'
 import TodayHeader from './TodayHeader'
 
-const RECENT_DAYS = 7
+/** How far back to look; also the longest streak the card can show. */
+const RECENT_DAYS = 120
 
 function TodayScreen() {
   const { morning, evening, loading, error, reload } = useTodayEntries()
@@ -27,6 +29,8 @@ function TodayScreen() {
   const recent = useRecentEntries(RECENT_DAYS)
   const morningCutoff = useMorningCutoff()
   const backup = useBackupReminder()
+  const weekEntries = [...recent, ...[morning, evening].filter((e) => e !== null)]
+  const loggedDays = new Set(weekEntries.map((e) => e.entryDate))
 
   return (
     <div className="flex flex-col gap-[2.4rem]">
@@ -55,8 +59,8 @@ function TodayScreen() {
           <BatteryCard reading={latestCapacity(morning, evening)} />
           <RecentDaysCard
             today={todayString()}
-            days={RECENT_DAYS}
-            entries={recent}
+            streak={currentStreak(loggedDays, todayString())}
+            entries={weekEntries}
             onOpen={openCheckin}
           />
         </>
