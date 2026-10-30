@@ -1,5 +1,8 @@
+import { Suspense } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { CheckinProvider, useCheckin } from '../features/checkin/CheckinContext'
+import LoadingCards from '../features/today/LoadingCards'
+import OfflineBanner from './OfflineBanner'
 import { AppShell, BottomNav, Button, InsightsIcon, SettingsIcon, TodayIcon } from './ui'
 import type { NavItem } from './ui'
 import { periodFor } from '../lib/dates'
@@ -13,7 +16,10 @@ const items: NavItem[] = [
 
 function RapidCheckinButton() {
   const { openCheckin } = useCheckin()
-  const label = periodFor(new Date(), useMorningCutoff()) === 'AM' ? 'Morning check-in' : 'Evening check-in'
+  const label =
+    periodFor(new Date(), useMorningCutoff()) === 'AM'
+      ? 'Morning check-in'
+      : 'Evening check-in'
   return (
     <div className="mx-auto mb-[1.2rem] w-full max-w-[48rem] px-[1.6rem]">
       <Button fullWidth onClick={() => openCheckin()}>
@@ -40,7 +46,10 @@ function AppLayout() {
           </>
         }
       >
-        <Outlet />
+        <OfflineBanner />
+        <Suspense fallback={<LoadingCards label="Loading" />}>
+          <Outlet />
+        </Suspense>
       </AppShell>
     </CheckinProvider>
   )

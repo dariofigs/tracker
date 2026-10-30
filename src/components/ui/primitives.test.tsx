@@ -81,7 +81,7 @@ describe('PillChip', () => {
 
   it('uses the clay variant when active', () => {
     render(<PillChip label="Walk" selected variant="clay" onChange={() => {}} />)
-    expect(screen.getByRole('button')).toHaveClass('text-accent-clay')
+    expect(screen.getByRole('button')).toHaveClass('text-clay-text')
   })
 
   it('has a 48px minimum target', () => {

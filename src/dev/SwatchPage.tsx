@@ -8,6 +8,7 @@ const colors = [
   { name: 'brand-sage', hex: '#2D5A46', className: 'bg-brand-sage' },
   { name: 'sage-tint', hex: '#E8F2EC', className: 'bg-sage-tint' },
   { name: 'accent-clay', hex: '#C47151', className: 'bg-accent-clay' },
+  { name: 'clay-text', hex: '#A85A3C', className: 'bg-clay-text' },
   { name: 'clay-tint', hex: '#FDF1ED', className: 'bg-clay-tint' },
   { name: 'flare-plum', hex: '#8C3B4E', className: 'bg-flare-plum' },
   { name: 'plum-tint', hex: '#FBECEF', className: 'bg-plum-tint' },

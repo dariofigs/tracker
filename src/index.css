@@ -14,6 +14,7 @@
   --color-brand-sage: #2d5a46;
   --color-sage-tint: #e8f2ec;
   --color-accent-clay: #c47151;
+  --color-clay-text: #a85a3c;
   --color-clay-tint: #fdf1ed;
   --color-flare-plum: #8c3b4e;
   --color-plum-tint: #fbecef;
@@ -97,6 +98,6 @@ h3,
 .font-display {
   font-family: var(--font-display);
   font-variation-settings:
-    "SOFT" 100,
-    "WONK" 0;
+    'SOFT' 100,
+    'WONK' 0;
 }

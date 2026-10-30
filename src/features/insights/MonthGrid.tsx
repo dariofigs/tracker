@@ -44,46 +44,50 @@ function MonthGrid({ monthStart, entries, today, onSelect }: MonthGridProps) {
       aria-label="Month calendar"
       className="grid grid-cols-7 gap-y-[0.4rem]"
     >
-      {WEEKDAYS.map((name) => (
-        <span
-          key={name}
-          role="columnheader"
-          className="text-micro text-text-muted text-center uppercase"
-        >
-          {name}
-        </span>
+      <div role="row" className="contents">
+        {WEEKDAYS.map((name) => (
+          <span
+            key={name}
+            role="columnheader"
+            className="text-micro text-text-muted text-center uppercase"
+          >
+            {name}
+          </span>
+        ))}
+      </div>
+      {monthGrid(monthStart).map((week, w) => (
+        <div key={w} role="row" className="contents">
+          {week.map((day, i) => {
+            if (!day) return <span key={`pad-${i}`} role="gridcell" aria-hidden="true" />
+            const am = entries.find((e) => e.entryDate === day && e.period === 'AM')
+            const pm = entries.find((e) => e.entryDate === day && e.period === 'PM')
+            const full = parseDayString(day).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+            })
+            return (
+              <button
+                key={day}
+                type="button"
+                role="gridcell"
+                disabled={day > today}
+                onClick={() => onSelect(day)}
+                aria-label={`${full}: ${describePeriod('morning', am)}, ${describePeriod('evening', pm)}`}
+                aria-current={day === today ? 'date' : undefined}
+                className={`min-touch text-body focus-visible:outline-brand-sage rounded-tile flex flex-col items-center justify-center gap-[0.4rem] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40 ${
+                  day === today ? 'bg-sage-tint font-bold' : ''
+                }`}
+              >
+                <span>{Number(day.slice(8))}</span>
+                <span className="flex gap-[0.4rem]">
+                  <Dot pain={entryPain(am)} logged={!!am} />
+                  <Dot pain={entryPain(pm)} logged={!!pm} />
+                </span>
+              </button>
+            )
+          })}
+        </div>
       ))}
-      {monthGrid(monthStart)
-        .flat()
-        .map((day, i) => {
-          if (!day) return <span key={`pad-${i}`} role="gridcell" aria-hidden="true" />
-          const am = entries.find((e) => e.entryDate === day && e.period === 'AM')
-          const pm = entries.find((e) => e.entryDate === day && e.period === 'PM')
-          const full = parseDayString(day).toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-          })
-          return (
-            <button
-              key={day}
-              type="button"
-              role="gridcell"
-              disabled={day > today}
-              onClick={() => onSelect(day)}
-              aria-label={`${full}: ${describePeriod('morning', am)}, ${describePeriod('evening', pm)}`}
-              aria-current={day === today ? 'date' : undefined}
-              className={`min-touch text-body focus-visible:outline-brand-sage rounded-tile flex flex-col items-center justify-center gap-[0.4rem] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40 ${
-                day === today ? 'bg-sage-tint font-bold' : ''
-              }`}
-            >
-              <span>{Number(day.slice(8))}</span>
-              <span className="flex gap-[0.4rem]">
-                <Dot pain={entryPain(am)} logged={!!am} />
-                <Dot pain={entryPain(pm)} logged={!!pm} />
-              </span>
-            </button>
-          )
-        })}
     </div>
   )
 }

@@ -1,6 +1,8 @@
 // Feature components (checklist Phase 4 onward). Every component built from a feature folder gets a
 // section here in all its states; the shared primitives live on PrimitivesPage.
 import { useState, type ReactNode } from 'react'
+import OfflineBanner from '../components/OfflineBanner'
+import StartupScreen from '../components/StartupScreen'
 import { Button } from '../components/ui'
 import type { Entry, EntryInput } from '../data/types'
 import { generateSeed } from './seedData'
@@ -260,6 +262,38 @@ function ComponentsPage() {
           </Variant>
           <Variant label="Evening">
             <TodayHeader now={new Date(2026, 9, 29, 19)} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Offline banner">
+          <Variant label="Offline">
+            <OfflineBanner offline />
+          </Variant>
+          <Variant label="Online (renders nothing)">
+            <OfflineBanner offline={false} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Startup screen">
+          <Variant label="Loading">
+            <div className="h-[16rem] overflow-hidden">
+              <StartupScreen state="loading" />
+            </div>
+          </Variant>
+          <Variant label="Database unreachable">
+            <StartupScreen
+              state="error"
+              title="Couldn’t reach your data"
+              message="Check your connection. If you haven’t used the app for a week, the free database may be paused: restart it from the Supabase dashboard."
+              onRetry={noop}
+            />
+          </Variant>
+          <Variant label="Not configured">
+            <StartupScreen
+              state="error"
+              title="App isn’t configured"
+              message="The Supabase URL or key is missing. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY, then rebuild."
+            />
           </Variant>
         </Demo>
 

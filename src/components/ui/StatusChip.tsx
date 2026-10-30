@@ -2,7 +2,7 @@ export type Status = 'balanced' | 'low-battery' | 'due' | 'flare'
 
 const styles: Record<Status, { label: string; className: string }> = {
   balanced: { label: 'Balanced', className: 'bg-sage-tint text-brand-sage' },
-  'low-battery': { label: 'Low Battery', className: 'bg-clay-tint text-accent-clay' },
+  'low-battery': { label: 'Low Battery', className: 'bg-clay-tint text-clay-text' },
   due: { label: 'DUE', className: 'bg-accent-clay text-surface-card' },
   flare: { label: 'Flare', className: 'bg-plum-tint text-flare-plum' },
 }

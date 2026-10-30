@@ -36,8 +36,13 @@ function BottomSheet({ open, onClose, title, children, footer }: BottomSheetProp
     const previous = document.activeElement as HTMLElement | null
     const overflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    // The sheet is portalled to <body>, so the app root behind it can be taken out of reach of
+    // keyboards and screen readers while it is open.
+    const appRoot = document.getElementById('root')
+    appRoot?.setAttribute('inert', '')
     sheetRef.current?.focus()
     return () => {
+      appRoot?.removeAttribute('inert')
       document.body.style.overflow = overflow
       previous?.focus?.()
     }

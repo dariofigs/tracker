@@ -13,7 +13,7 @@ type PillChipProps = Omit<
 
 const activeStyles = {
   sage: 'border-brand-sage bg-sage-tint text-brand-sage',
-  clay: 'border-accent-clay bg-clay-tint text-accent-clay',
+  clay: 'border-accent-clay bg-clay-tint text-clay-text',
 }
 
 function PillChip({

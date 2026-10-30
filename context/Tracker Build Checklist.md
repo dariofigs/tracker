@@ -176,15 +176,15 @@ Insights has two views behind a segmented switch: **Trends** and **Calendar**. T
 
 ## Phase 8: Quality and launch
 
-- [ ] 8.1 Accessibility pass: contrast on every token pair, focus order, screen-reader labels, reduced motion, 48px targets
+- [x] 8.1 Accessibility pass: contrast on every token pair, focus order, screen-reader labels, reduced motion, 48px targets
 - [ ] 8.2 Real-phone test on your device: gauge feel, sheet gestures, keyboard behavior, safe areas, bright and dim rooms
-- [ ] 8.3 End-to-end smoke test: log AM, log PM, see it on Today, in the Calendar and in Insights
-- [ ] 8.4 Error and loading states everywhere: no network, signed out, database paused, failed save
-- [ ] 8.5 Remove or isolate seed data so test rows never reach your real history
-- [ ] 8.6 Bundle size and load-time check on mobile data
+- [x] 8.3 End-to-end smoke test: log AM, log PM, see it on Today, in the Calendar and in Insights
+- [x] 8.4 Error and loading states everywhere: no network, signed out, database paused, failed save
+- [x] 8.5 Remove or isolate seed data so test rows never reach your real history
+- [x] 8.6 Bundle size and load-time check on mobile data
 - [ ] 8.7 Deploy to Cloudflare Pages (or Netlify) with environment variables set; add to your home screen
-- [ ] 8.8 Lock down: confirm signups are off, rules are active, and the app URL is not indexed (noindex)
-- [ ] 8.9 Write a short README with how to redeploy, rebuild the database from the SQL file, and restore from a backup
+- [ ] 8.8 Lock down (noindex meta, `X-Robots-Tag` header and `robots.txt` are in; confirming signups off and RLS on the live project is still yours): confirm signups are off, rules are active, and the app URL is not indexed (noindex)
+- [x] 8.9 Write a short README with how to redeploy, rebuild the database from the SQL file, and restore from a backup
 
 **Done when:** the live app works from your phone, an export has been taken, and a restore has been tested once.
 

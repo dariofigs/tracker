@@ -1,10 +1,16 @@
 // Fills the Supabase TEST project with about 60 days of seed data (checklist 2.6).
 // Run with: npm run seed:test
-// Refuses to run if the test URL is the same as the real project in .env.
+// Fails closed: it runs only when .env.test names its own project ref in SEED_ALLOWED_PROJECT_REF,
+// that ref matches the URL it is about to write to, and the URL differs from the real project in .env.
 
 import { readFileSync } from 'node:fs'
 import { createClient } from '@supabase/supabase-js'
-import { SEED_NOTE, SEED_OPTIONS, generateSeed, generateTimedSeed } from '../src/dev/seedData'
+import {
+  SEED_NOTE,
+  SEED_OPTIONS,
+  generateSeed,
+  generateTimedSeed,
+} from '../src/dev/seedData'
 import { entryToRow, timedLogToRow } from '../src/data/mappers'
 import { todayString } from '../src/lib/dates'
 
@@ -32,12 +38,29 @@ const email = process.env.TEST_EMAIL
 const password = process.env.TEST_PASSWORD
 
 if (!testUrl || !testKey || !email || !password) {
-  throw new Error('Run with --env-file=.env.test and set the URL, key, TEST_EMAIL and TEST_PASSWORD.')
+  throw new Error(
+    'Run with --env-file=.env.test and set the URL, key, TEST_EMAIL and TEST_PASSWORD.',
+  )
+}
+
+const allowedRef = process.env.SEED_ALLOWED_PROJECT_REF
+const testRef = new URL(testUrl).hostname.split('.')[0]
+if (!allowedRef || allowedRef !== testRef) {
+  throw new Error(
+    `Set SEED_ALLOWED_PROJECT_REF=${testRef} in .env.test to confirm this is the test project.`,
+  )
 }
 
 const realUrl = readEnvFile('.env').VITE_SUPABASE_URL
-if (realUrl && realUrl === testUrl) {
-  throw new Error('.env.test points at the real project. Seed data is only written to the test project.')
+if (!realUrl) {
+  throw new Error(
+    '.env has no VITE_SUPABASE_URL, so the real project cannot be ruled out.',
+  )
+}
+if (new URL(realUrl).hostname === new URL(testUrl).hostname) {
+  throw new Error(
+    '.env.test points at the real project. Seed data is only written to the test project.',
+  )
 }
 
 const client = createClient(testUrl, testKey)
@@ -45,7 +68,9 @@ const { error: signInError } = await client.auth.signInWithPassword({ email, pas
 if (signInError) throw signInError
 
 // The repository module reads Vite's import.meta.env, so this script talks to the client directly.
-const { data: existing, error: listError } = await client.from('custom_options').select('kind, label')
+const { data: existing, error: listError } = await client
+  .from('custom_options')
+  .select('kind, label')
 if (listError) throw listError
 
 const missing = Object.entries(SEED_OPTIONS).flatMap(([kind, labels]) =>
@@ -68,7 +93,10 @@ for (const entry of entries) {
 }
 
 // Timed logs have no unique key, so clear the previous seed logs first to keep reruns from doubling them.
-const { error: clearError } = await client.from('timed_logs').delete().eq('note', SEED_NOTE)
+const { error: clearError } = await client
+  .from('timed_logs')
+  .delete()
+  .eq('note', SEED_NOTE)
 if (clearError) throw clearError
 
 const timed = generateTimedSeed(todayString(), DAYS)

@@ -19,7 +19,8 @@ function SaveStatusLine({ status }: { status: SaveStatus }) {
     return () => clearTimeout(timer)
   }, [status.state])
 
-  const message = saveMessage(status) ?? (justSaved && status.state === 'saved' ? 'Saved' : null)
+  const message =
+    saveMessage(status) ?? (justSaved && status.state === 'saved' ? 'Saved' : null)
   const warn = status.state !== 'saving' && status.state !== 'saved'
 
   return (
@@ -27,7 +28,7 @@ function SaveStatusLine({ status }: { status: SaveStatus }) {
       {message && (
         <p
           className={`text-body-sm rounded-tile px-[1.2rem] py-[0.8rem] font-semibold ${
-            warn ? 'bg-clay-tint text-accent-clay' : 'bg-surface-subtle text-text-muted'
+            warn ? 'bg-clay-tint text-clay-text' : 'bg-surface-subtle text-text-muted'
           }`}
         >
           {message}
