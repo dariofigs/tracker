@@ -26,7 +26,7 @@ function RecentDaysCard({ today, days, entries, onOpen }: RecentDaysCardProps) {
         {dates.map((date) => (
           <li
             key={date}
-            className="border-border-subtle flex items-center justify-between gap-[1.2rem] border-b py-[0.4rem] last:border-b-0"
+            className="border-border-subtle flex items-center justify-between gap-[1.2rem] border-b py-[0.8rem] last:border-b-0 last:pb-0"
           >
             <span className="text-body text-text-primary font-semibold">
               {parseDayString(date).toLocaleDateString('en-US', {

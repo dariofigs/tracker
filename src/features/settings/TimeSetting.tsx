@@ -20,7 +20,7 @@ function TimeSetting({ value, onChange }: TimeSettingProps) {
             onChange={(e) => {
               if (isValidCutoff(e.target.value)) onChange(e.target.value)
             }}
-            className="min-touch bg-surface-subtle text-body w-[14rem] rounded-full pr-[4rem] pl-[1.6rem] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:opacity-0"
+            className="min-touch bg-surface-subtle text-body block h-[4.8rem] w-[14rem] appearance-none rounded-full pr-[4rem] pl-[1.6rem] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:opacity-0"
           />
           <Icon
             name="clock"
@@ -36,7 +36,7 @@ function TimeSetting({ value, onChange }: TimeSettingProps) {
         <button
           type="button"
           onClick={() => onChange(DEFAULT_MORNING_CUTOFF)}
-          className="min-touch text-caption text-brand-sage self-start font-semibold underline underline-offset-2"
+          className="min-touch text-caption text-brand-sage -mb-[1.4rem] self-start font-semibold underline underline-offset-2"
         >
           Reset to 12:00
         </button>

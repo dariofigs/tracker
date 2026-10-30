@@ -15,7 +15,7 @@ type AppShellProps = {
 function AppShell({ children, nav, navRaised = false }: AppShellProps) {
   return (
     <div className="bg-canvas-bg min-h-dvh">
-      <div className="relative mx-auto min-h-dvh w-full max-w-[48rem] pt-[env(safe-area-inset-top)] pr-[max(1.6rem,env(safe-area-inset-right))] pl-[max(1.6rem,env(safe-area-inset-left))]">
+      <div className="relative mx-auto min-h-dvh w-full max-w-[48rem] pt-[calc(env(safe-area-inset-top)+1.6rem)] pr-[max(1.6rem,env(safe-area-inset-right))] pl-[max(1.6rem,env(safe-area-inset-left))]">
         <main
           className={
             nav

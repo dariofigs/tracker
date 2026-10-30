@@ -24,7 +24,9 @@ function SaveStatusLine({ status }: { status: SaveStatus }) {
   const warn = status.state !== 'saving' && status.state !== 'saved'
 
   return (
-    <div role="status" aria-live="polite">
+    // The live region stays mounted so messages are announced; while empty it cancels the
+    // flex gap it would otherwise add under the header.
+    <div role="status" aria-live="polite" className={message ? '' : '-mt-[2.4rem]'}>
       {message && (
         <p
           className={`text-caption rounded-tile px-[1.2rem] py-[0.8rem] font-semibold ${

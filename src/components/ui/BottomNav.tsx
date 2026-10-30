@@ -32,7 +32,7 @@ function BottomNav({ items, value, onChange }: BottomNavProps) {
               active ? 'bg-sage-tint text-brand-sage' : 'text-text-muted'
             }`}
           >
-            <Icon name={item.icon} bold={active} size={24} />
+            <Icon name={item.icon} bold={active} size={24} strokeWidth={1.5} />
             {item.label}
           </button>
         )

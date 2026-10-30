@@ -42,7 +42,7 @@ function AccountCard() {
   return (
     <div className="flex flex-col gap-[2.4rem]">
       <CredentialForm kind="email" status={emailStatus} onSubmit={changeEmail} />
-      <div className="border-border-subtle border-t pt-[2.4rem]">
+      <div className="pt-[2.4rem]">
         <CredentialForm
           kind="password"
           status={passwordStatus}
