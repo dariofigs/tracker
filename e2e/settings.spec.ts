@@ -8,7 +8,7 @@ test.afterEach(cleanUp)
 test('the switch time decides which check-in the button opens', async ({ page }) => {
   await page.clock.setFixedTime(new Date(2026, 9, 30, 13, 0))
   await page.goto('/')
-  await expect(page.getByRole('button', { name: 'Evening check-in' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Evening check-in', exact: true })).toBeVisible()
 
   await page
     .getByRole('navigation', { name: 'Main' })
@@ -19,11 +19,11 @@ test('the switch time decides which check-in the button opens', async ({ page })
     .getByRole('navigation', { name: 'Main' })
     .getByRole('button', { name: 'Today' })
     .click()
-  await expect(page.getByRole('button', { name: 'Morning check-in' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Morning check-in', exact: true })).toBeVisible()
 
   // The choice survives a reload.
   await page.reload()
-  await expect(page.getByRole('button', { name: 'Morning check-in' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Morning check-in', exact: true })).toBeVisible()
 })
 
 test('renaming an option updates past check-ins that used it', async ({ page }) => {

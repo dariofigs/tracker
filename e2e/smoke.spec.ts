@@ -18,7 +18,7 @@ test('log morning and evening, then see the day on Today, Calendar and Trends', 
 }) => {
   await page.clock.setFixedTime(new Date(1998, 6, 1, 8, 0))
   await page.goto('/')
-  await page.getByRole('button', { name: 'Morning check-in' }).click()
+  await page.getByRole('button', { name: 'Morning check-in', exact: true }).click()
   const morning = page.getByRole('dialog')
   await setPain(page, 'Waking pain', 3)
   await morning.getByRole('button', { name: 'Save Entry' }).click()
@@ -27,7 +27,7 @@ test('log morning and evening, then see the day on Today, Calendar and Trends', 
 
   await page.clock.setFixedTime(new Date(1998, 6, 1, 19, 0))
   await page.reload()
-  await page.getByRole('button', { name: 'Evening check-in' }).click()
+  await page.getByRole('button', { name: 'Evening check-in', exact: true }).click()
   const evening = page.getByRole('dialog')
   await setPain(page, 'End-of-day pain', 5)
   await evening.getByRole('button', { name: 'Save Entry' }).click()
@@ -64,11 +64,11 @@ test('a save made without a connection waits, then goes through when it returns'
 }) => {
   await page.clock.setFixedTime(new Date(1998, 6, 2, 8, 0))
   await page.goto('/')
-  await expect(page.getByRole('button', { name: 'Morning check-in' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Morning check-in', exact: true })).toBeVisible()
 
   await context.setOffline(true)
   await expect(page.getByText(/You’re offline/)).toBeVisible()
-  await page.getByRole('button', { name: 'Morning check-in' }).click()
+  await page.getByRole('button', { name: 'Morning check-in', exact: true }).click()
   const sheet = page.getByRole('dialog')
   await setPain(page, 'Waking pain', 2)
   await sheet.getByRole('button', { name: 'Save Entry' }).click()
