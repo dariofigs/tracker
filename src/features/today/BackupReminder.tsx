@@ -7,7 +7,7 @@ type BackupReminderProps = {
   onSnooze: () => void
 }
 
-/** Monthly nudge to export a copy of the data. Dismissible; reappears after a week. */
+/** Monthly nudge to export a copy of the data. Dismissible; reappears the next day. */
 function BackupReminder({ days, neverBackedUp, onSnooze }: BackupReminderProps) {
   return (
     <aside

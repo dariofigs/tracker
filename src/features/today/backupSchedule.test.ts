@@ -39,12 +39,13 @@ describe('daysSinceBackup', () => {
   it('stays hidden while snoozed, then returns', () => {
     const input = { ...base, firstEntryDate: '2026-01-01' }
     expect(daysSinceBackup({ ...input, snoozedUntil: snoozeUntil(now) })).toBeNull()
+    // Still hidden late the same evening, back at the start of the next day.
+    const snoozed = snoozeUntil(new Date('2026-10-30T09:00:00'))
+    const late = new Date('2026-10-30T23:59:00')
+    const nextDay = new Date('2026-10-31T00:00:00')
+    expect(daysSinceBackup({ ...input, now: late, snoozedUntil: snoozed })).toBeNull()
     expect(
-      daysSinceBackup({
-        ...input,
-        now: new Date('2026-11-08T12:00:00'),
-        snoozedUntil: snoozeUntil(now),
-      }),
+      daysSinceBackup({ ...input, now: nextDay, snoozedUntil: snoozed }),
     ).not.toBeNull()
   })
 })

@@ -3,9 +3,6 @@ const DAY_MS = 24 * 60 * 60 * 1000
 /** Days after the last backup (or the first entry, if never backed up) before the reminder appears. */
 export const REMIND_AFTER_DAYS = 30
 
-/** Days the reminder stays hidden after "Remind me later". */
-export const SNOOZE_DAYS = 7
-
 type ReminderInput = {
   now: Date
   /** ISO timestamp of the last JSON export, or null if never. */
@@ -35,6 +32,7 @@ export function daysSinceBackup({
   return days >= REMIND_AFTER_DAYS ? days : null
 }
 
+/** "Remind me later" hides the reminder until the next local day begins. */
 export function snoozeUntil(now: Date): string {
-  return new Date(now.getTime() + SNOOZE_DAYS * DAY_MS).toISOString()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString()
 }
