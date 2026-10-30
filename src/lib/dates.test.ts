@@ -4,6 +4,7 @@ import {
   addMonths,
   dayBounds,
   endOfMonth,
+  formatClock,
   monthGrid,
   parseDayString,
   periodFor,
@@ -119,5 +120,17 @@ describe('monthGrid', () => {
 
   it('starts the first week with no padding when the month begins on a Monday', () => {
     expect(monthGrid('2026-06-01')[0][0]).toBe('2026-06-01')
+  })
+})
+
+describe('formatClock', () => {
+  it('shows a 12-hour clock without zero padding', () => {
+    expect(formatClock('19:00')).toBe('7:00 PM')
+    expect(formatClock('09:05')).toBe('9:05 AM')
+  })
+
+  it('handles noon and midnight', () => {
+    expect(formatClock('12:00')).toBe('12:00 PM')
+    expect(formatClock('00:00')).toBe('12:00 AM')
   })
 })

@@ -46,6 +46,15 @@ export function periodFor(
   return nowMinutes < cutoffMinutes ? 'AM' : 'PM'
 }
 
+/** "HH:mm" (24-hour) as a 12-hour clock for display, e.g. "19:00" becomes "7:00 PM". */
+export function formatClock(hhmm: string): string {
+  const [hours, minutes] = hhmm.split(':').map(Number)
+  return new Date(2000, 0, 1, hours, minutes).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
 /** First day of the month containing `day`, as YYYY-MM-01. */
 export function startOfMonth(day: string): string {
   return `${day.slice(0, 7)}-01`

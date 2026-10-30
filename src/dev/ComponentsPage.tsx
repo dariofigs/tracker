@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react'
 import OfflineBanner from '../components/OfflineBanner'
 import StartupScreen from '../components/StartupScreen'
-import { Button } from '../components/ui'
+import { Button, Card, SectionHeader } from '../components/ui'
 import type { Entry, EntryInput } from '../data/types'
 import { generateSeed } from './seedData'
 import { findInsights } from '../features/insights/engine/insights'
@@ -26,6 +26,7 @@ import MorningForm from '../features/checkin/MorningForm'
 import CustomChipAdder from '../features/checkin/CustomChipAdder'
 import NoteField from '../features/checkin/NoteField'
 import { DEFAULT_OPTIONS } from '../features/checkin/options'
+import AccountSection from '../features/settings/AccountSection'
 import CredentialForm, {
   type CredentialStatus,
 } from '../features/settings/CredentialForm'
@@ -534,10 +535,16 @@ function ComponentsPage() {
 
         <Demo title="Check-in switch time">
           <Variant label="Default (noon)">
-            <TimeSettingDemo initial="12:00" />
+            <Card className="flex flex-col gap-[1.6rem]">
+              <SectionHeader title="Check-in" />
+              <TimeSettingDemo initial="12:00" />
+            </Card>
           </Variant>
-          <Variant label="Changed (shows reset)">
-            <TimeSettingDemo initial="14:30" />
+          <Variant label="Changed (shows reset; card padding as in Settings)">
+            <Card className="flex flex-col gap-[1.6rem]">
+              <SectionHeader title="Check-in" />
+              <TimeSettingDemo initial="19:00" />
+            </Card>
           </Variant>
         </Demo>
 
@@ -667,6 +674,39 @@ function ComponentsPage() {
                 message: 'Could not change the password. Try a different one.',
               }}
             />
+          </Variant>
+        </Demo>
+
+        <Demo title="Account section">
+          <Variant label="Idle">
+            <Card className="flex flex-col gap-[1.6rem]">
+              <SectionHeader title="Account" />
+              <AccountSection
+                emailStatus={{ state: 'idle' }}
+                passwordStatus={{ state: 'idle' }}
+                onChangeEmail={noop}
+                onChangePassword={noop}
+                onSignOut={noop}
+              />
+            </Card>
+          </Variant>
+          <Variant label="Saving, error and done messages">
+            <Card className="flex flex-col gap-[1.6rem]">
+              <SectionHeader title="Account" />
+              <AccountSection
+                emailStatus={{
+                  state: 'done',
+                  message: 'Check both inboxes and open the confirmation links.',
+                }}
+                passwordStatus={{
+                  state: 'error',
+                  message: 'Could not change the password. Try a different one.',
+                }}
+                onChangeEmail={noop}
+                onChangePassword={noop}
+                onSignOut={noop}
+              />
+            </Card>
           </Variant>
         </Demo>
 

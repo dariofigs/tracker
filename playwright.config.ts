@@ -4,7 +4,8 @@ import { defineConfig } from '@playwright/test'
 // project and never to real data. TEST_EMAIL and TEST_PASSWORD come from the same file.
 process.loadEnvFile('.env.test')
 
-const PORT = 5174
+// Not Vite's default range (5173+), so a dev server left running can never be picked up by mistake.
+const PORT = 5190
 const AUTH_FILE = 'e2e/.auth/user.json'
 
 export default defineConfig({
@@ -21,7 +22,9 @@ export default defineConfig({
   webServer: {
     command: `npx vite --mode test --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    // Never reuse a server: a plain `npm run dev` talks to the real project, and these specs
+    // write rows. Playwright fails if the port is taken, which is the safe outcome.
+    reuseExistingServer: false,
   },
   projects: [
     { name: 'setup', testMatch: /auth\.setup\.ts/ },

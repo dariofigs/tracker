@@ -9,21 +9,22 @@
 
 Building on the approved **Botanical Sanctuary** palette, here are functional roles and extended tints:
 
-| Token Name       | Hex Code  | Role & Usage                                                |
-| :--------------- | :-------- | :---------------------------------------------------------- |
-| `canvas-bg`      | `#FBF9F5` | Primary app ground (warm unbleached linen)                  |
-| `surface-card`   | `#FFFFFF` | Primary card / container fill                               |
-| `surface-subtle` | `#F3EFEA` | Secondary container, inactive chips, unselected track       |
-| `border-subtle`  | `#EBE5DC` | 1px card boundaries and structural dividers                 |
-| `brand-sage`     | `#2D5A46` | Primary brand accent, low pain (1–3), active checkmarks     |
-| `sage-tint`      | `#E8F2EC` | Light badge background, pacing balance status               |
-| `accent-clay`    | `#C47151` | Moderate warning, exertion strain, moderate pain (4–6)      |
-| `clay-tint`      | `#FDF1ED` | Mild warning chips and exertion highlights                  |
-| `flare-plum`     | `#8C3B4E` | High pain (7–10) and flare indicator (gentle, non-alarming) |
-| `plum-tint`      | `#FBECEF` | Flare banner / high-pain chip fill                          |
-| `amber-pacing`   | `#D97706` | Spoon capacity alert, rest reminder                         |
-| `text-primary`   | `#1E2220` | High-contrast espresso for headlines, labels, metrics       |
-| `text-muted`     | `#736B63` | Subtitles, timestamps, unit labels, inactive icons          |
+| Token Name       | Hex Code  | Role & Usage                                                                            |
+| :--------------- | :-------- | :-------------------------------------------------------------------------------------- |
+| `canvas-bg`      | `#FBF9F5` | Primary app ground (warm unbleached linen)                                              |
+| `surface-card`   | `#FFFFFF` | Primary card / container fill                                                           |
+| `surface-subtle` | `#F3EFEA` | Secondary container, inactive chips, unselected track                                   |
+| `border-subtle`  | `#EBE5DC` | 1px card boundaries and structural dividers                                             |
+| `brand-sage`     | `#2D5A46` | Primary brand accent, low pain (1–3), active checkmarks                                 |
+| `sage-tint`      | `#E8F2EC` | Light badge background, pacing balance status                                           |
+| `accent-clay`    | `#C47151` | Moderate warning, `DUE` tag, moderate pain (4–6)                                        |
+| `clay-tint`      | `#FDF1ED` | Mild warning surfaces: offline banner, backup reminder                                  |
+| `clay-text`      | `#A85A3C` | Text on `clay-tint` and quiet clay actions (about 4.5:1 on `clay-tint`, 5.0:1 on white) |
+| `flare-plum`     | `#8C3B4E` | High pain (7–10) and flare indicator (gentle, non-alarming)                             |
+| `plum-tint`      | `#FBECEF` | Flare banner / high-pain chip fill                                                      |
+| `amber-pacing`   | `#D97706` | Spoon capacity alert, rest reminder                                                     |
+| `text-primary`   | `#1E2220` | High-contrast espresso for headlines, labels, metrics                                   |
+| `text-muted`     | `#736B63` | Subtitles, timestamps, unit labels, inactive icons                                      |
 
 ---
 
@@ -75,9 +76,10 @@ Building on the approved **Botanical Sanctuary** palette, here are functional ro
 ### 3. Tactile Pill Chips (Symptom & Activity Toggles)
 
 - **Purpose:** 1-tap selectors with minimum 48px touch clearance.
+- **One style for every kind of chip** (pain areas, activities, symptoms). Clay is a warning colour, so it is not used to tell chip kinds apart.
 - **States:**
-  - **Active:** Sage or Clay fill with `✓` prefix and bold text
-  - **Inactive:** Oat fill (`#F3EFEA`) with `+` prefix and muted text
+  - **Active:** Sage tint fill and border, sage text, bold, with the Solar Linear check icon before the label
+  - **Inactive:** Oat fill (`#F3EFEA`) with the Solar Linear plus icon and muted text
 
 ### 4. Correlation Insight Banner (Activity ↔ Symptom Link)
 
@@ -88,16 +90,50 @@ Building on the approved **Botanical Sanctuary** palette, here are functional ro
   - Humanized takeaway: _"Gentle walk (+20m) yesterday correlated with 25% lower morning stiffness today."_
   - Action link: _"View trend chart"_
 
-### 5. Sticky Bottom Navigation Bar
+### 5. Floating Bottom Navigation Bar
 
 - **Purpose:** Global navigation optimized for one-thumb reachability.
 - **Tabs:**
   - `Today` (Daily glance & rapid check-in)
-  - `Log` (History & timeline)
-  - `Insights` (Correlation graphs & trends)
-  - `Settings` (Sensors & custom symptoms)
+  - `Insights` (Correlation graphs & trends, plus the calendar)
+  - `Settings` (Check-in time, your options, backup, account)
+- **Layout:** spans the same column as the page content (max 480px, 16px side padding); tabs share the width equally. The active tab has a sage tint and a Bold Duotone icon.
+- **iOS Safari rule:** the fixed wrapper is offset from the bottom with `bottom: max(1.6rem, env(safe-area-inset-bottom))`. A fixed box that touches the bottom edge makes iOS 26+ Safari clip the page above its toolbar and paint a solid strip.
 
 ### 6. Rapid Check-in Floating / Fixed Action
 
 - **Purpose:** Available on every screen for instant logging without multi-page transitions.
-- **Structure:** Full-width 50px pill button or prominent floating trigger.
+- **Structure:** Full-width 50px pill button or prominent floating trigger, sharing the nav's column width.
+
+### 7. Backup Reminder
+
+- **Structure:** `clay-tint` card, body text in `clay-text`; a solid sage "Back up now" button (the one affirmative action) and a `clay-text` "Remind me later" link. Offline banner and save-status warnings use the same `clay-tint` and `clay-text` pair.
+
+### 8. Settings Controls
+
+- **Your options tabs:** a row of chips that scrolls sideways when it doesn't fit (`ScrollTabs`). A fade on the edge that still has content hints at more chips. Same radio behaviour as the segmented control.
+- **Check-in time:** a 48px oat pill drawn by the app (12-hour time and a clock icon); the native time input sits invisibly on top so a tap opens the device picker.
+- **Account:** email form, then password form, a hairline divider, then the `quiet` Sign out button.
+
+---
+
+## 4. Buttons
+
+- **Primary:** sage fill, white text. **Secondary:** sage outline. **Quiet:** no fill or outline, `clay-text`, for low-emphasis actions such as Sign out.
+- All buttons are at least 48px high; full-width buttons are 50px.
+
+---
+
+## 5. Icons
+
+- **Set:** Solar by 480 Design (CC BY 4.0), through the shared `Icon` component. Credit is in the README.
+- **Weights:** Bold Duotone for the active nav tab; Line Duotone for other icons; plain Linear for check, plus and the calendar arrows so small marks stay crisp.
+- **Stroke:** 2 for general icons, 1.5 (the Solar default) in the bottom nav.
+- Icons are decorative (`aria-hidden`); a text label carries the meaning.
+
+---
+
+## 6. Layout Notes
+
+- Pages start 16px below the safe-area top so iOS Safari's top blur doesn't soften the first line.
+- Today's header and Settings share the same gap to the content below (the empty save-status line adds no space).

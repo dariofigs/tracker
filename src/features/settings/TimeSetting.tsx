@@ -1,4 +1,4 @@
-import { DEFAULT_MORNING_CUTOFF } from '../../lib/dates'
+import { DEFAULT_MORNING_CUTOFF, formatClock } from '../../lib/dates'
 import { Icon } from '../../components/ui'
 import { isValidCutoff } from '../../lib/preferences'
 
@@ -13,19 +13,20 @@ function TimeSetting({ value, onChange }: TimeSettingProps) {
     <div className="flex flex-col gap-[0.8rem]">
       <label className="flex items-center justify-between gap-[1.6rem]">
         <span className="text-body text-balance">Evening check-in starts at</span>
-        <span className="relative shrink-0">
+        {/* The pill is drawn here; the real time input sits invisibly on top so a tap opens the
+            native picker. Styling the input itself top-aligns its text in iOS Safari. */}
+        <span className="bg-surface-subtle text-body has-[:focus-visible]:outline-brand-sage relative flex h-[4.8rem] w-[14rem] shrink-0 items-center justify-between rounded-full px-[1.6rem] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2">
+          <span aria-hidden="true" className="tabular-nums">
+            {formatClock(value)}
+          </span>
+          <Icon name="clock" size={20} className="text-text-muted" />
           <input
             type="time"
             value={value}
             onChange={(e) => {
               if (isValidCutoff(e.target.value)) onChange(e.target.value)
             }}
-            className="min-touch bg-surface-subtle text-body block h-[4.8rem] w-[14rem] appearance-none rounded-full pr-[4rem] pl-[1.6rem] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:opacity-0"
-          />
-          <Icon
-            name="clock"
-            size={20}
-            className="text-text-muted pointer-events-none absolute top-1/2 right-[1.4rem] -translate-y-1/2"
+            className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
           />
         </span>
       </label>

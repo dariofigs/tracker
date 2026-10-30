@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Button } from '../../components/ui'
 import { supabase } from '../../lib/supabase'
-import CredentialForm, { type CredentialStatus } from './CredentialForm'
+import AccountSection from './AccountSection'
+import type { CredentialStatus } from './CredentialForm'
 
 /** Sign out and change the login. */
 function AccountCard() {
@@ -40,21 +40,13 @@ function AccountCard() {
   }
 
   return (
-    <div className="flex flex-col gap-[2.4rem]">
-      <CredentialForm kind="email" status={emailStatus} onSubmit={changeEmail} />
-      <div className="pt-[2.4rem]">
-        <CredentialForm
-          kind="password"
-          status={passwordStatus}
-          onSubmit={changePassword}
-        />
-      </div>
-      <div className="border-border-subtle border-t pt-[1.6rem]">
-        <Button variant="quiet" fullWidth onClick={() => supabase.auth.signOut()}>
-          Sign out
-        </Button>
-      </div>
-    </div>
+    <AccountSection
+      emailStatus={emailStatus}
+      passwordStatus={passwordStatus}
+      onChangeEmail={changeEmail}
+      onChangePassword={changePassword}
+      onSignOut={() => supabase.auth.signOut()}
+    />
   )
 }
 
