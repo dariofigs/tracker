@@ -4,10 +4,13 @@ import { customOptionFromRow, entryFromRow, entryToRow, timedLogFromRow, timedLo
 import type {
   CustomOption,
   CustomOptionKind,
+  CustomOptionRow,
   Entry,
   EntryInput,
+  EntryRow,
   TimedLog,
   TimedLogInput,
+  TimedLogRow,
 } from './types'
 
 /** A Supabase error. `code` is the Postgres or PostgREST code, empty when there was no response. */
@@ -30,9 +33,76 @@ function unwrap<T>(result: {
   return result.data as T
 }
 
+/** PostgREST returns at most 1000 rows per request, so full-table reads go a page at a time. */
+export const PAGE_SIZE = 1000
+
+/** Reads every row of a query by asking for consecutive pages until one comes back short. */
+async function fetchAllPages<T>(
+  page: (
+    from: number,
+    to: number,
+  ) => PromiseLike<{ data: T[] | null; error: { message: string; code?: string } | null }>,
+): Promise<T[]> {
+  const rows: T[] = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const batch = unwrap(await page(from, from + PAGE_SIZE - 1))
+    rows.push(...batch)
+    if (batch.length < PAGE_SIZE) return rows
+  }
+}
+
 /** Data access for entries and custom options. RLS limits every query to the signed-in user. */
 export function createRepository(client: SupabaseClient) {
   return {
+    /** Every entry, oldest first. For export, import checks and renaming a label across history. */
+    async getAllEntries(): Promise<Entry[]> {
+      const rows = await fetchAllPages<EntryRow>((from, to) =>
+        client
+          .from('entries')
+          .select()
+          .order('entry_date', { ascending: true })
+          .order('period', { ascending: true })
+          .range(from, to),
+      )
+      return rows.map(entryFromRow)
+    },
+
+    /** Day of the oldest entry (YYYY-MM-DD), or null when nothing has been logged. */
+    async getEarliestEntryDate(): Promise<string | null> {
+      const result = await client
+        .from('entries')
+        .select('entry_date')
+        .order('entry_date', { ascending: true })
+        .limit(1)
+      return unwrap(result)[0]?.entry_date ?? null
+    },
+
+    /** Every timed log, oldest first. */
+    async listAllTimedLogs(): Promise<TimedLog[]> {
+      const rows = await fetchAllPages<TimedLogRow>((from, to) =>
+        client
+          .from('timed_logs')
+          .select()
+          .order('occurred_at', { ascending: true })
+          .order('id', { ascending: true })
+          .range(from, to),
+      )
+      return rows.map(timedLogFromRow)
+    },
+
+    /** Every custom option of every kind, including hidden ones, in creation order. */
+    async listAllCustomOptions(): Promise<CustomOption[]> {
+      const rows = await fetchAllPages<CustomOptionRow>((from, to) =>
+        client
+          .from('custom_options')
+          .select()
+          .order('created_at', { ascending: true })
+          .order('id', { ascending: true })
+          .range(from, to),
+      )
+      return rows.map(customOptionFromRow)
+    },
+
     /** Inserts or replaces the row for this day and period. Saving again edits instead of duplicating. */
     async upsertEntry(input: EntryInput): Promise<Entry> {
       const result = await client
@@ -134,10 +204,15 @@ export function createRepository(client: SupabaseClient) {
       return unwrap(result).map(customOptionFromRow)
     },
 
-    async addCustomOption(kind: CustomOptionKind, label: string): Promise<CustomOption> {
+    /** `hidden` adds the option already hidden, which is how a built-in choice is switched off. */
+    async addCustomOption(
+      kind: CustomOptionKind,
+      label: string,
+      hidden = false,
+    ): Promise<CustomOption> {
       const result = await client
         .from('custom_options')
-        .insert({ kind, label: label.trim() })
+        .insert({ kind, label: label.trim(), ...(hidden && { hidden }) })
         .select()
         .single()
       return customOptionFromRow(unwrap(result))

@@ -1,9 +1,12 @@
 import { periodFor, todayString } from '../../lib/dates'
+import { useMorningCutoff } from '../../lib/preferences'
 import { useRecentEntries } from '../../hooks/useRecentEntries'
 import { useSaveStatus } from '../../hooks/useSaveStatus'
 import { useTodayEntries } from '../../hooks/useTodayEntries'
+import { useBackupReminder } from '../../hooks/useBackupReminder'
 import { useTopInsight } from '../../hooks/useTopInsight'
 import { useCheckin } from '../checkin/CheckinContext'
+import BackupReminder from './BackupReminder'
 import BatteryCard from './BatteryCard'
 import CadenceCard from './CadenceCard'
 import InsightBanner from './InsightBanner'
@@ -22,12 +25,21 @@ function TodayScreen() {
   const saveStatus = useSaveStatus()
   const insight = useTopInsight()
   const recent = useRecentEntries(RECENT_DAYS)
+  const morningCutoff = useMorningCutoff()
+  const backup = useBackupReminder()
 
   return (
     <div className="flex flex-col gap-[2.4rem]">
       <TodayHeader />
       <SaveStatusLine status={saveStatus} />
       <InsightBanner insight={insight} />
+      {backup.days !== null && (
+        <BackupReminder
+          days={backup.days}
+          neverBackedUp={backup.neverBackedUp}
+          onSnooze={backup.snooze}
+        />
+      )}
       {loading ? (
         <LoadingCards />
       ) : error ? (
@@ -37,7 +49,7 @@ function TodayScreen() {
           <CadenceCard
             morning={morning}
             evening={evening}
-            currentPeriod={periodFor()}
+            currentPeriod={periodFor(new Date(), morningCutoff)}
             onOpen={openCheckin}
           />
           <BatteryCard reading={latestCapacity(morning, evening)} />

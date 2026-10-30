@@ -1,7 +1,13 @@
-import { Button } from '../../components/ui'
-import { supabase } from '../../lib/supabase'
+import { Card, SectionHeader } from '../../components/ui'
+import { preferences, usePreferences } from '../../lib/preferences'
+import AccountCard from './AccountCard'
+import BackupCard from './BackupCard'
+import OptionsManager from './OptionsManager'
+import TimeSetting from './TimeSetting'
 
 function SettingsScreen() {
+  const { morningCutoff } = usePreferences()
+
   return (
     <section
       aria-labelledby="settings-title"
@@ -10,9 +16,29 @@ function SettingsScreen() {
       <h1 id="settings-title" className="text-screen">
         Settings
       </h1>
-      <Button variant="secondary" onClick={() => supabase.auth.signOut()}>
-        Sign out
-      </Button>
+
+      <Card as="section" aria-label="Check-in" className="flex flex-col gap-[1.6rem]">
+        <SectionHeader title="Check-in" />
+        <TimeSetting
+          value={morningCutoff}
+          onChange={(value) => preferences.set({ morningCutoff: value })}
+        />
+      </Card>
+
+      <Card as="section" aria-label="Your options" className="flex flex-col gap-[1.6rem]">
+        <SectionHeader title="Your options" />
+        <OptionsManager />
+      </Card>
+
+      <Card as="section" aria-label="Backup" className="flex flex-col gap-[1.6rem]">
+        <SectionHeader title="Backup" />
+        <BackupCard />
+      </Card>
+
+      <Card as="section" aria-label="Account" className="flex flex-col gap-[1.6rem]">
+        <SectionHeader title="Account" />
+        <AccountCard />
+      </Card>
     </section>
   )
 }

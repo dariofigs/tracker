@@ -17,6 +17,8 @@ const CHAIN_METHODS = [
   'lt',
   'lte',
   'order',
+  'range',
+  'limit',
   'single',
 ] as const
 

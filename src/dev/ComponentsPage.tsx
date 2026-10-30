@@ -24,6 +24,18 @@ import MorningForm from '../features/checkin/MorningForm'
 import CustomChipAdder from '../features/checkin/CustomChipAdder'
 import NoteField from '../features/checkin/NoteField'
 import { DEFAULT_OPTIONS } from '../features/checkin/options'
+import CredentialForm, {
+  type CredentialStatus,
+} from '../features/settings/CredentialForm'
+import ImportPreview, {
+  type ImportStage,
+} from '../features/settings/backup/ImportPreview'
+import type { ImportPlan } from '../features/settings/backup/importPlan'
+import OptionsList from '../features/settings/OptionsList'
+import { buildOptionRows } from '../features/settings/optionsModel'
+import RenameSheet, { type RenameStage } from '../features/settings/RenameSheet'
+import TimeSetting from '../features/settings/TimeSetting'
+import BackupReminder from '../features/today/BackupReminder'
 import {
   defaultsFrom,
   emptyForm,
@@ -138,6 +150,95 @@ function DayDetailDemo() {
       )}
     </>
   )
+}
+
+const demoOptionRows = buildOptionRows('activity', [
+  { id: 'c1', kind: 'activity', label: 'Pool', hidden: false, createdAt: '' },
+  { id: 'c2', kind: 'activity', label: 'Rest', hidden: true, createdAt: '' },
+])
+
+function TimeSettingDemo({ initial }: { initial: string }) {
+  const [value, setValue] = useState(initial)
+  return <TimeSetting value={value} onChange={setValue} />
+}
+
+function RenameDemo({ stage, label }: { stage: RenameStage; label: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button variant="secondary" onClick={() => setOpen(true)}>
+        {label}
+      </Button>
+      {open && (
+        <RenameSheet
+          kind="activity"
+          row={demoOptionRows[0]}
+          rows={demoOptionRows}
+          stage={stage}
+          onClose={() => setOpen(false)}
+          onReview={() => {}}
+          onConfirm={() => {}}
+        />
+      )}
+    </>
+  )
+}
+
+const emptyGroup = { added: [], unchanged: [], changed: [] }
+const demoPlan: ImportPlan = {
+  entries: {
+    added: demoEntries.slice(0, 4),
+    unchanged: demoEntries.slice(4, 30),
+    changed: [
+      { incoming: demoEntries[30], existing: { ...demoEntries[30], note: 'edited' } },
+      { incoming: demoEntries[31], existing: { ...demoEntries[31], note: 'edited' } },
+    ],
+  },
+  timedLogs: emptyGroup,
+  options: { added: [], hiddenChanged: [] },
+  morningCutoff: '',
+}
+const samePlan: ImportPlan = {
+  ...demoPlan,
+  entries: { added: [], unchanged: demoEntries.slice(0, 30), changed: [] },
+}
+
+function ImportDemo({
+  plan,
+  stage,
+  label,
+}: {
+  plan: ImportPlan
+  stage: ImportStage
+  label: string
+}) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button variant="secondary" onClick={() => setOpen(true)}>
+        {label}
+      </Button>
+      {open && (
+        <ImportPreview
+          plan={plan}
+          stage={stage}
+          onClose={() => setOpen(false)}
+          onImport={() => {}}
+          onRetry={() => {}}
+        />
+      )}
+    </>
+  )
+}
+
+function CredentialDemo({
+  kind,
+  status,
+}: {
+  kind: 'email' | 'password'
+  status: CredentialStatus
+}) {
+  return <CredentialForm kind={kind} status={status} onSubmit={() => {}} />
 }
 
 function ComponentsPage() {
@@ -391,6 +492,144 @@ function ComponentsPage() {
         <Demo title="Day detail sheet">
           <Variant label="Entries with edit and delete (delete asks to confirm)">
             <DayDetailDemo />
+          </Variant>
+        </Demo>
+
+        <Demo title="Check-in switch time">
+          <Variant label="Default (noon)">
+            <TimeSettingDemo initial="12:00" />
+          </Variant>
+          <Variant label="Changed (shows reset)">
+            <TimeSettingDemo initial="14:30" />
+          </Variant>
+        </Demo>
+
+        <Demo title="Options list">
+          <Variant label="Custom, built-in and hidden (try Add with no text)">
+            <OptionsList
+              kind="activity"
+              rows={demoOptionRows}
+              onAdd={noop}
+              onRename={noop}
+              onToggleHidden={noop}
+            />
+          </Variant>
+          <Variant label="Saving (buttons disabled)">
+            <OptionsList
+              kind="symptom"
+              rows={buildOptionRows('symptom', [])}
+              busy
+              onAdd={noop}
+              onRename={noop}
+              onToggleHidden={noop}
+            />
+          </Variant>
+        </Demo>
+
+        <Demo title="Rename sheet">
+          <Variant label="Edit">
+            <RenameDemo label="Open: edit" stage={{ step: 'edit' }} />
+          </Variant>
+          <Variant label="Checking history">
+            <RenameDemo label="Open: checking" stage={{ step: 'checking' }} />
+          </Variant>
+          <Variant label="Confirm">
+            <RenameDemo
+              label="Open: confirm"
+              stage={{ step: 'confirm', entries: 12, timedLogs: 2 }}
+            />
+          </Variant>
+          <Variant label="Confirm, nothing uses it">
+            <RenameDemo
+              label="Open: unused"
+              stage={{ step: 'confirm', entries: 0, timedLogs: 0 }}
+            />
+          </Variant>
+          <Variant label="Updating">
+            <RenameDemo
+              label="Open: working"
+              stage={{ step: 'working', done: 5, total: 12 }}
+            />
+          </Variant>
+          <Variant label="Error">
+            <RenameDemo
+              label="Open: error"
+              stage={{ step: 'error', message: 'Stopped part-way. Nothing is lost.' }}
+            />
+          </Variant>
+        </Demo>
+
+        <Demo title="Import preview">
+          <Variant label="New, same and different">
+            <ImportDemo
+              label="Open: preview"
+              plan={demoPlan}
+              stage={{ step: 'preview' }}
+            />
+          </Variant>
+          <Variant label="Nothing to import">
+            <ImportDemo
+              label="Open: all same"
+              plan={samePlan}
+              stage={{ step: 'preview' }}
+            />
+          </Variant>
+          <Variant label="Saving">
+            <ImportDemo
+              label="Open: saving"
+              plan={demoPlan}
+              stage={{ step: 'working', done: 12, total: 30 }}
+            />
+          </Variant>
+          <Variant label="Done">
+            <ImportDemo
+              label="Open: done"
+              plan={demoPlan}
+              stage={{ step: 'done', saved: 30 }}
+            />
+          </Variant>
+          <Variant label="Error">
+            <ImportDemo
+              label="Open: error"
+              plan={demoPlan}
+              stage={{ step: 'error', message: 'Stopped part-way. Nothing is lost.' }}
+            />
+          </Variant>
+        </Demo>
+
+        <Demo title="Backup reminder">
+          <Variant label="Never backed up">
+            <BackupReminder days={42} neverBackedUp onSnooze={noop} />
+          </Variant>
+          <Variant label="Overdue">
+            <BackupReminder days={35} neverBackedUp={false} onSnooze={noop} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Change email and password">
+          <Variant label="Email, idle">
+            <CredentialDemo kind="email" status={{ state: 'idle' }} />
+          </Variant>
+          <Variant label="Email, saved">
+            <CredentialDemo
+              kind="email"
+              status={{
+                state: 'done',
+                message: 'Check both inboxes and open the confirmation links.',
+              }}
+            />
+          </Variant>
+          <Variant label="Password, saving">
+            <CredentialDemo kind="password" status={{ state: 'saving' }} />
+          </Variant>
+          <Variant label="Password, error">
+            <CredentialDemo
+              kind="password"
+              status={{
+                state: 'error',
+                message: 'Could not change the password. Try a different one.',
+              }}
+            />
           </Variant>
         </Demo>
 

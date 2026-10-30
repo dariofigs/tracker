@@ -8,6 +8,7 @@ import {
 } from 'react'
 import type { Period } from '../../data/types'
 import { periodFor, todayString } from '../../lib/dates'
+import { useMorningCutoff } from '../../lib/preferences'
 import CheckinSheet from './CheckinSheet'
 
 type CheckinContextValue = {
@@ -26,10 +27,12 @@ type Target = { period: Period; date: string }
 export function CheckinProvider({ children }: { children: ReactNode }) {
   const [target, setTarget] = useState<Target | null>(null)
 
+  const morningCutoff = useMorningCutoff()
+
   const openCheckin = useCallback(
     (period?: Period, date?: string) =>
-      setTarget({ period: period ?? periodFor(), date: date ?? todayString() }),
-    [],
+      setTarget({ period: period ?? periodFor(new Date(), morningCutoff), date: date ?? todayString() }),
+    [morningCutoff],
   )
   const value = useMemo(() => ({ openCheckin }), [openCheckin])
 

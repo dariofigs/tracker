@@ -164,13 +164,13 @@ Insights has two views behind a segmented switch: **Trends** and **Calendar**. T
 
 ## Phase 7: Settings and backup
 
-- [ ] 7.1 Custom symptoms, activities and exercise types: add, rename, hide
-- [ ] 7.2 AM/PM switch time (default 12:00)
-- [ ] 7.3 Export all data as JSON (for restore) and CSV (for spreadsheets)
-- [ ] 7.4 Import from JSON, with a preview and a duplicate check before anything is overwritten. Save one row per request via `repository.upsertEntries`, not a bulk upsert
-- [ ] 7.5 Monthly backup reminder on the Today screen, dismissible, based on the last export date
-- [ ] 7.6 Sign out and change login details
-- [ ] 7.7 Optional doctor summary: printable page with date range, average pain, flare days, top activities and the main patterns found, plus CSV of raw entries
+- [x] 7.1 Custom symptoms, activities and exercise types: add, rename, hide
+- [x] 7.2 AM/PM switch time (default 12:00)
+- [x] 7.3 Export all data as JSON (for restore) and CSV (for spreadsheets)
+- [x] 7.4 Import from JSON, with a preview and a duplicate check before anything is overwritten. Save one row per request via `repository.upsertEntries`, not a bulk upsert
+- [x] 7.5 Monthly backup reminder on the Today screen, dismissible, based on the last export date
+- [x] 7.6 Sign out and change login details
+- [ ] 7.7 Optional doctor summary (deferred to the Parking lot)
 
 **Done when:** you can export, wipe a test database, import, and see identical data.
 
@@ -212,3 +212,4 @@ Ideas that come up mid-build go here instead of expanding the current phase.
 - [ ] Scheduled automatic backup to a private repo
 - [ ] Dark / low-light mode
 - [ ] Timed-log engine and logging UI (hour-level lags from timed_logs; needs a quick-log button first)
+- [ ] Doctor summary: printable page with date range, average pain, flare days, top activities and the main patterns found, plus CSV of raw entries (was 7.7; reuse `exportCsv.ts` and `findInsights`)
