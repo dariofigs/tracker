@@ -1,4 +1,5 @@
 import { Card, SectionHeader } from '../../components/ui'
+import { repository } from '../../data/repository'
 import { preferences, usePreferences } from '../../lib/preferences'
 import AccountCard from './AccountCard'
 import BackupCard from './BackupCard'
@@ -21,7 +22,11 @@ function SettingsScreen() {
         <SectionHeader title="Check-in" />
         <TimeSetting
           value={morningCutoff}
-          onChange={(value) => preferences.set({ morningCutoff: value })}
+          onChange={(value) => {
+            preferences.set({ morningCutoff: value })
+            // Saved to the account so other devices pick it up; this device already has it.
+            repository.setMorningCutoff(value).catch(() => {})
+          }}
         />
       </Card>
 

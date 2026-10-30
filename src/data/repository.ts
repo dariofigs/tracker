@@ -77,6 +77,20 @@ export function createRepository(client: SupabaseClient) {
       return unwrap(result)[0]?.entry_date ?? null
     },
 
+    /** The saved check-in switch time ("HH:mm"), or null when none is saved yet. */
+    async getMorningCutoff(): Promise<string | null> {
+      const result = await client.from('user_preferences').select('morning_cutoff').limit(1)
+      return unwrap(result)[0]?.morning_cutoff ?? null
+    },
+
+    /** Saves the check-in switch time so every device uses the same one. */
+    async setMorningCutoff(value: string): Promise<void> {
+      const result = await client
+        .from('user_preferences')
+        .upsert({ morning_cutoff: value, updated_at: new Date().toISOString() })
+      unwrap(result)
+    },
+
     /** Every timed log, oldest first. */
     async listAllTimedLogs(): Promise<TimedLog[]> {
       const rows = await fetchAllPages<TimedLogRow>((from, to) =>

@@ -99,3 +99,20 @@ alter table public.entries add column if not exists pain_areas text[] not null d
 alter table public.custom_options drop constraint if exists custom_options_kind_check;
 alter table public.custom_options add constraint custom_options_kind_check
   check (kind in ('symptom', 'activity', 'exercise_type', 'pain_area'));
+
+-- Settings that follow the user across devices (currently the check-in switch time).
+-- One row per user; user_id is the key, so saving again edits the same row.
+create table if not exists public.user_preferences (
+  user_id         uuid primary key default auth.uid() references auth.users (id) on delete cascade,
+  morning_cutoff  text not null check (morning_cutoff ~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'),
+  updated_at      timestamptz not null default now()
+);
+
+alter table public.user_preferences enable row level security;
+
+drop policy if exists "user_preferences: owner only" on public.user_preferences;
+create policy "user_preferences: owner only" on public.user_preferences
+  for all
+  to authenticated
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid());

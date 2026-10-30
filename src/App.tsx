@@ -7,6 +7,7 @@ import DevPages from './dev/DevPages'
 import LoginScreen from './features/auth/LoginScreen'
 import TodayScreen from './features/today/TodayScreen'
 import { useSession } from './hooks/useSession'
+import { usePreferencesSync } from './lib/syncPreferences'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
 
 // Insights (charts) and Settings (backup tools) load on first visit, keeping the first screen small.
@@ -15,6 +16,7 @@ const SettingsScreen = lazy(() => import('./features/settings/SettingsScreen'))
 
 function App() {
   const { session, loading, failed, retry } = useSession()
+  usePreferencesSync(!!session)
 
   if (!isSupabaseConfigured) {
     return (
