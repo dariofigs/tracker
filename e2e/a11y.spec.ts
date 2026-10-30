@@ -42,7 +42,8 @@ async function smallTargets(page: Page) {
 
 const screens = [
   { name: 'Today', path: '/', ready: 'Morning check-in|Evening check-in' },
-  { name: 'Insights', path: '/insights', ready: 'Trends' },
+  { name: 'Trends', path: '/insights', ready: 'Trends' },
+  { name: 'Calendar', path: '/calendar', ready: 'Calendar' },
   { name: 'Settings', path: '/settings', ready: 'Settings' },
 ]
 
@@ -56,8 +57,7 @@ for (const screen of screens) {
 }
 
 test('the Calendar view has no axe violations', async ({ page }) => {
-  await page.goto('/insights')
-  await page.getByRole('radio', { name: 'Calendar' }).click()
+  await page.goto('/calendar')
   await expect(
     page
       .getByRole('grid')

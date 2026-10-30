@@ -12,6 +12,7 @@ import { isSupabaseConfigured, supabase } from './lib/supabase'
 
 // Insights (charts) and Settings (backup tools) load on first visit, keeping the first screen small.
 const InsightsScreen = lazy(() => import('./features/insights/InsightsScreen'))
+const CalendarScreen = lazy(() => import('./features/insights/CalendarScreen'))
 const SettingsScreen = lazy(() => import('./features/settings/SettingsScreen'))
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
         <Route element={<AppLayout />}>
           <Route index element={<TodayScreen />} />
           <Route path="insights" element={<InsightsScreen />} />
+          <Route path="calendar" element={<CalendarScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
         </Route>
         {import.meta.env.DEV && (

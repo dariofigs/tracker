@@ -48,13 +48,15 @@ function TrendsView() {
 
   return (
     <div className="flex flex-col gap-[2.4rem]">
+      <div className="bg-canvas-bg border-border-subtle sticky top-0 z-10 -mx-[1.6rem] -mt-[0.8rem] border-b px-[1.6rem] pt-[calc(env(safe-area-inset-top)+0.8rem)] pb-[0.8rem]">
+        <SegmentedControl
+          label="Chart range"
+          options={RANGES}
+          value={range}
+          onChange={setRange}
+        />
+      </div>
       <InsightCard result={result} />
-      <SegmentedControl
-        label="Chart range"
-        options={RANGES}
-        value={range}
-        onChange={setRange}
-      />
       <LagCurveCard series={charts.lag} />
       <ScatterCard
         title="Sleep and morning pain"

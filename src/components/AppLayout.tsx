@@ -11,7 +11,8 @@ import { useMorningCutoff } from '../lib/preferences'
 
 const items: NavItem[] = [
   { id: '/', label: 'Today', icon: 'today' },
-  { id: '/insights', label: 'Insights', icon: 'insights' },
+  { id: '/insights', label: 'Trends', icon: 'insights' },
+  { id: '/calendar', label: 'Calendar', icon: 'calendar' },
   { id: '/settings', label: 'Settings', icon: 'settings' },
 ]
 
@@ -31,7 +32,7 @@ function RapidCheckinButton() {
   )
 }
 
-/** Shell plus the three-tab nav; every signed-in screen renders in the Outlet. */
+/** Shell plus the four-tab nav; every signed-in screen renders in the Outlet. */
 function AppLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()

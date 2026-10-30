@@ -15,8 +15,9 @@ import { useCheckin } from '../checkin/CheckinContext'
 import LoadErrorCard from '../today/LoadErrorCard'
 import LoadingCards from '../today/LoadingCards'
 import DayDetailSheet from './DayDetailSheet'
-import HistoryList from './HistoryList'
 import MonthGrid from './MonthGrid'
+import MonthSummaryCard from './MonthSummaryCard'
+import NotableDaysCard from './NotableDaysCard'
 
 function CalendarView() {
   const today = todayString()
@@ -98,7 +99,7 @@ function CalendarView() {
           {entries.length === 0 ? (
             <Card
               as="section"
-              aria-label="History"
+              aria-label="Month summary"
               className="flex flex-col gap-[0.8rem]"
             >
               <p className="text-title font-semibold">Nothing logged in {monthName}</p>
@@ -107,7 +108,10 @@ function CalendarView() {
               </p>
             </Card>
           ) : (
-            <HistoryList entries={entries} onSelect={setSelected} />
+            <>
+              <MonthSummaryCard monthName={monthName} entries={entries} />
+              <NotableDaysCard entries={entries} onSelect={setSelected} />
+            </>
           )}
         </>
       )}

@@ -13,7 +13,7 @@ async function setPain(page: Page, name: string, steps: number) {
   for (let i = 0; i < steps; i++) await page.keyboard.press('ArrowRight')
 }
 
-test('log morning and evening, then see the day on Today, Calendar and Insights', async ({
+test('log morning and evening, then see the day on Today, Calendar and Trends', async ({
   page,
 }) => {
   await page.clock.setFixedTime(new Date(1998, 6, 1, 8, 0))
@@ -46,16 +46,15 @@ test('log morning and evening, then see the day on Today, Calendar and Insights'
 
   // Calendar shows the day with both pain readings.
   const nav = page.getByRole('navigation', { name: 'Main' })
-  await nav.getByRole('button', { name: 'Insights' }).click()
-  await page.getByRole('radio', { name: 'Calendar' }).click()
+  await nav.getByRole('button', { name: 'Calendar' }).click()
   await expect(
     page.getByRole('gridcell', {
       name: 'July 1: morning pain 3, evening pain 5',
     }),
   ).toBeVisible()
 
-  // Insights is honest that one day is not enough.
-  await page.getByRole('radio', { name: 'Trends' }).click()
+  // Trends is honest that one day is not enough.
+  await nav.getByRole('button', { name: 'Trends' }).click()
   await expect(page.getByText(/1 of \d+ days so far/).first()).toBeVisible()
 })
 

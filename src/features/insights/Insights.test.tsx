@@ -5,7 +5,9 @@ import { MemoryRouter } from 'react-router-dom'
 import type { Entry } from '../../data/types'
 import { startOfMonth, todayString } from '../../lib/dates'
 import DayDetailSheet from './DayDetailSheet'
-import HistoryList from './HistoryList'
+import CalendarScreen from './CalendarScreen'
+import MonthSummaryCard from './MonthSummaryCard'
+import NotableDaysCard from './NotableDaysCard'
 import InsightCard from './InsightCard'
 import InsightsScreen from './InsightsScreen'
 import MonthGrid from './MonthGrid'
@@ -90,12 +92,44 @@ describe('MonthGrid', () => {
   })
 })
 
-describe('HistoryList', () => {
-  it('lists logged days with both pain ratings', () => {
-    render(<HistoryList entries={[am, pm]} onSelect={vi.fn()} />)
-    expect(screen.getByRole('button', { name: /Oct 28/ })).toHaveTextContent(
-      'AM 8 · PM 2',
+describe('MonthSummaryCard', () => {
+  it('shows the month in numbers', () => {
+    render(<MonthSummaryCard monthName="October" entries={[am, pm]} />)
+    expect(screen.getByText('October at a glance')).toBeInTheDocument()
+    expect(screen.getByText('Avg pain').previousSibling).toHaveTextContent('5')
+    expect(screen.getByText('Flare days').previousSibling).toHaveTextContent('1')
+  })
+})
+
+describe('NotableDaysCard', () => {
+  it('opens the day tapped', async () => {
+    const onSelect = vi.fn()
+    render(<NotableDaysCard entries={[am, pm]} onSelect={onSelect} />)
+    await userEvent.click(screen.getByRole('button', { name: /Oct 28/ }))
+    expect(onSelect).toHaveBeenCalledWith('2026-10-28')
+  })
+
+  it('renders nothing when no pain was rated', () => {
+    const { container } = render(<NotableDaysCard entries={[]} onSelect={vi.fn()} />)
+    expect(container).toBeEmptyDOMElement()
+  })
+})
+
+describe('DayDetailSheet read-only', () => {
+  it('shows entries without edit, log or delete', () => {
+    render(
+      <DayDetailSheet
+        day="2026-10-28"
+        entries={[am]}
+        onClose={vi.fn()}
+        onEdit={vi.fn()}
+        onDeleted={vi.fn()}
+        editable={false}
+      />,
     )
+    expect(screen.getByText(/Waking pain 8/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /edit|log|delete/i })).toBeNull()
+    expect(screen.getByText(/Only yesterday can be changed/)).toBeInTheDocument()
   })
 })
 
@@ -145,7 +179,7 @@ describe('DayDetailSheet', () => {
 })
 
 describe('InsightsScreen', () => {
-  it('switches between Trends and Calendar', async () => {
+  it('shows the Trends charts with a 7-day range by default', () => {
     render(
       <MemoryRouter>
         <InsightsScreen />
@@ -154,8 +188,17 @@ describe('InsightsScreen', () => {
     expect(
       screen.getByRole('region', { name: 'Patterns in your data' }),
     ).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '7 days' })).toBeChecked()
+  })
+})
 
-    await userEvent.click(screen.getByRole('radio', { name: 'Calendar' }))
+describe('CalendarScreen', () => {
+  it('pages back only to the first month with data', async () => {
+    render(
+      <MemoryRouter>
+        <CalendarScreen />
+      </MemoryRouter>,
+    )
     expect(screen.getByRole('grid', { name: 'Month calendar' })).toBeInTheDocument()
     expect(screen.getByText(/Nothing logged in/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Next month' })).toBeDisabled()
@@ -165,14 +208,10 @@ describe('InsightsScreen', () => {
     await userEvent.click(previous)
     expect(screen.getByRole('button', { name: 'Next month' })).toBeEnabled()
     expect(startOfMonth(todayString())).toMatch(/-01$/)
-  })
 
-  it('opens on the calendar from a link', () => {
-    render(
-      <MemoryRouter initialEntries={['/insights?view=calendar']}>
-        <InsightsScreen />
-      </MemoryRouter>,
-    )
-    expect(screen.getByRole('radio', { name: 'Calendar' })).toBeChecked()
+    // The mock's first entry is in August; paging back stops there.
+    await userEvent.click(previous)
+    await userEvent.click(previous)
+    expect(previous).toBeDisabled()
   })
 })

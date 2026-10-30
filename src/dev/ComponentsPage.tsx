@@ -9,7 +9,8 @@ import { generateSeed } from './seedData'
 import { findInsights } from '../features/insights/engine/insights'
 import DayDetailSheet from '../features/insights/DayDetailSheet'
 import FlareDistributionCard from '../features/insights/FlareDistributionCard'
-import HistoryList from '../features/insights/HistoryList'
+import MonthSummaryCard from '../features/insights/MonthSummaryCard'
+import NotableDaysCard from '../features/insights/NotableDaysCard'
 import InsightCard from '../features/insights/InsightCard'
 import LagCurveCard from '../features/insights/LagCurveCard'
 import MonthGrid from '../features/insights/MonthGrid'
@@ -521,9 +522,21 @@ function ComponentsPage() {
           </Variant>
         </Demo>
 
-        <Demo title="History list">
-          <Variant label="Newest first">
-            <HistoryList entries={octoberEntries.slice(-16)} onSelect={noop} />
+        <Demo title="Month summary card">
+          <Variant label="October, fully logged">
+            <MonthSummaryCard monthName="October" entries={octoberEntries} />
+          </Variant>
+          <Variant label="Nothing rated">
+            <MonthSummaryCard monthName="September" entries={[]} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Notable days card">
+          <Variant label="October, fully logged">
+            <NotableDaysCard entries={octoberEntries} onSelect={noop} />
+          </Variant>
+          <Variant label="One day only (no lowest day)">
+            <NotableDaysCard entries={octoberEntries.slice(0, 1)} onSelect={noop} />
           </Variant>
         </Demo>
 
