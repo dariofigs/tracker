@@ -11,7 +11,6 @@ import RenameSheet, { type RenameStage } from './RenameSheet'
 const KINDS: { value: CustomOptionKind; label: string }[] = [
   { value: 'symptom', label: 'Symptoms' },
   { value: 'activity', label: 'Activities' },
-  { value: 'exercise_type', label: 'Exercise' },
   { value: 'pain_area', label: 'Body' },
 ]
 

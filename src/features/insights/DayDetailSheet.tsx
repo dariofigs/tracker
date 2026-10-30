@@ -18,6 +18,8 @@ type DayDetailSheetProps = {
   onEdit: (period: Period) => void
   /** Called after an entry is deleted, so the caller can reload. */
   onDeleted: () => void
+  /** False for days too far back to remember reliably; the sheet then only shows the entries. */
+  editable?: boolean
 }
 
 /** One day's entries with edit and delete. Delete asks first. */
@@ -27,6 +29,7 @@ function DayDetailSheet({
   onClose,
   onEdit,
   onDeleted,
+  editable = true,
 }: DayDetailSheetProps) {
   const [confirming, setConfirming] = useState<Entry | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -80,7 +83,7 @@ function DayDetailSheet({
                       <li key={line}>{line}</li>
                     ))}
                   </ul>
-                  {confirming?.id === entry.id ? (
+                  {!editable ? null : confirming?.id === entry.id ? (
                     <div
                       role="alertdialog"
                       aria-label={`Delete ${lowerLabel} entry`}
@@ -132,14 +135,21 @@ function DayDetailSheet({
               ) : (
                 <div className="flex items-center justify-between gap-[1.2rem]">
                   <p className="text-body text-text-muted">Not logged</p>
-                  <Button variant="secondary" onClick={() => onEdit(period)}>
-                    Log {lowerLabel}
-                  </Button>
+                  {editable && (
+                    <Button variant="secondary" onClick={() => onEdit(period)}>
+                      Log {lowerLabel}
+                    </Button>
+                  )}
                 </div>
               )}
             </section>
           )
         })}
+        {!editable && (
+          <p className="text-caption text-text-muted">
+            Only yesterday can be changed. Older days are easy to misremember.
+          </p>
+        )}
       </div>
     </BottomSheet>
   )

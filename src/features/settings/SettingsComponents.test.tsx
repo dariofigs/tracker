@@ -124,7 +124,7 @@ describe('OptionsList', () => {
     expect(onAdd).toHaveBeenCalledWith('Pool')
   })
 
-  it('labels hide and show buttons by option', () => {
+  it('moves hidden options into a Hidden section with a Restore button', async () => {
     render(
       <OptionsList
         kind="activity"
@@ -136,8 +136,10 @@ describe('OptionsList', () => {
         onToggleHidden={() => {}}
       />,
     )
-    expect(screen.getByRole('button', { name: 'Show Walk' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Hide Strength' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Show Walk' })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /Hidden \(1\)/ }))
+    expect(screen.getByRole('button', { name: 'Show Walk' })).toHaveTextContent('Restore')
   })
 })
 

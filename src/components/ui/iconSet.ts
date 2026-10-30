@@ -3,7 +3,13 @@ import { Chart2Icon as ChartBold } from '@solar-icons/react/bold-duotone/chart-2
 import { ClockCircleIcon as ClockBold } from '@solar-icons/react/bold-duotone/clock-circle'
 import { SunIcon as SunBold } from '@solar-icons/react/bold-duotone/sun'
 import { SettingsIcon as SettingsBold } from '@solar-icons/react/bold-duotone/settings'
+import { CalendarIcon as CalendarBold } from '@solar-icons/react/bold-duotone/calendar'
+import { FireIcon as FireBold } from '@solar-icons/react/bold-duotone/fire'
 import { AddIcon as AddLinear } from '@solar-icons/react/linear/add'
+import { AltArrowDownIcon as DownLinear } from '@solar-icons/react/linear/alt-arrow-down'
+import { AltArrowUpIcon as UpLinear } from '@solar-icons/react/linear/alt-arrow-up'
+import { CalendarIcon as CalendarLine } from '@solar-icons/react/line-duotone/calendar'
+import { FireIcon as FireLine } from '@solar-icons/react/line-duotone/fire'
 import { AltArrowLeftIcon as PrevLinear } from '@solar-icons/react/linear/alt-arrow-left'
 import { AltArrowRightIcon as NextLinear } from '@solar-icons/react/linear/alt-arrow-right'
 import { CheckIcon as CheckLinear } from '@solar-icons/react/linear/check'
@@ -26,6 +32,10 @@ export const ICONS = {
   prev: { line: PrevLinear, bold: PrevLinear },
   next: { line: NextLinear, bold: NextLinear },
   clock: { line: ClockLine, bold: ClockBold },
+  calendar: { line: CalendarLine, bold: CalendarBold },
+  fire: { line: FireLine, bold: FireBold },
+  up: { line: UpLinear, bold: UpLinear },
+  down: { line: DownLinear, bold: DownLinear },
 } satisfies Record<string, { line: Glyph; bold: Glyph }>
 
 export type IconName = keyof typeof ICONS

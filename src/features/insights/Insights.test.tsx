@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import type { Entry } from '../../data/types'
@@ -16,6 +16,7 @@ const deleteEntry = vi.fn<(id: string) => void>()
 let deleteResult: () => Promise<void> = () => Promise.resolve()
 vi.mock('../../data/repository', () => ({
   repository: {
+    getEarliestEntryDate: () => Promise.resolve('2026-08-05'),
     deleteEntry: (id: string) => {
       deleteEntry(id)
       return deleteResult()
@@ -159,7 +160,9 @@ describe('InsightsScreen', () => {
     expect(screen.getByText(/Nothing logged in/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Next month' })).toBeDisabled()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Previous month' }))
+    const previous = screen.getByRole('button', { name: 'Previous month' })
+    await waitFor(() => expect(previous).toBeEnabled())
+    await userEvent.click(previous)
     expect(screen.getByRole('button', { name: 'Next month' })).toBeEnabled()
     expect(startOfMonth(todayString())).toMatch(/-01$/)
   })

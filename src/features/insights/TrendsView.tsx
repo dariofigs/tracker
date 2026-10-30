@@ -29,7 +29,7 @@ function TrendsView() {
     addDays(today, -ENGINE_DAYS),
     today,
   )
-  const [range, setRange] = useState(30)
+  const [range, setRange] = useState(7)
   const result = useMemo(() => findInsights(entries), [entries])
 
   const from = addDays(today, -(range - 1))

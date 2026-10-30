@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, Icon } from '../../components/ui'
+import { repository } from '../../data/repository'
 import type { Period } from '../../data/types'
 import { useEntriesInRange } from '../../hooks/useEntriesInRange'
 import {
+  addDays,
   addMonths,
   endOfMonth,
   parseDayString,
@@ -26,6 +28,18 @@ function CalendarView() {
     endOfMonth(monthStart),
   )
   const { openCheckin } = useCheckin()
+  const [earliest, setEarliest] = useState<string | null | undefined>(undefined)
+
+  useEffect(() => {
+    repository
+      .getEarliestEntryDate()
+      .then(setEarliest)
+      .catch(() => setEarliest(null))
+  }, [])
+
+  // Stay on the current month until we know where the data starts.
+  const firstMonth = earliest ? startOfMonth(earliest) : thisMonth
+  const atFirstMonth = monthStart <= firstMonth
 
   const monthName = parseDayString(monthStart).toLocaleDateString('en-US', {
     month: 'long',
@@ -45,6 +59,7 @@ function CalendarView() {
         <Button
           variant="secondary"
           aria-label="Previous month"
+          disabled={atFirstMonth}
           onClick={() => setMonthStart(addMonths(monthStart, -1))}
         >
           <Icon name="prev" size={20} />
@@ -104,6 +119,7 @@ function CalendarView() {
           onClose={() => setSelected(null)}
           onEdit={edit}
           onDeleted={reload}
+          editable={selected === addDays(today, -1)}
         />
       )}
     </div>

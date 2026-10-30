@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Button } from '../../components/ui'
+import { Button, Icon } from '../../components/ui'
 import type { CustomOptionKind } from '../../data/types'
 import { KIND_NOUN, validateLabel, type OptionRow } from './optionsModel'
 
@@ -27,7 +27,10 @@ function OptionsList({
 }: OptionsListProps) {
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [showHidden, setShowHidden] = useState(false)
   const noun = KIND_NOUN[kind]
+  const shown = rows.filter((r) => !r.hidden)
+  const hidden = rows.filter((r) => r.hidden)
 
   function submit(event: FormEvent) {
     event.preventDefault()
@@ -41,19 +44,12 @@ function OptionsList({
   return (
     <div className="flex flex-col gap-[1.2rem]">
       <ul className="divide-border-subtle flex flex-col divide-y">
-        {rows.map((row) => (
+        {shown.map((row) => (
           <li
             key={row.label}
             className="flex items-center justify-between gap-[0.8rem] py-[0.4rem]"
           >
-            <div className="min-w-0">
-              <p
-                className={`text-body truncate ${row.hidden ? 'text-text-muted line-through' : ''}`}
-              >
-                {row.label}
-              </p>
-              {row.hidden && <p className="text-caption text-text-muted">Hidden</p>}
-            </div>
+            <p className="text-body min-w-0 truncate">{row.label}</p>
             <div className="flex shrink-0">
               <button
                 type="button"
@@ -68,15 +64,51 @@ function OptionsList({
                 type="button"
                 className={smallButton}
                 disabled={busy}
-                aria-label={`${row.hidden ? 'Show' : 'Hide'} ${row.label}`}
+                aria-label={`Hide ${row.label}`}
                 onClick={() => onToggleHidden(row)}
               >
-                {row.hidden ? 'Show' : 'Hide'}
+                Hide
               </button>
             </div>
           </li>
         ))}
       </ul>
+      {hidden.length > 0 && (
+        <div className="flex flex-col">
+          <button
+            type="button"
+            aria-expanded={showHidden}
+            className="min-touch text-caption text-text-muted focus-visible:outline-brand-sage flex items-center gap-[0.4rem] self-start font-semibold focus-visible:outline-2"
+            onClick={() => setShowHidden((v) => !v)}
+          >
+            <Icon name={showHidden ? 'up' : 'down'} size={16} />
+            Hidden ({hidden.length})
+          </button>
+          {showHidden && (
+            <ul className="divide-border-subtle flex flex-col divide-y">
+              {hidden.map((row) => (
+                <li
+                  key={row.label}
+                  className="flex items-center justify-between gap-[0.8rem] py-[0.4rem]"
+                >
+                  <p className="text-body text-text-muted min-w-0 truncate line-through">
+                    {row.label}
+                  </p>
+                  <button
+                    type="button"
+                    className={smallButton}
+                    disabled={busy}
+                    aria-label={`Show ${row.label}`}
+                    onClick={() => onToggleHidden(row)}
+                  >
+                    Restore
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
       <form onSubmit={submit} className="flex flex-col gap-[0.8rem]" noValidate>
         <div className="flex items-center gap-[0.8rem]">
           <input

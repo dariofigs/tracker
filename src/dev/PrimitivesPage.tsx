@@ -99,7 +99,6 @@ const effortOptions = [
 const kindOptions = [
   { value: 'symptom', label: 'Symptoms' },
   { value: 'activity', label: 'Activities' },
-  { value: 'exercise_type', label: 'Exercise' },
   { value: 'pain_area', label: 'Body' },
 ]
 

@@ -5,6 +5,7 @@ import LoadingCards from '../features/today/LoadingCards'
 import OfflineBanner from './OfflineBanner'
 import { AppShell, BottomNav, Button } from './ui'
 import type { NavItem } from './ui'
+import { useTodayEntries } from '../hooks/useTodayEntries'
 import { periodFor } from '../lib/dates'
 import { useMorningCutoff } from '../lib/preferences'
 
@@ -14,12 +15,13 @@ const items: NavItem[] = [
   { id: '/settings', label: 'Settings', icon: 'settings' },
 ]
 
+/** Offers the check-in for the current period; gone once that one is logged. */
 function RapidCheckinButton() {
   const { openCheckin } = useCheckin()
-  const label =
-    periodFor(new Date(), useMorningCutoff()) === 'AM'
-      ? 'Morning check-in'
-      : 'Evening check-in'
+  const { morning, evening, loading } = useTodayEntries()
+  const period = periodFor(new Date(), useMorningCutoff())
+  if (loading || (period === 'AM' ? morning : evening)) return null
+  const label = period === 'AM' ? 'Morning check-in' : 'Evening check-in'
   return (
     <div className="mb-[1.2rem]">
       <Button fullWidth onClick={() => openCheckin()}>
