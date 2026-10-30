@@ -29,6 +29,13 @@ describe('daysSinceBackup', () => {
     ).toBe(45)
   })
 
+  it('appears on day 30 after the last export, not before', () => {
+    const exportedAt = new Date('2026-09-30T12:00:00').toISOString()
+    const input = { ...base, lastExportAt: exportedAt }
+    expect(daysSinceBackup({ ...input, now: new Date('2026-10-29T12:00:00') })).toBeNull()
+    expect(daysSinceBackup({ ...input, now: new Date('2026-10-30T12:00:00') })).toBe(30)
+  })
+
   it('stays hidden while snoozed, then returns', () => {
     const input = { ...base, firstEntryDate: '2026-01-01' }
     expect(daysSinceBackup({ ...input, snoozedUntil: snoozeUntil(now) })).toBeNull()

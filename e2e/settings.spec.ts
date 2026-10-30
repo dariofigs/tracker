@@ -149,12 +149,12 @@ test('the backup reminder appears when overdue and can be snoozed', async ({ pag
   await page.addInitScript(() => {
     const key = 'tracker.preferences'
     if (localStorage.getItem(key)) return
-    const lastExportAt = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString()
+    const lastExportAt = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
     localStorage.setItem(key, JSON.stringify({ lastExportAt }))
   })
   await page.goto('/')
   const reminder = page.getByRole('complementary', { name: 'Backup reminder' })
-  await expect(reminder).toContainText('40 days since your last backup')
+  await expect(reminder).toContainText('30 days since your last backup')
 
   await reminder.getByRole('button', { name: 'Remind me later' }).click()
   await expect(reminder).toBeHidden()
