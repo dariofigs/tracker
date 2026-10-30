@@ -50,7 +50,7 @@ On the phone, open the URL and use **Add to Home Screen**.
 
 ### After the first deploy, check
 
-- `curl -I https://<your-app-url>/` shows `x-robots-tag: noindex, nofollow`.
+- `curl -I https://<your-app-url>/` shows `x-robots-tag: noindex, nofollow, noai, noimageai`.
 - Opening `https://<your-app-url>/settings` directly loads the app, not a 404.
 - Signing up with a new email in the Supabase API (or the dashboard form) is refused.
 - Signed out, the Supabase REST API returns no rows for `entries`.
