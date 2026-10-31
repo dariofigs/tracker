@@ -83,7 +83,7 @@ function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
                   return (
                     <span
                       key={period}
-                      className={`h-[3rem] rounded-[0.8rem] [corner-shape:squircle] ${fill}`}
+                      className={`h-[3rem] rounded-[1.2rem] supports-[corner-shape:squircle]:[corner-shape:squircle] ${fill}`}
                     />
                   )
                 })}
