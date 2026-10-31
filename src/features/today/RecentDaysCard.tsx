@@ -11,6 +11,31 @@ type RecentDaysCardProps = {
   /** Consecutive days with a check-in, ending today (or yesterday while today is empty). */
   streak: number
   entries: Entry[]
+  tone?: WeekTone
+}
+
+/** Fill colors per cell state. Which set the live card uses is still being decided. */
+export type WeekTone = 'solid' | 'tint' | 'soft'
+
+const TONES: Record<WeekTone, { logged: string; flare: string; missed: string }> = {
+  // Full-strength brand colors; logged cells stand out against the canvas.
+  solid: {
+    logged: 'bg-brand-sage',
+    flare: 'bg-accent-clay',
+    missed: 'bg-surface-subtle',
+  },
+  // Tint fill plus a matching outline, so the pale fills keep an edge.
+  tint: {
+    logged: 'bg-sage-tint border border-brand-sage/40',
+    flare: 'bg-clay-tint border border-accent-clay/50',
+    missed: 'bg-surface-subtle',
+  },
+  // Half-strength brand colors: softer than solid, more visible than a tint.
+  soft: {
+    logged: 'bg-brand-sage/45',
+    flare: 'bg-accent-clay/50',
+    missed: 'bg-surface-subtle',
+  },
 }
 
 const INITIALS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -22,7 +47,7 @@ function spoken(day: string, am: Entry | undefined, pm: Entry | undefined) {
 }
 
 /** This calendar week at a glance, with the running streak. Display only. */
-function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
+function RecentDaysCard({ today, streak, entries, tone = 'solid' }: RecentDaysCardProps) {
   const days = weekDays(today)
   return (
     <Card as="section" aria-label="This week">
@@ -30,8 +55,8 @@ function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
         title="This week"
         trailing={
           streak > 0 && (
-            <span className="text-caption text-brand-sage flex items-center gap-[0.4rem] font-semibold">
-              <Icon name="fire" bold size={18} />
+            <span className="text-caption text-text-muted flex items-center gap-[0.4rem] font-semibold">
+              <Icon name="fire" bold size={18} className="text-amber-pacing" />
               {streak} {streak === 1 ? 'day' : 'days'}
             </span>
           )
@@ -50,35 +75,37 @@ function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
             </li>
           ))}
       </ul>
-      <div
-        aria-hidden="true"
-        className="text-micro text-text-muted mt-[0.8rem] grid grid-cols-7 gap-[0.4rem] text-center"
-      >
-        {INITIALS.map((initial, i) => (
-          <span key={i}>{initial}</span>
-        ))}
-        {(['AM', 'PM'] as const).flatMap((period) =>
-          days.map((day) => {
-            const entry = entries.find((e) => e.entryDate === day && e.period === period)
-            const pain = entryPain(entry)
-            const fill =
-              day > today
-                ? 'border-bead-stone border border-dashed'
-                : !entry
-                  ? 'bg-surface-subtle'
-                  : pain != null && pain >= FLARE_PAIN
-                    ? 'bg-clay-tint'
-                    : 'bg-sage-tint'
-            return (
-              <span
-                key={`${period}-${day}`}
-                className={`h-[2.2rem] rounded-[0.6rem] ${fill} ${
-                  day === today ? 'outline-brand-sage outline-[1.5px]' : ''
+      <div aria-hidden="true" className="mt-[0.8rem] grid grid-cols-7 gap-[0.4rem]">
+        {days.map((day, i) => {
+          const future = day > today
+          return (
+            <div key={day} className="flex flex-col items-center gap-[0.4rem]">
+              <span className="text-micro text-text-muted">{INITIALS[i]}</span>
+              <div
+                className={`flex w-full flex-col gap-[0.4rem] rounded-[1rem] border-2 p-[0.3rem] ${
+                  day === today ? 'border-brand-sage' : 'border-transparent'
                 }`}
-              />
-            )
-          }),
-        )}
+              >
+                {(['AM', 'PM'] as const).map((period) => {
+                  const entry = entries.find(
+                    (e) => e.entryDate === day && e.period === period,
+                  )
+                  const pain = entryPain(entry)
+                  const fill = future
+                    ? 'border-bead-stone border border-dashed'
+                    : !entry
+                      ? TONES[tone].missed
+                      : pain != null && pain >= FLARE_PAIN
+                        ? TONES[tone].flare
+                        : TONES[tone].logged
+                  return (
+                    <span key={period} className={`h-[3rem] rounded-[0.6rem] ${fill}`} />
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
       </div>
     </Card>
   )

@@ -47,7 +47,7 @@ function OptionsList({
         {shown.map((row) => (
           <li
             key={row.label}
-            className="flex items-center justify-between gap-[0.8rem] py-[0.4rem]"
+            className="flex items-center justify-between gap-[0.8rem] py-[0.4rem] last:pb-0"
           >
             <p className="text-body min-w-0 truncate">{row.label}</p>
             <div className="flex shrink-0">
@@ -73,7 +73,7 @@ function OptionsList({
           </li>
         ))}
         {hidden.length > 0 && (
-          <li>
+          <li className={showHidden ? 'border-b-0' : ''}>
             <button
               type="button"
               aria-expanded={showHidden}
@@ -89,7 +89,7 @@ function OptionsList({
           hidden.map((row) => (
             <li
               key={row.label}
-              className="flex items-center justify-between gap-[0.8rem] py-[0.4rem]"
+              className="flex items-center justify-between gap-[0.8rem] py-[0.4rem] last:pb-0"
             >
               <p className="text-body text-text-muted min-w-0 truncate line-through">
                 {row.label}

@@ -51,7 +51,7 @@ function NotableDaysCard({
       <SectionHeader title="Notable days" />
       <ul className="divide-border-subtle mt-[0.8rem] flex flex-col divide-y">
         {rows.map((row) => (
-          <li key={row.title} className="py-[0.4rem]">
+          <li key={row.title} className="py-[0.4rem] last:pb-0">
             <button
               type="button"
               onClick={() => onSelect(row.day)}
