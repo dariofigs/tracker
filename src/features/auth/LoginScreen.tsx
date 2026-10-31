@@ -67,7 +67,7 @@ export default function LoginScreen() {
         <button
           type="submit"
           disabled={submitting}
-          className="min-touch rounded-tile bg-brand-sage text-title w-full px-[1.6rem] font-semibold text-white disabled:opacity-60"
+          className="min-touch rounded-tile bg-brand-sage text-title w-full px-[1.6rem] text-surface-card font-semibold disabled:opacity-60"
         >
           {submitting ? 'Signing in…' : 'Sign in'}
         </button>

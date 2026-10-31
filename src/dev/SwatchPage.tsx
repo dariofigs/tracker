@@ -1,20 +1,22 @@
 // Swatch page (checklist 0.5). Kept as a permanent reference for the design tokens.
 
+// The swatches follow the system theme; each label lists the light hex, then the dark (Stone) hex.
 const colors = [
-  { name: 'canvas-bg', hex: '#FBF9F5', className: 'bg-canvas-bg' },
-  { name: 'surface-card', hex: '#FFFFFF', className: 'bg-surface-card' },
-  { name: 'surface-subtle', hex: '#F3EFEA', className: 'bg-surface-subtle' },
-  { name: 'border-subtle', hex: '#EBE5DC', className: 'bg-border-subtle' },
-  { name: 'brand-sage', hex: '#2D5A46', className: 'bg-brand-sage' },
-  { name: 'sage-tint', hex: '#E8F2EC', className: 'bg-sage-tint' },
-  { name: 'accent-clay', hex: '#C47151', className: 'bg-accent-clay' },
-  { name: 'clay-text', hex: '#A85A3C', className: 'bg-clay-text' },
-  { name: 'clay-tint', hex: '#FDF1ED', className: 'bg-clay-tint' },
-  { name: 'flare-plum', hex: '#8C3B4E', className: 'bg-flare-plum' },
-  { name: 'plum-tint', hex: '#FBECEF', className: 'bg-plum-tint' },
-  { name: 'amber-pacing', hex: '#D97706', className: 'bg-amber-pacing' },
-  { name: 'text-primary', hex: '#1E2220', className: 'bg-text-primary' },
-  { name: 'text-muted', hex: '#736B63', className: 'bg-text-muted' },
+  { name: 'canvas-bg', hex: '#FBF9F5', dark: '#1B1B19', className: 'bg-canvas-bg' },
+  { name: 'surface-card', hex: '#FFFFFF', dark: '#252523', className: 'bg-surface-card' },
+  { name: 'surface-subtle', hex: '#F3EFEA', dark: '#2F2F2C', className: 'bg-surface-subtle' },
+  { name: 'border-subtle', hex: '#EBE5DC', dark: '#3A3A36', className: 'bg-border-subtle' },
+  { name: 'brand-sage', hex: '#2D5A46', dark: '#8CC0A0', className: 'bg-brand-sage' },
+  { name: 'sage-tint', hex: '#E8F2EC', dark: '#26372E', className: 'bg-sage-tint' },
+  { name: 'accent-clay', hex: '#C47151', dark: '#D08A78', className: 'bg-accent-clay' },
+  { name: 'clay-text', hex: '#A85A3C', dark: '#E5AB9B', className: 'bg-clay-text' },
+  { name: 'clay-tint', hex: '#FDF1ED', dark: '#372B29', className: 'bg-clay-tint' },
+  { name: 'flare-plum', hex: '#8C3B4E', dark: '#DB8CA3', className: 'bg-flare-plum' },
+  { name: 'plum-tint', hex: '#FBECEF', dark: '#382A2F', className: 'bg-plum-tint' },
+  { name: 'amber-pacing', hex: '#D97706', dark: '#E8AD52', className: 'bg-amber-pacing' },
+  { name: 'text-primary', hex: '#1E2220', dark: '#EEECE6', className: 'bg-text-primary' },
+  { name: 'text-muted', hex: '#736B63', dark: '#A4A199', className: 'bg-text-muted' },
+  { name: 'bead-stone', hex: '#D1C9BE', dark: '#55544E', className: 'bg-bead-stone' },
 ]
 
 const typeScale = [
@@ -56,7 +58,7 @@ function SwatchPage() {
                 className={`rounded-tile border-border-subtle h-[4.8rem] border ${c.className}`}
               />
               <p className="text-caption mt-[0.8rem] font-semibold">{c.name}</p>
-              <p className="text-micro text-text-muted">{c.hex}</p>
+              <p className="text-micro text-text-muted">{c.hex} / {c.dark}</p>
             </li>
           ))}
         </ul>

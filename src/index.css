@@ -49,6 +49,36 @@
   --radius-sheet: 24px;
 }
 
+/*
+ * Dark theme, direction B "Stone" (design canvas "Tracker Dark Mode"). Follows the system setting.
+ * Near-neutral warm greys; cards get lighter than the canvas rather than whiter. Accents are lifted,
+ * so a filled chip or button keeps dark text via text-surface-card.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas-bg: #1b1b19;
+    --color-surface-card: #252523;
+    --color-surface-subtle: #2f2f2c;
+    --color-border-subtle: #3a3a36;
+    --color-brand-sage: #8cc0a0;
+    --color-sage-tint: #26372e;
+    --color-accent-clay: #d08a78;
+    --color-clay-text: #e5ab9b;
+    --color-clay-tint: #372b29;
+    --color-flare-plum: #db8ca3;
+    --color-plum-tint: #382a2f;
+    --color-amber-pacing: #e8ad52;
+    --color-text-primary: #eeece6;
+    --color-text-muted: #a4a199;
+    --color-bead-stone: #55544e;
+  }
+}
+
+/* Native controls and scrollbars follow the theme */
+:root {
+  color-scheme: light dark;
+}
+
 /* Minimum comfortable tap target for joint-stiffness days (see Phase 3 chips) */
 @utility min-touch {
   min-width: 48px;

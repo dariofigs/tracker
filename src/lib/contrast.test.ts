@@ -1,13 +1,17 @@
 /// <reference types="node" />
 import { readFileSync } from 'node:fs'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 // Vitest runs from the project root.
 const css = readFileSync('src/index.css', 'utf8')
+// The dark overrides live in the prefers-color-scheme block; everything before it is the light theme.
+const darkStart = css.indexOf('@media (prefers-color-scheme: dark)')
+const themes = { light: css.slice(0, darkStart), dark: css.slice(darkStart) }
+let scheme: keyof typeof themes = 'light'
 
 function token(name: string): string {
-  const match = css.match(new RegExp(`--color-${name}:\\s*(#[0-9a-fA-F]{6})`))
-  if (!match) throw new Error(`Token --color-${name} not found in index.css`)
+  const match = themes[scheme].match(new RegExp(`--color-${name}:\\s*(#[0-9a-fA-F]{6})`))
+  if (!match) throw new Error(`Token --color-${name} not found in the ${scheme} theme`)
   return match[1]
 }
 
@@ -58,7 +62,11 @@ const graphicPairs: [string, string][] = [
   ['flare-plum', 'canvas-bg'],
 ]
 
-describe('colour contrast', () => {
+describe.each(['light', 'dark'] as const)('colour contrast, %s theme', (name) => {
+  beforeAll(() => {
+    scheme = name
+  })
+
   it.each(textPairs)('text %s on %s meets 4.5:1', (fg, bg) => {
     expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5)
   })
