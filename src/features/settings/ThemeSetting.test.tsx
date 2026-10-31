@@ -29,10 +29,12 @@ describe('ThemeSetting', () => {
   })
 
   it('shows the switch times only for day and night', () => {
-    const { rerender } = render(<ThemeSetting theme="dark" {...times} onChange={vi.fn()} />)
-    expect(screen.queryByLabelText('Dark from')).toBeNull()
+    const { rerender } = render(
+      <ThemeSetting theme="dark" {...times} onChange={vi.fn()} />,
+    )
+    expect(screen.queryByLabelText('Switch to dark at')).toBeNull()
     rerender(<ThemeSetting theme="schedule" {...times} onChange={vi.fn()} />)
-    expect(screen.getByLabelText('Dark from')).toHaveValue('19:00')
-    expect(screen.getByLabelText('Light from')).toHaveValue('07:00')
+    expect(screen.getByLabelText('Switch to dark at')).toHaveValue('19:00')
+    expect(screen.getByLabelText('Switch to light at')).toHaveValue('07:00')
   })
 })

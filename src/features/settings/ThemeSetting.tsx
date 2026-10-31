@@ -27,25 +27,38 @@ const OPTIONS: ThemeOption[] = [
   },
 ]
 
-type TimeBoxProps = { label: string; value: string; onChange: (value: string) => void }
+type TimeRowProps = {
+  label: string
+  icon: IconName
+  value: string
+  onChange: (value: string) => void
+}
 
 /** The time is drawn here; the real input sits invisibly on top so a tap opens the native picker. */
-function TimeBox({ label, value, onChange }: TimeBoxProps) {
+function TimeRow({ label, icon, value, onChange }: TimeRowProps) {
   return (
-    <label className="bg-surface-subtle rounded-tile has-[:focus-visible]:outline-brand-sage relative flex flex-1 flex-col gap-[0.4rem] px-[1.2rem] py-[1rem] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2">
-      <span className="text-micro text-text-muted font-medium">{label}</span>
-      <span aria-hidden="true" className="text-body font-semibold tabular-nums">
-        {formatClock(value)}
+    <label className="flex min-h-[4.8rem] items-center gap-[1.2rem]">
+      <span
+        aria-hidden="true"
+        className="rounded-tile bg-surface-subtle text-text-primary flex size-[3.6rem] shrink-0 items-center justify-center"
+      >
+        <Icon name={icon} bold size={20} />
       </span>
-      <input
-        type="time"
-        aria-label={label}
-        value={value}
-        onChange={(e) => {
-          if (isValidCutoff(e.target.value)) onChange(e.target.value)
-        }}
-        className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
-      />
+      <span className="text-body flex-1">{label}</span>
+      <span className="bg-surface-subtle text-body has-[:focus-visible]:outline-brand-sage relative flex h-[4.8rem] min-w-[11rem] shrink-0 items-center justify-center rounded-full px-[1.6rem] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2">
+        <span aria-hidden="true" className="font-semibold tabular-nums">
+          {formatClock(value)}
+        </span>
+        <input
+          type="time"
+          aria-label={label}
+          value={value}
+          onChange={(e) => {
+            if (isValidCutoff(e.target.value)) onChange(e.target.value)
+          }}
+          className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
+        />
+      </span>
     </label>
   )
 }
@@ -118,16 +131,18 @@ function ThemeSetting({ theme, darkFrom, lightFrom, onChange }: ThemeSettingProp
       </div>
 
       {theme === 'schedule' && (
-        <div className="flex gap-[0.8rem]">
-          <TimeBox
-            label="Dark from"
-            value={darkFrom}
-            onChange={(value) => onChange({ darkFrom: value })}
-          />
-          <TimeBox
-            label="Light from"
+        <div className="border-border-subtle flex flex-col gap-[1.6rem] border-t pt-[1.6rem]">
+          <TimeRow
+            label="Switch to light at"
+            icon="sun"
             value={lightFrom}
             onChange={(value) => onChange({ lightFrom: value })}
+          />
+          <TimeRow
+            label="Switch to dark at"
+            icon="moon-stars"
+            value={darkFrom}
+            onChange={(value) => onChange({ darkFrom: value })}
           />
         </div>
       )}
