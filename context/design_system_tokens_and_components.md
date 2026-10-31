@@ -98,7 +98,7 @@ Building on the approved **Botanical Sanctuary** palette, here are functional ro
   - `Insights` (Correlation graphs & trends, plus the calendar)
   - `Settings` (Check-in time, your options, backup, account)
 - **Layout:** spans the same column as the page content (max 480px, 16px side padding); tabs share the width equally. The active tab has a sage tint and a Bold Duotone icon.
-- **iOS Safari rule:** the fixed wrapper is offset from the bottom with `bottom: max(1.6rem, env(safe-area-inset-bottom))`. A fixed box that touches the bottom edge makes iOS 26+ Safari clip the page above its toolbar and paint a solid strip.
+- **iOS Safari rule:** the fixed wrapper is offset from the bottom with `bottom: max(1.6rem, env(safe-area-inset-bottom))`. A fixed box that touches the bottom edge makes iOS 26+ Safari clip the page above its toolbar and paint a solid strip. The same applies to sticky bars at the top (the Trends range pill): offset them with `top`, never padding inside a box that touches the edge, or Safari skips its scroll blur.
 
 ### 6. Rapid Check-in Floating / Fixed Action
 

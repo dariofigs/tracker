@@ -49,7 +49,10 @@ function TrendsView() {
   useEffect(() => {
     const el = sentinel.current
     if (!el || typeof IntersectionObserver === 'undefined') return
-    const observer = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting))
+    // The bar pins 0.8rem below the top, so count it as stuck from there.
+    const observer = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting), {
+      rootMargin: '-8px 0px 0px 0px',
+    })
     observer.observe(el)
     return () => observer.disconnect()
   }, [loading, error])
@@ -60,7 +63,9 @@ function TrendsView() {
   return (
     <div className="flex flex-col gap-[2.4rem]">
       <div ref={sentinel} aria-hidden="true" className="-mb-[2.4rem] h-px" />
-      <div className="sticky top-0 z-10 -mt-[0.8rem] pt-[calc(env(safe-area-inset-top)+0.8rem)] pb-[0.8rem]">
+      {/* Offset with `top`, not padding: a sticky box touching the top edge stops iOS Safari from
+          blurring the page under its bar as you scroll. */}
+      <div className="sticky top-[calc(env(safe-area-inset-top)+0.8rem)] z-10 pb-[0.8rem]">
         <div
           className={`rounded-full border transition-shadow ${stuck ? 'border-border-subtle shadow-[0_4px_14px_rgba(30,34,32,0.08)]' : 'border-transparent'}`}
         >
