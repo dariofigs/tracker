@@ -1,9 +1,12 @@
+import { isDemo } from '../../demo/mode'
 import { formatHeaderDate, greetingFor } from './headerText'
 
 // Single-user app; a Settings field can replace this later.
 const NAME = 'Darío'
+// The demo greets with a made-up name rather than the owner's.
+const DEMO_NAME = 'Alex'
 
-function TodayHeader({ now = new Date(), name = NAME }: { now?: Date; name?: string }) {
+function TodayHeader({ now = new Date(), name = isDemo ? DEMO_NAME : NAME }: { now?: Date; name?: string }) {
   return (
     <header className="pt-[2.4rem]">
       <p className="text-micro text-text-muted font-semibold">{formatHeaderDate(now)}</p>

@@ -1,4 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { createMemoryRepository } from '../demo/memoryRepository'
+import { isDemo } from '../demo/mode'
 import { supabase } from '../lib/supabase'
 import { customOptionFromRow, entryFromRow, entryToRow, timedLogFromRow, timedLogToRow } from './mappers'
 import type {
@@ -253,4 +255,7 @@ export function createRepository(client: SupabaseClient) {
 
 export type Repository = ReturnType<typeof createRepository>
 
-export const repository = createRepository(supabase)
+/** On /demo the data lives in memory and resets on reload; otherwise it is the Supabase account. */
+export const repository: Repository = isDemo
+  ? createMemoryRepository()
+  : createRepository(supabase)

@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { CheckinProvider, useCheckin } from '../features/checkin/CheckinContext'
 import LoadingCards from '../features/today/LoadingCards'
+import DemoBanner from './DemoBanner'
 import OfflineBanner from './OfflineBanner'
 import { AppShell, BottomNav, Button } from './ui'
 import type { NavItem } from './ui'
@@ -53,6 +54,7 @@ function AppLayout() {
           </>
         }
       >
+        <DemoBanner />
         <OfflineBanner />
         <Suspense fallback={<LoadingCards label="Loading" />}>
           <Outlet />

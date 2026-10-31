@@ -1,7 +1,9 @@
 import { Card, SectionHeader } from '../../components/ui'
 import { repository } from '../../data/repository'
 import { preferences, usePreferences } from '../../lib/preferences'
+import { isDemo } from '../../demo/mode'
 import AccountCard from './AccountCard'
+import DemoAccountNotice from './DemoAccountNotice'
 import BackupCard from './BackupCard'
 import OptionsManager from './OptionsManager'
 import ThemeSetting from './ThemeSetting'
@@ -43,40 +45,45 @@ function SettingsScreen() {
         />
       </Card>
 
-      <Card as="section" aria-label="Weather" className="flex flex-col gap-[1.6rem]">
-        <SectionHeader title="Weather" />
-        <WeatherSetting
-          enabled={weatherIcon}
-          onChange={async (enabled) => {
-            if (!enabled) {
-              clearWeatherCache()
-              preferences.set({ weatherIcon: false })
+      {/* No location or weather lookups in the demo. */}
+      {!isDemo && (
+        <Card as="section" aria-label="Weather" className="flex flex-col gap-[1.6rem]">
+          <SectionHeader title="Weather" />
+          <WeatherSetting
+            enabled={weatherIcon}
+            onChange={async (enabled) => {
+              if (!enabled) {
+                clearWeatherCache()
+                preferences.set({ weatherIcon: false })
+                return true
+              }
+              try {
+                await requestLocation()
+              } catch {
+                return false
+              }
+              preferences.set({ weatherIcon: true })
               return true
-            }
-            try {
-              await requestLocation()
-            } catch {
-              return false
-            }
-            preferences.set({ weatherIcon: true })
-            return true
-          }}
-        />
-      </Card>
+            }}
+          />
+        </Card>
+      )}
 
       <Card as="section" aria-label="Your options" className="flex flex-col gap-[1.6rem]">
         <SectionHeader title="Your options" />
         <OptionsManager />
       </Card>
 
-      <Card as="section" aria-label="Backup" className="flex flex-col gap-[1.6rem]">
-        <SectionHeader title="Backup" />
-        <BackupCard />
-      </Card>
+      {!isDemo && (
+        <Card as="section" aria-label="Backup" className="flex flex-col gap-[1.6rem]">
+          <SectionHeader title="Backup" />
+          <BackupCard />
+        </Card>
+      )}
 
       <Card as="section" aria-label="Account" className="flex flex-col gap-[1.6rem]">
         <SectionHeader title="Account" />
-        <AccountCard />
+        {isDemo ? <DemoAccountNotice /> : <AccountCard />}
       </Card>
     </section>
   )

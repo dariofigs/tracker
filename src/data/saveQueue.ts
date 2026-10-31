@@ -1,3 +1,4 @@
+import { isDemo } from '../demo/mode'
 import { supabase } from '../lib/supabase'
 import { newId } from '../lib/ids'
 import { repository } from './repository'
@@ -248,7 +249,8 @@ export const saveQueue = createSaveQueue({
   saveEntry: (input) => repository.upsertEntry(input),
   saveTimedLog: (id, input) => repository.upsertTimedLog(id, input),
   hasSession: async () => Boolean((await supabase.auth.getSession()).data.session),
-  storage: browserStorage(),
+  // The demo keeps nothing between visits, so a queued save must not outlive the page.
+  storage: isDemo ? null : browserStorage(),
 })
 
 // Retry as soon as the connection comes back, rather than waiting for the backoff timer.

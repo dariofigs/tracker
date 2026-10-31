@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { repository } from '../data/repository'
+import { isDemo } from '../demo/mode'
 import { daysSinceBackup, snoozeUntil } from '../features/today/backupSchedule'
 import { preferences, usePreferences } from '../lib/preferences'
 
@@ -28,12 +29,15 @@ export function useBackupReminder(): {
   }, [])
 
   return {
-    days: daysSinceBackup({
-      now: new Date(),
-      lastExportAt,
-      firstEntryDate,
-      snoozedUntil: backupReminderSnoozedUntil,
-    }),
+    // The demo has nothing to back up.
+    days: isDemo
+      ? null
+      : daysSinceBackup({
+          now: new Date(),
+          lastExportAt,
+          firstEntryDate,
+          snoozedUntil: backupReminderSnoozedUntil,
+        }),
     neverBackedUp: lastExportAt === null,
     snooze: () =>
       preferences.set({ backupReminderSnoozedUntil: snoozeUntil(new Date()) }),

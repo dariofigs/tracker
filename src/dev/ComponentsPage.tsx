@@ -1,7 +1,9 @@
 // Feature components (checklist Phase 4 onward). Every component built from a feature folder gets a
 // section here in all its states; the shared primitives live on PrimitivesPage.
 import { useState, type ReactNode } from 'react'
+import DemoBanner from '../components/DemoBanner'
 import OfflineBanner from '../components/OfflineBanner'
+import DemoAccountNotice from '../features/settings/DemoAccountNotice'
 import StartupScreen from '../components/StartupScreen'
 import { Button, Card, SectionHeader } from '../components/ui'
 import type { Entry, EntryInput } from '../data/types'
@@ -326,6 +328,21 @@ function ComponentsPage() {
           </Variant>
           <Variant label="Online (renders nothing)">
             <OfflineBanner offline={false} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Demo banner">
+          <Variant label="Shown on /demo (Dismiss hides it until reload)">
+            <DemoBanner show />
+          </Variant>
+          <Variant label="Outside the demo (renders nothing)">
+            <DemoBanner show={false} />
+          </Variant>
+        </Demo>
+
+        <Demo title="Demo account notice">
+          <Variant label="Settings → Account on /demo">
+            <DemoAccountNotice />
           </Variant>
         </Demo>
 

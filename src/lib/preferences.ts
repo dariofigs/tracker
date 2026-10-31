@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import { isDemo } from '../demo/mode'
 import { DEFAULT_MORNING_CUTOFF } from './dates'
 
 /** Light, dark, follow the device, or switch by time of day (darkFrom / lightFrom). */
@@ -119,7 +120,8 @@ function browserStorage(): PreferenceStorage | null {
   }
 }
 
-export const preferences = createPreferencesStore(browserStorage())
+// The demo keeps settings in memory only, so nothing it does is left on the visitor's device.
+export const preferences = createPreferencesStore(isDemo ? null : browserStorage())
 
 export function usePreferences(): Preferences {
   return useSyncExternalStore(preferences.subscribe, preferences.get)
