@@ -11,31 +11,13 @@ type RecentDaysCardProps = {
   /** Consecutive days with a check-in, ending today (or yesterday while today is empty). */
   streak: number
   entries: Entry[]
-  tone?: WeekTone
 }
 
-/** Fill colors per cell state. Which set the live card uses is still being decided. */
-export type WeekTone = 'solid' | 'tint' | 'soft'
-
-const TONES: Record<WeekTone, { logged: string; flare: string; missed: string }> = {
-  // Full-strength brand colors; logged cells stand out against the canvas.
-  solid: {
-    logged: 'bg-brand-sage',
-    flare: 'bg-accent-clay',
-    missed: 'bg-surface-subtle',
-  },
-  // Tint fill plus a matching outline, so the pale fills keep an edge.
-  tint: {
-    logged: 'bg-sage-tint border border-brand-sage/40',
-    flare: 'bg-clay-tint border border-accent-clay/50',
-    missed: 'bg-surface-subtle',
-  },
-  // Half-strength brand colors: softer than solid, more visible than a tint.
-  soft: {
-    logged: 'bg-brand-sage/45',
-    flare: 'bg-accent-clay/50',
-    missed: 'bg-surface-subtle',
-  },
+/** Fill colors per cell state. Tints keep an outline so they stay visible on the canvas. */
+const CELL = {
+  logged: 'bg-sage-tint border border-brand-sage/40',
+  flare: 'bg-clay-tint border border-accent-clay/50',
+  missed: 'bg-surface-subtle',
 }
 
 const INITIALS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -47,7 +29,7 @@ function spoken(day: string, am: Entry | undefined, pm: Entry | undefined) {
 }
 
 /** This calendar week at a glance, with the running streak. Display only. */
-function RecentDaysCard({ today, streak, entries, tone = 'solid' }: RecentDaysCardProps) {
+function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
   const days = weekDays(today)
   return (
     <Card as="section" aria-label="This week">
@@ -94,12 +76,15 @@ function RecentDaysCard({ today, streak, entries, tone = 'solid' }: RecentDaysCa
                   const fill = future
                     ? 'border-bead-stone border border-dashed'
                     : !entry
-                      ? TONES[tone].missed
+                      ? CELL.missed
                       : pain != null && pain >= FLARE_PAIN
-                        ? TONES[tone].flare
-                        : TONES[tone].logged
+                        ? CELL.flare
+                        : CELL.logged
                   return (
-                    <span key={period} className={`h-[3rem] rounded-[0.6rem] ${fill}`} />
+                    <span
+                      key={period}
+                      className={`h-[3rem] rounded-[0.8rem] [corner-shape:squircle] ${fill}`}
+                    />
                   )
                 })}
               </div>

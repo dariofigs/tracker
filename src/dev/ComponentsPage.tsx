@@ -135,15 +135,6 @@ const demoEntries: Entry[] = demoInputs.map((e, i) => ({
   note: null,
 }))
 const octoberEntries = demoEntries.filter((e) => e.entryDate.startsWith('2026-10'))
-const weekDemo: Entry[] = [
-  { ...morning, entryDate: '2026-10-25' },
-  { ...evening, entryDate: '2026-10-26', endPain: 8 },
-  { ...morning, entryDate: '2026-10-27' },
-  { ...evening, entryDate: '2026-10-27' },
-  { ...morning, entryDate: '2026-10-29' },
-  { ...evening, entryDate: '2026-10-29' },
-  { ...morning, entryDate: '2026-10-30' },
-]
 const zeroPainEntries: Entry[] = [
   { ...base, id: 'z1', entryDate: '2026-10-12', period: 'AM', wakingPain: 0 },
   { ...base, id: 'z2', entryDate: '2026-10-13', period: 'PM', endPain: 0 },
@@ -454,15 +445,6 @@ function ComponentsPage() {
               ]}
             />
           </Variant>
-          <Variant label="Colors A: solid brand (live default)">
-            <RecentDaysCard today="2026-10-30" streak={3} entries={weekDemo} tone="solid" />
-          </Variant>
-          <Variant label="Colors B: tint with outline">
-            <RecentDaysCard today="2026-10-30" streak={3} entries={weekDemo} tone="tint" />
-          </Variant>
-          <Variant label="Colors C: half-strength">
-            <RecentDaysCard today="2026-10-30" streak={3} entries={weekDemo} tone="soft" />
-          </Variant>
           <Variant label="Start of the week, no streak">
             <RecentDaysCard today="2026-10-25" streak={0} entries={[]} />
           </Variant>
@@ -573,7 +555,11 @@ function ComponentsPage() {
             <NotableDaysCard entries={octoberEntries.slice(0, 1)} onSelect={noop} />
           </Variant>
           <Variant label="Nothing notable (no pain above zero)">
-            <NotableDaysCard entries={zeroPainEntries} onSelect={noop} monthName="October" />
+            <NotableDaysCard
+              entries={zeroPainEntries}
+              onSelect={noop}
+              monthName="October"
+            />
           </Variant>
         </Demo>
 

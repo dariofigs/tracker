@@ -62,7 +62,7 @@ function TrendsView() {
       <div ref={sentinel} aria-hidden="true" className="-mb-[2.4rem] h-px" />
       <div className="sticky top-0 z-10 -mt-[0.8rem] pt-[calc(env(safe-area-inset-top)+0.8rem)] pb-[0.8rem]">
         <div
-          className={`rounded-full transition-shadow ${stuck ? 'shadow-[0_4px_14px_rgba(30,34,32,0.08)]' : ''}`}
+          className={`rounded-full border transition-shadow ${stuck ? 'border-border-subtle shadow-[0_4px_14px_rgba(30,34,32,0.08)]' : 'border-transparent'}`}
         >
           <SegmentedControl
             label="Chart range"
