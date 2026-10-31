@@ -13,7 +13,8 @@ type RecentDaysCardProps = {
   entries: Entry[]
 }
 
-/** Fill colors per cell state. Tints keep an outline so they stay visible on the canvas. */
+/** Cell radius is --cell-r; the ring around today is --cell-r + its 0.3rem padding + 0.2rem border, so the corners stay concentric.
+ * Fill colors per cell state. Tints keep an outline so they stay visible on the canvas. */
 const CELL = {
   logged: 'bg-sage-tint border border-brand-sage/40',
   flare: 'bg-clay-tint border border-accent-clay/50',
@@ -57,14 +58,17 @@ function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
             </li>
           ))}
       </ul>
-      <div aria-hidden="true" className="mt-[0.8rem] grid grid-cols-7 gap-[0.4rem]">
+      <div
+        aria-hidden="true"
+        className="mt-[0.8rem] grid grid-cols-7 gap-[0.4rem] [--cell-r:0.8rem] supports-[corner-shape:squircle]:[--cell-r:1.2rem]"
+      >
         {days.map((day, i) => {
           const future = day > today
           return (
             <div key={day} className="flex flex-col items-center gap-[0.4rem]">
               <span className="text-micro text-text-muted">{INITIALS[i]}</span>
               <div
-                className={`flex w-full flex-col gap-[0.4rem] rounded-[1rem] border-2 p-[0.3rem] ${
+                className={`flex w-full flex-col gap-[0.4rem] rounded-[calc(var(--cell-r)+0.5rem)] border-2 p-[0.3rem] supports-[corner-shape:squircle]:[corner-shape:squircle] ${
                   day === today ? 'border-brand-sage' : 'border-transparent'
                 }`}
               >
@@ -83,7 +87,7 @@ function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
                   return (
                     <span
                       key={period}
-                      className={`h-[3rem] rounded-[1.2rem] supports-[corner-shape:squircle]:[corner-shape:squircle] ${fill}`}
+                      className={`h-[3rem] rounded-[var(--cell-r)] supports-[corner-shape:squircle]:[corner-shape:squircle] ${fill}`}
                     />
                   )
                 })}
