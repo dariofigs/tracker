@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { SegmentedControl } from '../../components/ui'
 import { useEntriesInRange } from '../../hooks/useEntriesInRange'
-import { ENGINE_DAYS } from '../../hooks/useTopInsight'
 import { addDays, todayString } from '../../lib/dates'
 import LoadErrorCard from '../today/LoadErrorCard'
 import LoadingCards from '../today/LoadingCards'
@@ -22,6 +21,9 @@ const RANGES = [
   { value: 30, label: '30 days' },
   { value: 90, label: '90 days' },
 ]
+
+/** How far back the engine looks. More days make small effects findable. */
+const ENGINE_DAYS = 365
 
 function TrendsView() {
   const today = todayString()

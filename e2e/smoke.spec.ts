@@ -13,7 +13,7 @@ async function setPain(page: Page, name: string, steps: number) {
   for (let i = 0; i < steps; i++) await page.keyboard.press('ArrowRight')
 }
 
-test('log morning and evening, then see the day on Today, Calendar and Trends', async ({
+test('log morning and evening, then see the day on Today, Calendar and Insights', async ({
   page,
 }) => {
   await page.clock.setFixedTime(new Date(1998, 6, 1, 8, 0))
@@ -53,8 +53,8 @@ test('log morning and evening, then see the day on Today, Calendar and Trends', 
     }),
   ).toBeVisible()
 
-  // Trends is honest that one day is not enough.
-  await nav.getByRole('button', { name: 'Trends' }).click()
+  // Insights is honest that one day is not enough.
+  await nav.getByRole('button', { name: 'Insights' }).click()
   await expect(page.getByText(/1 of \d+ days so far/).first()).toBeVisible()
 })
 

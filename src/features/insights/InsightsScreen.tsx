@@ -7,7 +7,7 @@ function InsightsScreen() {
       className="flex flex-col gap-[2.4rem] pt-[2.4rem]"
     >
       <h1 id="insights-title" className="text-screen">
-        Trends
+        Insights
       </h1>
       <TrendsView />
     </section>

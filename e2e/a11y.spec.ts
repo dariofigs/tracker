@@ -42,7 +42,7 @@ async function smallTargets(page: Page) {
 
 const screens = [
   { name: 'Today', path: '/', ready: 'Morning check-in|Evening check-in' },
-  { name: 'Trends', path: '/insights', ready: 'Trends' },
+  { name: 'Insights', path: '/insights', ready: 'Insights' },
   { name: 'Calendar', path: '/calendar', ready: 'Calendar' },
   { name: 'Settings', path: '/settings', ready: 'Settings' },
 ]

@@ -3,7 +3,6 @@
 import { useState, type ReactNode } from 'react'
 import DemoBanner from '../components/DemoBanner'
 import OfflineBanner from '../components/OfflineBanner'
-import DemoAccountNotice from '../features/settings/DemoAccountNotice'
 import StartupScreen from '../components/StartupScreen'
 import { Button, Card, SectionHeader } from '../components/ui'
 import type { Entry, EntryInput } from '../data/types'
@@ -54,7 +53,6 @@ import {
 import RecentDaysCard from '../features/today/RecentDaysCard'
 import CadenceCard from '../features/today/CadenceCard'
 import BatteryCard from '../features/today/BatteryCard'
-import InsightBanner from '../features/today/InsightBanner'
 import LoadErrorCard from '../features/today/LoadErrorCard'
 import LoadingCards from '../features/today/LoadingCards'
 import SaveStatusLine from '../features/today/SaveStatusLine'
@@ -340,12 +338,6 @@ function ComponentsPage() {
           </Variant>
         </Demo>
 
-        <Demo title="Demo account notice">
-          <Variant label="Settings → Account on /demo">
-            <DemoAccountNotice />
-          </Variant>
-        </Demo>
-
         <Demo title="Startup screen">
           <Variant label="Loading">
             <div className="h-[16rem] overflow-hidden">
@@ -403,19 +395,6 @@ function ComponentsPage() {
           </Variant>
           <Variant label="Evening reading, low">
             <BatteryCard reading={{ value: 25, source: 'evening' }} />
-          </Variant>
-        </Demo>
-
-        <Demo title="Insight banner">
-          <Variant label="With an insight">
-            <InsightBanner
-              insight={{
-                text: 'Gentle walks tend to come before calmer mornings in your log.',
-              }}
-            />
-          </Variant>
-          <Variant label="No insight (renders nothing)">
-            <InsightBanner insight={null} />
           </Variant>
         </Demo>
 

@@ -14,7 +14,7 @@ import { useMorningCutoff } from '../lib/preferences'
 function navItems(todayIcon: NavItem['icon']): NavItem[] {
   return [
     { id: '/', label: 'Today', icon: todayIcon },
-    { id: '/insights', label: 'Trends', icon: 'insights' },
+    { id: '/insights', label: 'Insights', icon: 'insights' },
     { id: '/calendar', label: 'Calendar', icon: 'calendar' },
     { id: '/settings', label: 'Settings', icon: 'settings' },
   ]

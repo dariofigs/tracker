@@ -72,9 +72,6 @@ export default function LoginScreen() {
           {submitting ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
-      <a href="/demo" className="min-touch text-caption text-text-muted mt-[2.4rem] flex items-center justify-center underline">
-        Take a look at the demo
-      </a>
     </main>
   )
 }

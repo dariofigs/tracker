@@ -4,7 +4,7 @@ import { formatHeaderDate, greetingFor } from './headerText'
 // Single-user app; a Settings field can replace this later.
 const NAME = 'Darío'
 // The demo greets with a made-up name rather than the owner's.
-const DEMO_NAME = 'Alex'
+const DEMO_NAME = 'Demo'
 
 function TodayHeader({ now = new Date(), name = isDemo ? DEMO_NAME : NAME }: { now?: Date; name?: string }) {
   return (

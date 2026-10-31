@@ -5,12 +5,10 @@ import { useRecentEntries } from '../../hooks/useRecentEntries'
 import { useSaveStatus } from '../../hooks/useSaveStatus'
 import { useTodayEntries } from '../../hooks/useTodayEntries'
 import { useBackupReminder } from '../../hooks/useBackupReminder'
-import { useTopInsight } from '../../hooks/useTopInsight'
 import { useCheckin } from '../checkin/CheckinContext'
 import BackupReminder from './BackupReminder'
 import BatteryCard from './BatteryCard'
 import CadenceCard from './CadenceCard'
-import InsightBanner from './InsightBanner'
 import LoadErrorCard from './LoadErrorCard'
 import LoadingCards from './LoadingCards'
 import RecentDaysCard from './RecentDaysCard'
@@ -25,7 +23,6 @@ function TodayScreen() {
   const { morning, evening, loading, error, reload } = useTodayEntries()
   const { openCheckin } = useCheckin()
   const saveStatus = useSaveStatus()
-  const insight = useTopInsight()
   const recent = useRecentEntries(RECENT_DAYS)
   const morningCutoff = useMorningCutoff()
   const backup = useBackupReminder()
@@ -36,7 +33,6 @@ function TodayScreen() {
     <div className="flex flex-col gap-[2.4rem]">
       <TodayHeader />
       <SaveStatusLine status={saveStatus} />
-      <InsightBanner insight={insight} />
       {backup.days !== null && (
         <BackupReminder
           days={backup.days}
