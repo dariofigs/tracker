@@ -22,7 +22,11 @@ export type Preferences = {
   backupReminderSnoozedUntil: string | null
   /** Show the current weather as the Today tab icon. Needs location access. */
   weatherIcon: boolean
+  /** What the Today greeting calls you. Empty means the greeting has no name. */
+  name: string
 }
+
+export const MAX_NAME_LENGTH = 40
 
 export const DEFAULT_PREFERENCES: Preferences = {
   morningCutoff: DEFAULT_MORNING_CUTOFF,
@@ -32,6 +36,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   lastExportAt: null,
   backupReminderSnoozedUntil: null,
   weatherIcon: false,
+  name: '',
 }
 
 const STORAGE_KEY = 'tracker.preferences'
@@ -65,6 +70,7 @@ export function parsePreferences(raw: string | null): Preferences {
       lastExportAt: isoOrNull(data.lastExportAt),
       backupReminderSnoozedUntil: isoOrNull(data.backupReminderSnoozedUntil),
       weatherIcon: data.weatherIcon === true,
+      name: typeof data.name === 'string' ? data.name.slice(0, MAX_NAME_LENGTH) : '',
     }
   } catch {
     return DEFAULT_PREFERENCES

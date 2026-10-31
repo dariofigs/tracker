@@ -4,6 +4,7 @@ import { preferences, usePreferences } from '../../lib/preferences'
 import { isDemo } from '../../demo/mode'
 import AccountCard from './AccountCard'
 import BackupCard from './BackupCard'
+import NameSetting from './NameSetting'
 import OptionsManager from './OptionsManager'
 import ThemeSetting from './ThemeSetting'
 import TimeSetting from './TimeSetting'
@@ -17,7 +18,7 @@ const demoOff = {
 }
 
 function SettingsScreen() {
-  const { morningCutoff, theme, darkFrom, lightFrom, weatherIcon } = usePreferences()
+  const { morningCutoff, theme, darkFrom, lightFrom, weatherIcon, name } = usePreferences()
 
   return (
     <section
@@ -27,6 +28,16 @@ function SettingsScreen() {
       <h1 id="settings-title" className="text-screen">
         Settings
       </h1>
+
+      <Card as="section" aria-label="Profile" {...demoOff}>
+        <SectionHeader title="Profile" />
+        <NameSetting
+          value={name}
+          onChange={(value) => preferences.set({ name: value })}
+          // Saved to the account so other devices pick it up; this device already has it.
+          onCommit={(value) => repository.setDisplayName(value).catch(() => {})}
+        />
+      </Card>
 
       <Card as="section" aria-label="Check-in" className="flex flex-col gap-[1.6rem]">
         <SectionHeader title="Check-in" />

@@ -41,6 +41,7 @@ import { buildOptionRows } from '../features/settings/optionsModel'
 import RenameSheet, { type RenameStage } from '../features/settings/RenameSheet'
 import ThemeSetting from '../features/settings/ThemeSetting'
 import WeatherSetting from '../features/settings/WeatherSetting'
+import NameSetting from '../features/settings/NameSetting'
 import TimeSetting from '../features/settings/TimeSetting'
 import type { ThemeMode } from '../lib/preferences'
 import BackupReminder from '../features/today/BackupReminder'
@@ -207,6 +208,16 @@ function WeatherSettingCard({ initial, refuse = false }: { initial: boolean; ref
           return true
         }}
       />
+    </Card>
+  )
+}
+
+function NameSettingDemo({ initial }: { initial: string }) {
+  const [value, setValue] = useState(initial)
+  return (
+    <Card className="flex flex-col gap-[1.6rem]">
+      <SectionHeader title="Profile" />
+      <NameSetting value={value} onChange={setValue} />
     </Card>
   )
 }
@@ -617,6 +628,15 @@ function ComponentsPage() {
         <Demo title="Day detail sheet">
           <Variant label="Entries with edit and delete (delete asks to confirm)">
             <DayDetailDemo />
+          </Variant>
+        </Demo>
+
+        <Demo title="Name setting">
+          <Variant label="Empty (greeting has no name)">
+            <NameSettingDemo initial="" />
+          </Variant>
+          <Variant label="Filled">
+            <NameSettingDemo initial="Sam" />
           </Variant>
         </Demo>
 

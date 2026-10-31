@@ -19,6 +19,7 @@ export function createMemoryRepository(
   const timedLogs = new Map<string, TimedLog>()
   const options: CustomOption[] = []
   let morningCutoff: string | null = null
+  let displayName: string | null = null
   let optionClock = 0
 
   const keyOf = (date: string, period: string) => `${date}|${period}`
@@ -86,6 +87,12 @@ export function createMemoryRepository(
     },
     async setMorningCutoff(value) {
       morningCutoff = value
+    },
+    async getDisplayName() {
+      return displayName
+    },
+    async setDisplayName(value) {
+      displayName = value
     },
     async listAllTimedLogs() {
       return [...timedLogs.values()].sort((a, b) => a.occurredAt.localeCompare(b.occurredAt))

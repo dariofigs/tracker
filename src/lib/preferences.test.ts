@@ -22,6 +22,13 @@ describe('parsePreferences', () => {
     expect(parsePreferences('not json')).toEqual(DEFAULT_PREFERENCES)
   })
 
+  it('leaves the name blank by default and for older saved preferences', () => {
+    expect(DEFAULT_PREFERENCES.name).toBe('')
+    expect(parsePreferences(null).name).toBe('')
+    expect(parsePreferences(JSON.stringify({ theme: 'dark' })).name).toBe('')
+    expect(parsePreferences(JSON.stringify({ name: 42 })).name).toBe('')
+  })
+
   it('falls back field by field for invalid values', () => {
     const result = parsePreferences(
       JSON.stringify({ morningCutoff: '25:00', lastExportAt: 'yesterday-ish' }),

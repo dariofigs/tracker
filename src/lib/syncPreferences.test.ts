@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createPreferencesStore } from './preferences'
-import { syncMorningCutoff } from './syncPreferences'
+import { syncDisplayName, syncMorningCutoff } from './syncPreferences'
 
 function memoryStore() {
   const data = new Map<string, string>()
@@ -39,5 +39,41 @@ describe('syncMorningCutoff', () => {
     }
     await syncMorningCutoff(repo, store)
     expect(store.get().morningCutoff).toBe('14:00')
+  })
+})
+
+describe('syncDisplayName', () => {
+  it('takes the saved name, including a deliberately blank one', async () => {
+    const store = memoryStore()
+    store.set({ name: 'Sam' })
+    await syncDisplayName({ getDisplayName: async () => '', setDisplayName: vi.fn() }, store)
+    expect(store.get().name).toBe('')
+  })
+
+  it('uploads a name typed here when nothing is saved yet', async () => {
+    const store = memoryStore()
+    store.set({ name: 'Sam' })
+    const repo = { getDisplayName: async () => null, setDisplayName: vi.fn() }
+    await syncDisplayName(repo, store)
+    expect(repo.setDisplayName).toHaveBeenCalledWith('Sam')
+  })
+
+  it('uploads nothing when there is no name anywhere', async () => {
+    const repo = { getDisplayName: async () => null, setDisplayName: vi.fn() }
+    await syncDisplayName(repo, memoryStore())
+    expect(repo.setDisplayName).not.toHaveBeenCalled()
+  })
+
+  it('keeps the local name when the lookup fails', async () => {
+    const store = memoryStore()
+    store.set({ name: 'Sam' })
+    const repo = {
+      getDisplayName: async () => {
+        throw new Error('offline')
+      },
+      setDisplayName: vi.fn(),
+    }
+    await syncDisplayName(repo, store)
+    expect(store.get().name).toBe('Sam')
   })
 })

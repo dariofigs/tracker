@@ -93,6 +93,20 @@ export function createRepository(client: SupabaseClient) {
       unwrap(result)
     },
 
+    /** The saved greeting name, or null when none has been saved yet. */
+    async getDisplayName(): Promise<string | null> {
+      const result = await client.from('user_preferences').select('display_name').limit(1)
+      return unwrap(result)[0]?.display_name ?? null
+    },
+
+    /** Saves the greeting name so every device uses the same one. An empty name is a saved choice. */
+    async setDisplayName(value: string): Promise<void> {
+      const result = await client
+        .from('user_preferences')
+        .upsert({ display_name: value, updated_at: new Date().toISOString() })
+      unwrap(result)
+    },
+
     /** Every timed log, oldest first. */
     async listAllTimedLogs(): Promise<TimedLog[]> {
       const rows = await fetchAllPages<TimedLogRow>((from, to) =>

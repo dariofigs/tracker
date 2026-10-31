@@ -100,13 +100,18 @@ alter table public.custom_options drop constraint if exists custom_options_kind_
 alter table public.custom_options add constraint custom_options_kind_check
   check (kind in ('symptom', 'activity', 'exercise_type', 'pain_area'));
 
--- Settings that follow the user across devices (currently the check-in switch time).
+-- Settings that follow the user across devices (the check-in switch time and the greeting name).
 -- One row per user; user_id is the key, so saving again edits the same row.
 create table if not exists public.user_preferences (
   user_id         uuid primary key default auth.uid() references auth.users (id) on delete cascade,
   morning_cutoff  text not null check (morning_cutoff ~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'),
   updated_at      timestamptz not null default now()
 );
+
+-- Each setting is saved on its own, so none of them can be required.
+alter table public.user_preferences alter column morning_cutoff drop not null;
+alter table public.user_preferences add column if not exists display_name text
+  check (char_length(display_name) <= 40);
 
 alter table public.user_preferences enable row level security;
 

@@ -19,4 +19,9 @@ describe('TodayHeader', () => {
     )
     expect(screen.getByText('Thursday, October 29')).toBeInTheDocument()
   })
+
+  it('greets without a name when none is set', () => {
+    render(<TodayHeader now={new Date(2026, 9, 29, 9)} />)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/^Good morning$/)
+  })
 })
