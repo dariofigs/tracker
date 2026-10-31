@@ -431,7 +431,7 @@ function ComponentsPage() {
         </Demo>
 
         <Demo title="Recent days card">
-          <Variant label="Mid-week (Fri Oct 30), 3-day streak, some days missed">
+          <Variant label="Mid-week (Fri Oct 30), 3-day streak, a flare evening (clay), missed days">
             <RecentDaysCard
               today="2026-10-30"
               streak={3}
@@ -440,6 +440,7 @@ function ComponentsPage() {
                 { ...evening, entryDate: '2026-10-29' },
                 { ...morning, entryDate: '2026-10-28' },
                 { ...morning, entryDate: '2026-10-27' },
+                { ...evening, entryDate: '2026-10-27', endPain: 8 },
                 { ...morning, entryDate: '2026-10-30' },
               ]}
             />

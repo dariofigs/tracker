@@ -3,7 +3,7 @@ import type { Entry } from '../../data/types'
 import { parseDayString } from '../../lib/dates'
 import { weekDays } from '../../lib/streak'
 import { entryPain } from '../insights/entrySummary'
-import { Dot } from '../insights/MonthGrid'
+import { FLARE_PAIN } from '../insights/monthStats'
 
 type RecentDaysCardProps = {
   /** Local day (YYYY-MM-DD); the card shows the Sunday-to-Saturday week around it. */
@@ -50,31 +50,35 @@ function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
             </li>
           ))}
       </ul>
-      <div aria-hidden="true" className="mt-[1.2rem] grid grid-cols-7 gap-[0.6rem]">
-        {days.map((day, i) => {
-          const am = entries.find((e) => e.entryDate === day && e.period === 'AM')
-          const pm = entries.find((e) => e.entryDate === day && e.period === 'PM')
-          const future = day > today
-          return (
-            <div
-              key={day}
-              className={`rounded-tile flex flex-col items-center gap-[0.4rem] border py-[0.8rem] ${
-                future
-                  ? 'border-bead-stone text-text-muted border-dashed'
-                  : day === today
-                    ? 'bg-sage-tint border-brand-sage'
-                    : 'bg-surface-subtle border-transparent'
-              }`}
-            >
-              <span className="text-micro text-text-muted">{INITIALS[i]}</span>
-              <span className="text-body font-semibold">{Number(day.slice(8))}</span>
-              <span className="flex gap-[0.4rem]">
-                <Dot pain={entryPain(am)} logged={!!am} />
-                <Dot pain={entryPain(pm)} logged={!!pm} />
-              </span>
-            </div>
-          )
-        })}
+      <div
+        aria-hidden="true"
+        className="text-micro text-text-muted mt-[0.8rem] grid grid-cols-7 gap-[0.4rem] text-center"
+      >
+        {INITIALS.map((initial, i) => (
+          <span key={i}>{initial}</span>
+        ))}
+        {(['AM', 'PM'] as const).flatMap((period) =>
+          days.map((day) => {
+            const entry = entries.find((e) => e.entryDate === day && e.period === period)
+            const pain = entryPain(entry)
+            const fill =
+              day > today
+                ? 'border-bead-stone border border-dashed'
+                : !entry
+                  ? 'bg-surface-subtle'
+                  : pain != null && pain >= FLARE_PAIN
+                    ? 'bg-clay-tint'
+                    : 'bg-sage-tint'
+            return (
+              <span
+                key={`${period}-${day}`}
+                className={`h-[2.2rem] rounded-[0.6rem] ${fill} ${
+                  day === today ? 'outline-brand-sage outline-[1.5px]' : ''
+                }`}
+              />
+            )
+          }),
+        )}
       </div>
     </Card>
   )
