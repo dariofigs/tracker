@@ -38,7 +38,9 @@ import type { ImportPlan } from '../features/settings/backup/importPlan'
 import OptionsList from '../features/settings/OptionsList'
 import { buildOptionRows } from '../features/settings/optionsModel'
 import RenameSheet, { type RenameStage } from '../features/settings/RenameSheet'
+import ThemeSetting from '../features/settings/ThemeSetting'
 import TimeSetting from '../features/settings/TimeSetting'
+import type { ThemeMode } from '../lib/preferences'
 import BackupReminder from '../features/today/BackupReminder'
 import {
   defaultsFrom,
@@ -164,6 +166,17 @@ const demoOptionRows = buildOptionRows('activity', [
   { id: 'c1', kind: 'activity', label: 'Pool', hidden: false, createdAt: '' },
   { id: 'c2', kind: 'activity', label: 'Rest', hidden: true, createdAt: '' },
 ])
+
+// Local state only: the gallery cards must not change the theme of the whole page.
+function ThemeSettingCard({ initial }: { initial: ThemeMode }) {
+  const [state, setState] = useState({ theme: initial, darkFrom: '19:00', lightFrom: '07:00' })
+  return (
+    <Card className="flex flex-col gap-[1.6rem]">
+      <SectionHeader title="Appearance" />
+      <ThemeSetting {...state} onChange={(changes) => setState((s) => ({ ...s, ...changes }))} />
+    </Card>
+  )
+}
 
 function TimeSettingDemo({ initial }: { initial: string }) {
   const [value, setValue] = useState(initial)
@@ -581,6 +594,21 @@ function ComponentsPage() {
               <SectionHeader title="Check-in" />
               <TimeSettingDemo initial="19:00" />
             </Card>
+          </Variant>
+        </Demo>
+
+        <Demo title="Appearance setting">
+          <Variant label="Same as device (default)">
+            <ThemeSettingCard initial="system" />
+          </Variant>
+          <Variant label="Light">
+            <ThemeSettingCard initial="light" />
+          </Variant>
+          <Variant label="Dark">
+            <ThemeSettingCard initial="dark" />
+          </Variant>
+          <Variant label="Day and night (shows the two switch times)">
+            <ThemeSettingCard initial="schedule" />
           </Variant>
         </Demo>
 

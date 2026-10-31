@@ -4,6 +4,7 @@ import AppLayout from './components/AppLayout'
 import ErrorBoundary from './components/ErrorBoundary'
 import StartupScreen from './components/StartupScreen'
 import DevPages from './dev/DevPages'
+import ThemeSwitch from './dev/ThemeSwitch'
 import LoginScreen from './features/auth/LoginScreen'
 import TodayScreen from './features/today/TodayScreen'
 import { useSession } from './hooks/useSession'
@@ -55,13 +56,16 @@ function App() {
             path="dev"
             element={
               <>
-                <button
-                  type="button"
-                  onClick={() => supabase.auth.signOut()}
-                  className="min-touch rounded-tile bg-surface-card text-caption fixed top-[1.6rem] right-[1.6rem] px-[1.6rem]"
-                >
-                  Sign out
-                </button>
+                <div className="fixed top-[1.6rem] right-[1.6rem] z-10 flex items-center gap-[0.8rem]">
+                  <ThemeSwitch />
+                  <button
+                    type="button"
+                    onClick={() => supabase.auth.signOut()}
+                    className="min-touch rounded-tile bg-surface-card text-caption px-[1.6rem]"
+                  >
+                    Sign out
+                  </button>
+                </div>
                 <DevPages />
               </>
             }

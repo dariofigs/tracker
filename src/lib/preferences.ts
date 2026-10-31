@@ -1,10 +1,20 @@
 import { useSyncExternalStore } from 'react'
 import { DEFAULT_MORNING_CUTOFF } from './dates'
 
+/** Light, dark, follow the device, or switch by time of day (darkFrom / lightFrom). */
+export type ThemeMode = 'light' | 'dark' | 'system' | 'schedule'
+
+const THEME_MODES: readonly ThemeMode[] = ['light', 'dark', 'system', 'schedule']
+
 /** Settings that live on this phone. Backed up inside the JSON export, but not in the database. */
 export type Preferences = {
   /** AM before this "HH:mm" time, PM from it onward. */
   morningCutoff: string
+  theme: ThemeMode
+  /** "HH:mm" the dark theme starts when theme is "schedule". */
+  darkFrom: string
+  /** "HH:mm" the light theme starts when theme is "schedule". */
+  lightFrom: string
   /** ISO timestamp of the last JSON export, or null if never exported. */
   lastExportAt: string | null
   /** ISO timestamp until which the backup reminder stays hidden, or null. */
@@ -13,6 +23,9 @@ export type Preferences = {
 
 export const DEFAULT_PREFERENCES: Preferences = {
   morningCutoff: DEFAULT_MORNING_CUTOFF,
+  theme: 'system',
+  darkFrom: '19:00',
+  lightFrom: '07:00',
   lastExportAt: null,
   backupReminderSnoozedUntil: null,
 }
@@ -38,6 +51,13 @@ export function parsePreferences(raw: string | null): Preferences {
       morningCutoff: isValidCutoff(data.morningCutoff)
         ? data.morningCutoff
         : DEFAULT_PREFERENCES.morningCutoff,
+      theme: THEME_MODES.includes(data.theme as ThemeMode)
+        ? (data.theme as ThemeMode)
+        : DEFAULT_PREFERENCES.theme,
+      darkFrom: isValidCutoff(data.darkFrom) ? data.darkFrom : DEFAULT_PREFERENCES.darkFrom,
+      lightFrom: isValidCutoff(data.lightFrom)
+        ? data.lightFrom
+        : DEFAULT_PREFERENCES.lightFrom,
       lastExportAt: isoOrNull(data.lastExportAt),
       backupReminderSnoozedUntil: isoOrNull(data.backupReminderSnoozedUntil),
     }

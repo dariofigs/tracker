@@ -4,10 +4,11 @@ import { preferences, usePreferences } from '../../lib/preferences'
 import AccountCard from './AccountCard'
 import BackupCard from './BackupCard'
 import OptionsManager from './OptionsManager'
+import ThemeSetting from './ThemeSetting'
 import TimeSetting from './TimeSetting'
 
 function SettingsScreen() {
-  const { morningCutoff } = usePreferences()
+  const { morningCutoff, theme, darkFrom, lightFrom } = usePreferences()
 
   return (
     <section
@@ -27,6 +28,16 @@ function SettingsScreen() {
             // Saved to the account so other devices pick it up; this device already has it.
             repository.setMorningCutoff(value).catch(() => {})
           }}
+        />
+      </Card>
+
+      <Card as="section" aria-label="Appearance" className="flex flex-col gap-[1.6rem]">
+        <SectionHeader title="Appearance" />
+        <ThemeSetting
+          theme={theme}
+          darkFrom={darkFrom}
+          lightFrom={lightFrom}
+          onChange={(changes) => preferences.set(changes)}
         />
       </Card>
 

@@ -29,6 +29,22 @@ describe('parsePreferences', () => {
     expect(result).toEqual(DEFAULT_PREFERENCES)
   })
 
+  it('keeps a valid theme choice and falls back for anything else', () => {
+    const kept = parsePreferences(
+      JSON.stringify({ theme: 'schedule', darkFrom: '21:30', lightFrom: '06:15' }),
+    )
+    expect(kept.theme).toBe('schedule')
+    expect(kept.darkFrom).toBe('21:30')
+    expect(kept.lightFrom).toBe('06:15')
+
+    const bad = parsePreferences(
+      JSON.stringify({ theme: 'sepia', darkFrom: '9pm', lightFrom: 7 }),
+    )
+    expect(bad.theme).toBe('system')
+    expect(bad.darkFrom).toBe('19:00')
+    expect(bad.lightFrom).toBe('07:00')
+  })
+
   it('keeps valid values', () => {
     const result = parsePreferences(
       JSON.stringify({
