@@ -135,6 +135,61 @@ const demoEntries: Entry[] = demoInputs.map((e, i) => ({
   note: null,
 }))
 const octoberEntries = demoEntries.filter((e) => e.entryDate.startsWith('2026-10'))
+const zeroPainEntries: Entry[] = [
+  { ...base, id: 'z1', entryDate: '2026-10-12', period: 'AM', wakingPain: 0 },
+  { ...base, id: 'z2', entryDate: '2026-10-13', period: 'PM', endPain: 0 },
+]
+
+const RANGE_DEMO = [7, 30, 90]
+
+/** Scrolls dummy cards under a pinned range control, to judge how each treatment sits. */
+function RangeBarDemo({ kind }: { kind: 'tabs' | 'header' | 'pill' }) {
+  const [range, setRange] = useState(7)
+  const options = RANGE_DEMO.map((d) => ({ value: d, label: `${d} days` }))
+  const choose = (d: number) => (
+    <button
+      key={d}
+      type="button"
+      aria-pressed={range === d}
+      onClick={() => setRange(d)}
+      className={
+        kind === 'tabs'
+          ? `text-body min-touch flex-1 border-b-2 font-semibold ${range === d ? 'border-brand-sage text-brand-sage' : 'text-text-muted border-transparent'}`
+          : `text-caption min-h-[3.6rem] rounded-full px-[1.2rem] font-semibold ${range === d ? 'bg-brand-sage text-surface-card' : 'bg-surface-subtle text-text-muted'}`
+      }
+    >
+      {options.find((o) => o.value === d)?.label}
+    </button>
+  )
+  return (
+    <div className="bg-canvas-bg border-border-subtle relative h-[32rem] overflow-y-auto rounded-[1.6rem] border px-[1.6rem]">
+      {kind === 'tabs' && (
+        <div className="bg-canvas-bg border-border-subtle sticky top-0 z-10 -mx-[1.6rem] flex border-b px-[1.6rem] pt-[0.8rem]">
+          {RANGE_DEMO.map(choose)}
+        </div>
+      )}
+      {kind === 'header' && (
+        <div className="bg-canvas-bg sticky top-0 z-10 -mx-[1.6rem] flex items-center justify-between px-[1.6rem] py-[1.2rem]">
+          <h3 className="text-title font-semibold">Trends</h3>
+          <div className="flex gap-[0.6rem]">{RANGE_DEMO.map(choose)}</div>
+        </div>
+      )}
+      {kind === 'pill' && (
+        <div className="sticky top-[0.8rem] z-10 mx-auto flex w-fit gap-[0.4rem] rounded-full bg-white/80 p-[0.4rem] shadow-md backdrop-blur">
+          {RANGE_DEMO.map(choose)}
+        </div>
+      )}
+      <div className="flex flex-col gap-[1.2rem] py-[1.2rem]">
+        {[1, 2, 3, 4].map((n) => (
+          <Card key={n}>
+            <SectionHeader title={`Chart card ${n}`} />
+            <div className="bg-surface-subtle mt-[1.2rem] h-[10rem] rounded-[1.2rem]" />
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 function DayDetailDemo() {
   const [open, setOpen] = useState(false)
@@ -431,7 +486,6 @@ function ComponentsPage() {
             <RecentDaysCard
               today="2026-10-30"
               streak={3}
-              onOpen={noop}
               entries={[
                 { ...morning, entryDate: '2026-10-29' },
                 { ...evening, entryDate: '2026-10-29' },
@@ -442,15 +496,26 @@ function ComponentsPage() {
             />
           </Variant>
           <Variant label="Start of the week, no streak">
-            <RecentDaysCard today="2026-10-25" streak={0} onOpen={noop} entries={[]} />
+            <RecentDaysCard today="2026-10-25" streak={0} entries={[]} />
           </Variant>
           <Variant label="Last day of the week, one-day streak">
             <RecentDaysCard
               today="2026-10-31"
               streak={1}
-              onOpen={noop}
               entries={[{ ...evening, entryDate: '2026-10-31' }]}
             />
+          </Variant>
+        </Demo>
+
+        <Demo title="Trends range bar (pinned)">
+          <Variant label="A: underlined tabs">
+            <RangeBarDemo kind="tabs" />
+          </Variant>
+          <Variant label="B: title row with compact chips">
+            <RangeBarDemo kind="header" />
+          </Variant>
+          <Variant label="C: floating pill">
+            <RangeBarDemo kind="pill" />
           </Variant>
         </Demo>
 
@@ -551,6 +616,26 @@ function ComponentsPage() {
           <Variant label="One day only (no lowest day)">
             <NotableDaysCard entries={octoberEntries.slice(0, 1)} onSelect={noop} />
           </Variant>
+          <Variant label="Empty A: nothing notable, card hidden (live default)">
+            <NotableDaysCard entries={zeroPainEntries} onSelect={noop} />
+            <p className="text-caption text-text-muted">(Nothing renders above this line.)</p>
+          </Variant>
+          <Variant label="Empty B: quiet note">
+            <NotableDaysCard
+              entries={zeroPainEntries}
+              onSelect={noop}
+              monthName="October"
+              emptyState="quiet"
+            />
+          </Variant>
+          <Variant label="Empty C: positive note">
+            <NotableDaysCard
+              entries={zeroPainEntries}
+              onSelect={noop}
+              monthName="October"
+              emptyState="positive"
+            />
+          </Variant>
         </Demo>
 
         <Demo title="Day detail sheet">
@@ -579,6 +664,24 @@ function ComponentsPage() {
             <OptionsList
               kind="activity"
               rows={demoOptionRows}
+              onAdd={noop}
+              onRename={noop}
+              onToggleHidden={noop}
+            />
+          </Variant>
+          <Variant label="Every option hidden (no divider)">
+            <OptionsList
+              kind="activity"
+              rows={buildOptionRows(
+                'activity',
+                ['Walk', 'Stretch'].map((label, i) => ({
+                  id: `h${i}`,
+                  kind: 'activity' as const,
+                  label,
+                  hidden: true,
+                  createdAt: '',
+                })),
+              ).filter((r) => r.hidden)}
               onAdd={noop}
               onRename={noop}
               onToggleHidden={noop}

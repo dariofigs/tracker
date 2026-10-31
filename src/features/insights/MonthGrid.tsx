@@ -11,7 +11,7 @@ const dotClass: Record<PainBand, string> = {
   plum: 'bg-flare-plum',
 }
 
-function Dot({ pain, logged }: { pain: number | null; logged: boolean }) {
+export function Dot({ pain, logged }: { pain: number | null; logged: boolean }) {
   const filled = pain != null ? dotClass[painBand(pain)] : logged ? 'bg-bead-stone' : ''
   return (
     <span

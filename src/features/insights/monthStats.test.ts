@@ -49,6 +49,14 @@ describe('notableDays', () => {
     expect(notableDays([])).toEqual({ highest: null, lowest: null, longestFlare: null })
   })
 
+  it('has nothing notable when no day went above zero pain', () => {
+    expect(notableDays([am('2026-10-01', 0), pm('2026-10-02', 0)])).toEqual({
+      highest: null,
+      lowest: null,
+      longestFlare: null,
+    })
+  })
+
   it('omits the lowest day when every day matches', () => {
     expect(notableDays([am('2026-10-01', 4)]).lowest).toBeNull()
   })

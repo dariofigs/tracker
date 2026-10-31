@@ -1,7 +1,9 @@
 import { Card, Icon, SectionHeader } from '../../components/ui'
-import type { Entry, Period } from '../../data/types'
+import type { Entry } from '../../data/types'
 import { parseDayString } from '../../lib/dates'
 import { weekDays } from '../../lib/streak'
+import { entryPain } from '../insights/entrySummary'
+import { Dot } from '../insights/MonthGrid'
 
 type RecentDaysCardProps = {
   /** Local day (YYYY-MM-DD); the card shows the Sunday-to-Saturday week around it. */
@@ -9,16 +11,19 @@ type RecentDaysCardProps = {
   /** Consecutive days with a check-in, ending today (or yesterday while today is empty). */
   streak: number
   entries: Entry[]
-  onOpen: (period: Period, date: string) => void
 }
 
-const PERIODS: { period: Period; label: string }[] = [
-  { period: 'AM', label: 'Morning' },
-  { period: 'PM', label: 'Evening' },
-]
+const INITIALS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
-/** This calendar week with a button per past check-in, and the running streak. */
-function RecentDaysCard({ today, streak, entries, onOpen }: RecentDaysCardProps) {
+function spoken(day: string, am: Entry | undefined, pm: Entry | undefined) {
+  const name = parseDayString(day).toLocaleDateString('en-US', { weekday: 'long' })
+  const logged = [am && 'morning', pm && 'evening'].filter(Boolean).join(' and ')
+  return `${name}: ${logged ? `${logged} logged` : 'nothing logged'}`
+}
+
+/** This calendar week at a glance, with the running streak. Display only. */
+function RecentDaysCard({ today, streak, entries }: RecentDaysCardProps) {
+  const days = weekDays(today)
   return (
     <Card as="section" aria-label="This week">
       <SectionHeader
@@ -32,59 +37,45 @@ function RecentDaysCard({ today, streak, entries, onOpen }: RecentDaysCardProps)
           )
         }
       />
-      <ul className="mt-[1.2rem] flex flex-col">
-        {weekDays(today).map((date) => {
-          const isToday = date === today
-          const isFuture = date > today
-          return (
-            <li
-              key={date}
-              className="border-border-subtle flex items-center justify-between gap-[1.2rem] border-b py-[0.8rem] last:border-b-0 last:pb-0"
-            >
-              <span
-                className={`text-body font-semibold ${isFuture ? 'text-text-muted' : 'text-text-primary'}`}
-              >
-                {isToday
-                  ? 'Today'
-                  : parseDayString(date).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-              </span>
-              {isToday || isFuture ? (
-                <span className="text-caption text-text-muted">
-                  {isToday ? 'Use the check-ins above' : 'Coming up'}
-                </span>
-              ) : (
-                <span className="flex gap-[0.8rem]">
-                  {PERIODS.map(({ period, label }) => {
-                    const done = entries.some(
-                      (e) => e.entryDate === date && e.period === period,
-                    )
-                    return (
-                      <button
-                        key={period}
-                        type="button"
-                        onClick={() => onOpen(period, date)}
-                        aria-label={`${period} ${label.toLowerCase()} check-in for ${date}, ${done ? 'logged, edit' : 'not logged, add'}`}
-                        className={`min-touch text-caption focus-visible:outline-brand-sage inline-flex items-center gap-[0.6rem] rounded-full px-[1.6rem] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                          done
-                            ? 'bg-sage-tint text-brand-sage'
-                            : 'bg-surface-subtle text-text-muted'
-                        }`}
-                      >
-                        <Icon name={done ? 'check' : 'add'} bold={done} size={16} />
-                        {period}
-                      </button>
-                    )
-                  })}
-                </span>
+      <ul className="sr-only">
+        {days
+          .filter((day) => day <= today)
+          .map((day) => (
+            <li key={day}>
+              {spoken(
+                day,
+                entries.find((e) => e.entryDate === day && e.period === 'AM'),
+                entries.find((e) => e.entryDate === day && e.period === 'PM'),
               )}
             </li>
+          ))}
+      </ul>
+      <div aria-hidden="true" className="mt-[1.2rem] grid grid-cols-7 gap-[0.6rem]">
+        {days.map((day, i) => {
+          const am = entries.find((e) => e.entryDate === day && e.period === 'AM')
+          const pm = entries.find((e) => e.entryDate === day && e.period === 'PM')
+          const future = day > today
+          return (
+            <div
+              key={day}
+              className={`rounded-tile flex flex-col items-center gap-[0.4rem] border py-[0.8rem] ${
+                future
+                  ? 'border-bead-stone text-text-muted border-dashed'
+                  : day === today
+                    ? 'bg-sage-tint border-brand-sage'
+                    : 'bg-surface-subtle border-transparent'
+              }`}
+            >
+              <span className="text-micro text-text-muted">{INITIALS[i]}</span>
+              <span className="text-body font-semibold">{Number(day.slice(8))}</span>
+              <span className="flex gap-[0.4rem]">
+                <Dot pain={entryPain(am)} logged={!!am} />
+                <Dot pain={entryPain(pm)} logged={!!pm} />
+              </span>
+            </div>
           )
         })}
-      </ul>
+      </div>
     </Card>
   )
 }

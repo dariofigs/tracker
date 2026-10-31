@@ -61,7 +61,6 @@ function TodayScreen() {
             today={todayString()}
             streak={currentStreak(loggedDays, todayString())}
             entries={weekEntries}
-            onOpen={openCheckin}
           />
         </>
       )}

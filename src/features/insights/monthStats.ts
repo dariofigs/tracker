@@ -82,6 +82,9 @@ export function notableDays(entries: Entry[]): NotableDays {
     if (run.days >= 2 && (!longestFlare || run.days > longestFlare.days)) longestFlare = run
   }
 
+  // A month with no pain above zero has no "highest" worth pointing at.
+  if (highest && highest.pain === 0) return { highest: null, lowest: null, longestFlare: null }
+
   return {
     highest,
     lowest: lowest && highest && lowest.pain !== highest.pain ? lowest : null,
