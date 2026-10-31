@@ -8,28 +8,22 @@ type ThemeOption = {
   label: string
   hint: string
   icon: IconName
-  /** The swatch is a fixed preview of the theme, so it does not change with the current one. */
-  swatch: string
 }
 
-const SPLIT = 'linear-gradient(135deg, #fbf9f5 50%, #1b1b19 50%)'
-
 const OPTIONS: ThemeOption[] = [
-  { value: 'light', label: 'Light', hint: 'Always light', icon: 'sun', swatch: '#fbf9f5' },
-  { value: 'dark', label: 'Dark', hint: 'Always dark', icon: 'moon', swatch: '#1b1b19' },
+  { value: 'light', label: 'Light', hint: 'Always light', icon: 'sun' },
+  { value: 'dark', label: 'Dark', hint: 'Always dark', icon: 'moon-stars' },
   {
     value: 'system',
     label: 'Same as device',
     hint: 'Follows your phone or computer',
-    icon: 'monitor',
-    swatch: SPLIT,
+    icon: 'stars',
   },
   {
     value: 'schedule',
     label: 'Day and night',
     hint: 'Light by day, dark after dusk, on your times',
     icon: 'clock',
-    swatch: SPLIT,
   },
 ]
 
@@ -60,7 +54,9 @@ type ThemeSettingProps = {
   theme: ThemeMode
   darkFrom: string
   lightFrom: string
-  onChange: (changes: Partial<Pick<Preferences, 'theme' | 'darkFrom' | 'lightFrom'>>) => void
+  onChange: (
+    changes: Partial<Pick<Preferences, 'theme' | 'darkFrom' | 'lightFrom'>>,
+  ) => void
 }
 
 /** Light, dark, same as the device, or by time of day. The choice stays on this device. */
@@ -100,14 +96,9 @@ function ThemeSetting({ theme, darkFrom, lightFrom, onChange }: ThemeSettingProp
             >
               <span
                 aria-hidden="true"
-                style={{ background: option.swatch }}
-                className="rounded-tile flex size-[4rem] shrink-0 items-center justify-center border border-black/10 text-[#736b63]"
+                className="rounded-tile bg-sage-tint text-brand-sage flex size-[4rem] shrink-0 items-center justify-center"
               >
-                <Icon
-                  name={option.icon}
-                  size={22}
-                  className={option.value === 'dark' ? 'text-[#8cc0a0]' : undefined}
-                />
+                <Icon name={option.icon} bold size={22} />
               </span>
               <span className="flex flex-1 flex-col gap-[0.2rem]">
                 <span className="text-body font-semibold">{option.label}</span>

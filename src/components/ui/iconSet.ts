@@ -19,8 +19,10 @@ import { SunIcon as SunLine } from '@solar-icons/react/line-duotone/sun'
 import { SettingsIcon as SettingsLine } from '@solar-icons/react/line-duotone/settings'
 import { MoonIcon as MoonLine } from '@solar-icons/react/line-duotone/moon'
 import { MoonIcon as MoonBold } from '@solar-icons/react/bold-duotone/moon'
-import { MonitorIcon as MonitorLine } from '@solar-icons/react/line-duotone/monitor'
-import { MonitorIcon as MonitorBold } from '@solar-icons/react/bold-duotone/monitor'
+import { MoonStarsIcon as MoonStarsLine } from '@solar-icons/react/line-duotone/moon-stars'
+import { MoonStarsIcon as MoonStarsBold } from '@solar-icons/react/bold-duotone/moon-stars'
+import { StarsIcon as StarsLine } from '@solar-icons/react/line-duotone/stars'
+import { StarsIcon as StarsBold } from '@solar-icons/react/bold-duotone/stars'
 
 type GlyphProps = SVGProps<SVGSVGElement> & { size?: number | string }
 type Glyph = ComponentType<GlyphProps>
@@ -43,7 +45,8 @@ export const ICONS = {
   // Same glyph as today, named for what it shows
   sun: { line: SunLine, bold: SunBold },
   moon: { line: MoonLine, bold: MoonBold },
-  monitor: { line: MonitorLine, bold: MonitorBold },
+  'moon-stars': { line: MoonStarsLine, bold: MoonStarsBold },
+  stars: { line: StarsLine, bold: StarsBold },
 } satisfies Record<string, { line: Glyph; bold: Glyph }>
 
 export type IconName = keyof typeof ICONS
