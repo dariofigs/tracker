@@ -48,7 +48,7 @@ function CheckinSheet({ period, date = todayString(), onClose }: CheckinSheetPro
       {ready ? (
         <div className="space-y-[3.2rem] pb-[0.8rem]">
           {period === 'AM' ? (
-            <MorningForm form={form} onChange={patch} />
+            <MorningForm form={form} onChange={patch} options={options} onAddOption={addOption} />
           ) : (
             <EveningForm form={form} onChange={patch} options={options} onAddOption={addOption} />
           )}

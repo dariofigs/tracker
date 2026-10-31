@@ -80,6 +80,8 @@ export function toEntryInput(entryDate: string, period: Period, form: CheckinFor
     put('sleepHours', form.sleepHours)
     put('sleepQuality', form.sleepQuality)
     put('startingCapacity', form.startingCapacity)
+    // Areas only mean something when there was pain; lowering pain to 0 clears them.
+    input.painAreas = (form.wakingPain ?? 0) > 0 ? form.painAreas : []
   } else {
     put('endPain', form.endPain)
     put('exercise', form.exercise)

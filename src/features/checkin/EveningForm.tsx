@@ -5,6 +5,7 @@ import CustomChipAdder from './CustomChipAdder'
 import Field from './Field'
 import type { CheckinForm } from './formModel'
 import { withSelected, type CheckinOptions } from './options'
+import PainAreasField from './PainAreasField'
 
 type EveningFormProps = {
   form: CheckinForm
@@ -20,8 +21,8 @@ const toggle = (list: string[], label: string, on: boolean) =>
 function EveningForm({ form, onChange, options, onAddOption }: EveningFormProps) {
   /** Adds the label to the chip list and selects it for today. */
   const addAndSelect = (
-    kind: 'activity' | 'symptom' | 'pain_area',
-    field: 'activities' | 'symptoms' | 'painAreas',
+    kind: 'activity' | 'symptom',
+    field: 'activities' | 'symptoms',
   ) =>
     (label: string) => {
       onAddOption(kind, label)
@@ -44,22 +45,13 @@ function EveningForm({ form, onChange, options, onAddOption }: EveningFormProps)
       </Field>
 
       {(form.endPain ?? 0) > 0 && (
-        <Field
-          label="Where does it hurt?"
+        <PainAreasField
           hint="Tap every area that hurt today. It helps spot patterns over time."
-        >
-          <div className="flex flex-wrap gap-[0.8rem]">
-            {withSelected(options.pain_area, form.painAreas).map((label) => (
-              <PillChip
-                key={label}
-                label={label}
-                selected={form.painAreas.includes(label)}
-                onChange={(on) => onChange({ painAreas: toggle(form.painAreas, label, on) })}
-              />
-            ))}
-            <CustomChipAdder noun="area" onAdd={addAndSelect('pain_area', 'painAreas')} />
-          </div>
-        </Field>
+          areas={options.pain_area}
+          selected={form.painAreas}
+          onChange={(painAreas) => onChange({ painAreas })}
+          onAdd={(label) => onAddOption('pain_area', label)}
+        />
       )}
 
       <Field label="Stress" hint="Mental or emotional load today. Naming it is a good step.">

@@ -41,6 +41,7 @@ describe('toEntryInput', () => {
       period: 'AM',
       wakingPain: 0,
       sleepHours: 7,
+      painAreas: [],
       note: null,
     })
   })

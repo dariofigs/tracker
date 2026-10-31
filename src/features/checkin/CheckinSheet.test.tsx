@@ -82,9 +82,35 @@ describe('morning check-in', () => {
       sleepHours: 7,
       sleepQuality: 4,
       startingCapacity: 50,
+      painAreas: [],
       note: null,
     })
     expect(onClose).toHaveBeenCalled()
+  })
+
+  it('asks where it hurts when waking pain is above 0 and saves the areas', async () => {
+    await open('AM')
+    expect(screen.queryByText('Where does it hurt?')).not.toBeInTheDocument()
+
+    const pain = screen.getByRole('slider', { name: 'Waking pain' })
+    pain.focus()
+    await userEvent.keyboard('{End}')
+    expect(screen.getByText('Where does it hurt?')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Lower back' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Save Entry' }))
+    expect(save.mock.calls[0][0]).toMatchObject({ wakingPain: 10, painAreas: ['Lower back'] })
+  })
+
+  it('clears morning areas when pain is set back to 0', async () => {
+    await open('AM')
+    const pain = screen.getByRole('slider', { name: 'Waking pain' })
+    pain.focus()
+    await userEvent.keyboard('{End}')
+    await userEvent.click(screen.getByRole('button', { name: 'Knees' }))
+    pain.focus()
+    await userEvent.keyboard('{Home}')
+    await userEvent.click(screen.getByRole('button', { name: 'Save Entry' }))
+    expect(save.mock.calls[0][0]).toMatchObject({ wakingPain: 0, painAreas: [] })
   })
 
   it('pre-fills sleep from the last morning but leaves pain unset', async () => {
@@ -242,6 +268,7 @@ describe('edit mode', () => {
       sleepHours: 8,
       sleepQuality: 3,
       startingCapacity: 75,
+      painAreas: [],
       note: 'old',
     })
   })

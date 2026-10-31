@@ -1,12 +1,17 @@
 import { PainGauge, SegmentedControl, Stepper } from '../../components/ui'
-import type { SleepQuality } from '../../data/types'
+import type { CustomOptionKind, SleepQuality } from '../../data/types'
 import CapacityPicker from './CapacityPicker'
 import Field from './Field'
 import { DEFAULT_SLEEP_HOURS, type CheckinForm } from './formModel'
+import type { CheckinOptions } from './options'
+import PainAreasField from './PainAreasField'
 
 type MorningFormProps = {
   form: CheckinForm
   onChange: (changes: Partial<CheckinForm>) => void
+  options: CheckinOptions
+  /** Adds a new custom chip to the list for next time. */
+  onAddOption: (kind: CustomOptionKind, label: string) => void
 }
 
 const QUALITY: { value: SleepQuality; label: string }[] = [
@@ -17,7 +22,7 @@ const QUALITY: { value: SleepQuality; label: string }[] = [
   { value: 5, label: '5' },
 ]
 
-function MorningForm({ form, onChange }: MorningFormProps) {
+function MorningForm({ form, onChange, options, onAddOption }: MorningFormProps) {
   return (
     <div className="space-y-[3.2rem]">
       <Field
@@ -32,6 +37,15 @@ function MorningForm({ form, onChange }: MorningFormProps) {
           valueText={(n) => `${n} out of 10`}
         />
       </Field>
+      {(form.wakingPain ?? 0) > 0 && (
+        <PainAreasField
+          hint="Tap every area that hurts right now. It helps spot patterns over time."
+          areas={options.pain_area}
+          selected={form.painAreas}
+          onChange={(painAreas) => onChange({ painAreas })}
+          onAdd={(label) => onAddOption('pain_area', label)}
+        />
+      )}
       <Field label="Hours slept" hint="Roughly is fine. A best guess helps.">
         <Stepper
           label="Sleep hours"

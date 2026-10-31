@@ -87,7 +87,14 @@ const evening: Entry = { ...base, period: 'PM', endPain: 5, remainingCapacity: 2
 
 function MorningDemo({ initial }: { initial: CheckinForm }) {
   const [form, setForm] = useState(initial)
-  return <MorningForm form={form} onChange={(c) => setForm((f) => ({ ...f, ...c }))} />
+  return (
+    <MorningForm
+      form={form}
+      onChange={(c) => setForm((f) => ({ ...f, ...c }))}
+      options={DEFAULT_OPTIONS}
+      onAddOption={() => {}}
+    />
+  )
 }
 
 function EveningDemo({ initial }: { initial: CheckinForm }) {
@@ -169,11 +176,18 @@ const demoOptionRows = buildOptionRows('activity', [
 
 // Local state only: the gallery cards must not change the theme of the whole page.
 function ThemeSettingCard({ initial }: { initial: ThemeMode }) {
-  const [state, setState] = useState({ theme: initial, darkFrom: '19:00', lightFrom: '07:00' })
+  const [state, setState] = useState({
+    theme: initial,
+    darkFrom: '19:00',
+    lightFrom: '07:00',
+  })
   return (
     <Card className="flex flex-col gap-[1.6rem]">
       <SectionHeader title="Appearance" />
-      <ThemeSetting {...state} onChange={(changes) => setState((s) => ({ ...s, ...changes }))} />
+      <ThemeSetting
+        {...state}
+        onChange={(changes) => setState((s) => ({ ...s, ...changes }))}
+      />
     </Card>
   )
 }
@@ -396,6 +410,15 @@ function ComponentsPage() {
                 { ...morning, sleepHours: 6.5, sleepQuality: 2 },
                 'AM',
               )}
+            />
+          </Variant>
+          <Variant label="Pain above 0 asks where it hurts">
+            <MorningDemo
+              initial={{
+                ...defaultsFrom(null, 'AM'),
+                wakingPain: 4,
+                painAreas: ['Knees'],
+              }}
             />
           </Variant>
           <Variant label="Editing a saved entry">
