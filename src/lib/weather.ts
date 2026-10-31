@@ -22,7 +22,7 @@ export function iconForWeather(code: number, isDay: boolean): IconName {
   return DEFAULT_WEATHER_ICON
 }
 
-/** Rounded to two decimals (about 1 km) so a precise position never leaves the phone. */
+/** Rounded to two decimals (under a mile) so a precise position is never stored or sent. */
 function coarse(value: number): number {
   return Math.round(value * 100) / 100
 }

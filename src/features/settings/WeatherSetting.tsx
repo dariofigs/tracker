@@ -54,7 +54,7 @@ function WeatherSetting({ enabled, onChange }: WeatherSettingProps) {
       <p className="text-caption text-text-muted">
         {denied
           ? 'Location is blocked. Allow it for this site in your browser settings to turn this on.'
-          : 'The icon follows the sky where you are. Your location stays on this device, rounded to about a kilometre.'}
+          : 'The icon follows the sky where you are. Your location is never saved to your account. Only an approximate spot, rounded to within about a mile, is kept on this device and sent to a weather service to get the forecast.'}
       </p>
     </div>
   )
