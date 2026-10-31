@@ -110,7 +110,7 @@ function CalendarView() {
           ) : (
             <>
               <MonthSummaryCard monthName={monthName} entries={entries} />
-              <NotableDaysCard entries={entries} onSelect={setSelected} />
+              <NotableDaysCard entries={entries} onSelect={setSelected} monthName={monthName} />
             </>
           )}
         </>

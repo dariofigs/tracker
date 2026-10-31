@@ -48,7 +48,7 @@ function TrendsView() {
 
   return (
     <div className="flex flex-col gap-[2.4rem]">
-      <div className="bg-canvas-bg border-border-subtle sticky top-0 z-10 -mx-[1.6rem] -mt-[0.8rem] border-b px-[1.6rem] pt-[calc(env(safe-area-inset-top)+0.8rem)] pb-[0.8rem]">
+      <div className="sticky top-0 z-10 -mt-[0.8rem] pt-[calc(env(safe-area-inset-top)+0.8rem)] pb-[0.8rem]">
         <SegmentedControl
           label="Chart range"
           options={RANGES}

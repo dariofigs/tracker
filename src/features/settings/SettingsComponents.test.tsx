@@ -124,7 +124,7 @@ describe('OptionsList', () => {
     expect(onAdd).toHaveBeenCalledWith('Pool')
   })
 
-  it('lists hidden options last, after a divider, with a Restore button', async () => {
+  it('puts a Hidden row last in the list that reveals the hidden options with a Restore button', async () => {
     render(
       <OptionsList
         kind="activity"
@@ -137,9 +137,11 @@ describe('OptionsList', () => {
       />,
     )
     expect(screen.getByRole('button', { name: 'Hide Strength' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Show Walk' })).not.toBeInTheDocument()
+    const toggle = screen.getByRole('button', { name: /Hidden \(1\)/ })
+    expect(screen.getAllByRole('listitem').at(-1)).toContainElement(toggle)
+    await userEvent.click(toggle)
     expect(screen.getByRole('button', { name: 'Show Walk' })).toHaveTextContent('Restore')
-    expect(screen.getByRole('separator')).toBeInTheDocument()
-    expect(screen.getAllByRole('listitem').at(-1)).toHaveTextContent('Walk')
   })
 })
 

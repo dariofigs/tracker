@@ -109,9 +109,9 @@ describe('NotableDaysCard', () => {
     expect(onSelect).toHaveBeenCalledWith('2026-10-28')
   })
 
-  it('renders nothing when no pain was rated', () => {
-    const { container } = render(<NotableDaysCard entries={[]} onSelect={vi.fn()} />)
-    expect(container).toBeEmptyDOMElement()
+  it('says nothing stood out when no pain was rated', () => {
+    render(<NotableDaysCard entries={[]} onSelect={vi.fn()} monthName="October" />)
+    expect(screen.getByText('Nothing stood out in October.')).toBeInTheDocument()
   })
 })
 
