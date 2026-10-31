@@ -39,6 +39,7 @@ import OptionsList from '../features/settings/OptionsList'
 import { buildOptionRows } from '../features/settings/optionsModel'
 import RenameSheet, { type RenameStage } from '../features/settings/RenameSheet'
 import ThemeSetting from '../features/settings/ThemeSetting'
+import WeatherSetting from '../features/settings/WeatherSetting'
 import TimeSetting from '../features/settings/TimeSetting'
 import type { ThemeMode } from '../lib/preferences'
 import BackupReminder from '../features/today/BackupReminder'
@@ -187,6 +188,24 @@ function ThemeSettingCard({ initial }: { initial: ThemeMode }) {
       <ThemeSetting
         {...state}
         onChange={(changes) => setState((s) => ({ ...s, ...changes }))}
+      />
+    </Card>
+  )
+}
+
+// Local state only: the gallery must not ask for location or change the real setting.
+function WeatherSettingCard({ initial, refuse = false }: { initial: boolean; refuse?: boolean }) {
+  const [enabled, setEnabled] = useState(initial)
+  return (
+    <Card className="flex flex-col gap-[1.6rem]">
+      <SectionHeader title="Weather" />
+      <WeatherSetting
+        enabled={enabled}
+        onChange={(next) => {
+          if (next && refuse) return false
+          setEnabled(next)
+          return true
+        }}
       />
     </Card>
   )
@@ -632,6 +651,18 @@ function ComponentsPage() {
           </Variant>
           <Variant label="Day and night (shows the two switch times)">
             <ThemeSettingCard initial="schedule" />
+          </Variant>
+        </Demo>
+
+        <Demo title="Weather setting">
+          <Variant label="Off (default)">
+            <WeatherSettingCard initial={false} />
+          </Variant>
+          <Variant label="On">
+            <WeatherSettingCard initial />
+          </Variant>
+          <Variant label="Location blocked (turning on is refused)">
+            <WeatherSettingCard initial={false} refuse />
           </Variant>
         </Demo>
 

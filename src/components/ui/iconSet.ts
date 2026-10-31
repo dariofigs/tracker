@@ -23,6 +23,18 @@ import { MoonStarsIcon as MoonStarsLine } from '@solar-icons/react/line-duotone/
 import { MoonStarsIcon as MoonStarsBold } from '@solar-icons/react/bold-duotone/moon-stars'
 import { StarsIcon as StarsLine } from '@solar-icons/react/line-duotone/stars'
 import { StarsIcon as StarsBold } from '@solar-icons/react/bold-duotone/stars'
+import { CloudsIcon as CloudsLine } from '@solar-icons/react/line-duotone/clouds'
+import { CloudsIcon as CloudsBold } from '@solar-icons/react/bold-duotone/clouds'
+import { CloudSun2Icon as CloudSunLine } from '@solar-icons/react/line-duotone/cloud-sun-2'
+import { CloudSun2Icon as CloudSunBold } from '@solar-icons/react/bold-duotone/cloud-sun-2'
+import { CloudRainIcon as CloudRainLine } from '@solar-icons/react/line-duotone/cloud-rain'
+import { CloudRainIcon as CloudRainBold } from '@solar-icons/react/bold-duotone/cloud-rain'
+import { SnowflakeIcon as SnowflakeLine } from '@solar-icons/react/line-duotone/snowflake'
+import { SnowflakeIcon as SnowflakeBold } from '@solar-icons/react/bold-duotone/snowflake'
+import { CloudStormIcon as CloudStormLine } from '@solar-icons/react/line-duotone/cloud-storm'
+import { CloudStormIcon as CloudStormBold } from '@solar-icons/react/bold-duotone/cloud-storm'
+import { FogIcon as FogLine } from '@solar-icons/react/line-duotone/fog'
+import { FogIcon as FogBold } from '@solar-icons/react/bold-duotone/fog'
 
 type GlyphProps = SVGProps<SVGSVGElement> & { size?: number | string }
 type Glyph = ComponentType<GlyphProps>
@@ -47,6 +59,13 @@ export const ICONS = {
   moon: { line: MoonLine, bold: MoonBold },
   'moon-stars': { line: MoonStarsLine, bold: MoonStarsBold },
   stars: { line: StarsLine, bold: StarsBold },
+  // Weather, for the Today tab
+  clouds: { line: CloudsLine, bold: CloudsBold },
+  'cloud-sun': { line: CloudSunLine, bold: CloudSunBold },
+  'cloud-rain': { line: CloudRainLine, bold: CloudRainBold },
+  snowflake: { line: SnowflakeLine, bold: SnowflakeBold },
+  'cloud-storm': { line: CloudStormLine, bold: CloudStormBold },
+  fog: { line: FogLine, bold: FogBold },
 } satisfies Record<string, { line: Glyph; bold: Glyph }>
 
 export type IconName = keyof typeof ICONS

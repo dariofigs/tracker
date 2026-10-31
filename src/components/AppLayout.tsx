@@ -6,15 +6,18 @@ import OfflineBanner from './OfflineBanner'
 import { AppShell, BottomNav, Button } from './ui'
 import type { NavItem } from './ui'
 import { useTodayEntries } from '../hooks/useTodayEntries'
+import { useWeatherIcon } from '../hooks/useWeatherIcon'
 import { periodFor } from '../lib/dates'
 import { useMorningCutoff } from '../lib/preferences'
 
-const items: NavItem[] = [
-  { id: '/', label: 'Today', icon: 'today' },
-  { id: '/insights', label: 'Trends', icon: 'insights' },
-  { id: '/calendar', label: 'Calendar', icon: 'calendar' },
-  { id: '/settings', label: 'Settings', icon: 'settings' },
-]
+function navItems(todayIcon: NavItem['icon']): NavItem[] {
+  return [
+    { id: '/', label: 'Today', icon: todayIcon },
+    { id: '/insights', label: 'Trends', icon: 'insights' },
+    { id: '/calendar', label: 'Calendar', icon: 'calendar' },
+    { id: '/settings', label: 'Settings', icon: 'settings' },
+  ]
+}
 
 /** Offers the check-in for the current period; gone once that one is logged. */
 function RapidCheckinButton() {
@@ -36,6 +39,7 @@ function RapidCheckinButton() {
 function AppLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const items = navItems(useWeatherIcon())
   const active = items.find((i) => i.id !== '/' && pathname.startsWith(i.id))?.id ?? '/'
 
   return (

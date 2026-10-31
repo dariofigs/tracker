@@ -8,6 +8,7 @@ import {
   Stepper,
   BottomNav,
   ICON_NAMES,
+  type IconName,
   Icon,
   BottomSheet,
   Button,
@@ -82,10 +83,22 @@ const navItems = [
   { id: 'settings', label: 'Settings', icon: 'settings' as const },
 ]
 
-function NavDemo() {
+function NavDemo({ todayIcon = 'today' }: { todayIcon?: IconName }) {
   const [tab, setTab] = useState('today')
-  return <BottomNav items={navItems} value={tab} onChange={setTab} />
+  const items = [{ ...navItems[0], icon: todayIcon }, ...navItems.slice(1)]
+  return <BottomNav items={items} value={tab} onChange={setTab} />
 }
+
+const todayWeather: { label: string; icon: IconName }[] = [
+  { label: 'Clear day', icon: 'sun' },
+  { label: 'Clear night', icon: 'moon-stars' },
+  { label: 'Partly cloudy', icon: 'cloud-sun' },
+  { label: 'Overcast', icon: 'clouds' },
+  { label: 'Rain', icon: 'cloud-rain' },
+  { label: 'Snow', icon: 'snowflake' },
+  { label: 'Storm', icon: 'cloud-storm' },
+  { label: 'Fog', icon: 'fog' },
+]
 
 const qualityOptions = [1, 2, 3, 4, 5].map((n) => ({ value: n, label: String(n) }))
 const effortOptions = [
@@ -201,6 +214,15 @@ function PrimitivesPage() {
           <Card className="bg-surface-subtle">
             <NavDemo />
           </Card>
+        </Demo>
+
+        <Demo title="Bottom Nav: Today by weather (tap another tab for the inactive state)">
+          {todayWeather.map(({ label, icon }) => (
+            <Card key={icon} className="bg-surface-subtle space-y-[0.8rem]">
+              <p className="text-micro text-text-muted">{label}</p>
+              <NavDemo todayIcon={icon} />
+            </Card>
+          ))}
         </Demo>
 
         <Demo title="Icons (Solar, CC BY 4.0 by 480 Design)">

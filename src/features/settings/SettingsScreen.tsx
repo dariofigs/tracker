@@ -6,9 +6,11 @@ import BackupCard from './BackupCard'
 import OptionsManager from './OptionsManager'
 import ThemeSetting from './ThemeSetting'
 import TimeSetting from './TimeSetting'
+import WeatherSetting from './WeatherSetting'
+import { clearWeatherCache, requestLocation } from '../../lib/weather'
 
 function SettingsScreen() {
-  const { morningCutoff, theme, darkFrom, lightFrom } = usePreferences()
+  const { morningCutoff, theme, darkFrom, lightFrom, weatherIcon } = usePreferences()
 
   return (
     <section
@@ -38,6 +40,27 @@ function SettingsScreen() {
           darkFrom={darkFrom}
           lightFrom={lightFrom}
           onChange={(changes) => preferences.set(changes)}
+        />
+      </Card>
+
+      <Card as="section" aria-label="Weather" className="flex flex-col gap-[1.6rem]">
+        <SectionHeader title="Weather" />
+        <WeatherSetting
+          enabled={weatherIcon}
+          onChange={async (enabled) => {
+            if (!enabled) {
+              clearWeatherCache()
+              preferences.set({ weatherIcon: false })
+              return true
+            }
+            try {
+              await requestLocation()
+            } catch {
+              return false
+            }
+            preferences.set({ weatherIcon: true })
+            return true
+          }}
         />
       </Card>
 

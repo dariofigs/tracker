@@ -19,6 +19,8 @@ export type Preferences = {
   lastExportAt: string | null
   /** ISO timestamp until which the backup reminder stays hidden, or null. */
   backupReminderSnoozedUntil: string | null
+  /** Show the current weather as the Today tab icon. Needs location access. */
+  weatherIcon: boolean
 }
 
 export const DEFAULT_PREFERENCES: Preferences = {
@@ -28,6 +30,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   lightFrom: '07:00',
   lastExportAt: null,
   backupReminderSnoozedUntil: null,
+  weatherIcon: false,
 }
 
 const STORAGE_KEY = 'tracker.preferences'
@@ -60,6 +63,7 @@ export function parsePreferences(raw: string | null): Preferences {
         : DEFAULT_PREFERENCES.lightFrom,
       lastExportAt: isoOrNull(data.lastExportAt),
       backupReminderSnoozedUntil: isoOrNull(data.backupReminderSnoozedUntil),
+      weatherIcon: data.weatherIcon === true,
     }
   } catch {
     return DEFAULT_PREFERENCES
